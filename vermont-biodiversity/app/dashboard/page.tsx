@@ -14,6 +14,10 @@ export default function DashboardPage() {
   const [answers, setAnswers] = useState<SurveyAnswers>({});
   const [completed, setCompleted] = useState<number[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState<number | null>(null);
+  useEffect(() => {
+  setCurrentMonth(new Date().getMonth() + 1);
+}, []);
 
   useEffect(() => {
     // Load previously saved survey answers.
@@ -73,7 +77,6 @@ export default function DashboardPage() {
   // students write their survey questions.
   // ==========================================
 
-  const currentMonth = new Date().getMonth() + 1;
 
   const matchedRecommendations = recommendations.filter((tip) => {
     // Hide recommendations that have not been written yet.
@@ -83,11 +86,12 @@ export default function DashboardPage() {
 
     // Check whether the recommendation applies this month.
     if (
-      tip.months.length > 0 &&
-      !tip.months.includes(currentMonth)
-    ) {
-      return false;
-    }
+  currentMonth !== null &&
+  tip.months.length > 0 &&
+  !tip.months.includes(currentMonth)
+) {
+  return false;
+}
 
     // Temporary lawn and garden matching.
     // We will update this after students choose their answers.
