@@ -367,7 +367,7 @@ After the developer approves and merges the changes:
 3. If the build succeeds, the changes are published.
 4. Open the website to check your work.
 
-**Website link:** [INSERT WEBSITE LINK]
+**Website link:** https://vermont-biodiversity-opal.vercel.app
 
 It may take a few minutes for changes to appear.
 
@@ -450,7 +450,7 @@ If you have questions or encounter an error, contact the developer.
 
 **GitHub Repository:** https://github.com/ryangrankin/vermont-biodiversity
 
-**Website:** [INSERT WEBSITE LINK]
+**Website:** https://vermont-biodiversity-opal.vercel.app
 
 ---
 
