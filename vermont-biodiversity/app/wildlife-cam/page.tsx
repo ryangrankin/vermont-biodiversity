@@ -1,38 +1,70 @@
 import Link from "next/link";
-import { wildlifePhotos } from "@/data/studentContent";
+import Image from "next/image";
+import { wildlifeContent } from "@/data/studentContent";
 
-export default function WildlifeCamPage() {
+export default function WildlifePage() {
   return (
     <main className="container">
 
-      <Link href="/" className="back-link">
-        ← Back to Home
+      {/* BACK TO DASHBOARD */}
+
+      <Link href="/dashboard" className="back-link">
+        ← Back to Dashboard
       </Link>
+
+      {/* PAGE HEADER */}
 
       <h1>Wildlife Cam</h1>
 
-      <p>Explore wildlife from around Vermont!</p>
+      <p>[STUDENTS: WRITE AN INTRODUCTION TO THIS PAGE]</p>
 
+      {/* WILDLIFE ENTRIES */}
 
-      {/* STUDENTS: WILDLIFE PHOTOS WILL GO HERE */}
+      <section className="section">
+        <div className="card-grid">
 
-      <div className="card-grid">
+          {wildlifeContent.map((wildlife, index) => (
+            <article className="info-card" key={index}>
 
-        {wildlifePhotos.map((photo, index) => (
-          <div className="info-card" key={index}>
+              {/* IMAGE OR IMAGE PLACEHOLDER */}
 
-            <div className="photo-placeholder">
-              Photo Coming Soon
-            </div>
+              {wildlife.image ? (
+                <Image
+                  src={wildlife.image}
+                  alt={wildlife.title}
+                  width={400}
+                  height={250}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "8px",
+                  }}
+                />
+              ) : (
+                <div className="wildlife-image-placeholder">
+                  [STUDENTS: CHOOSE A WILDLIFE IMAGE]
+                </div>
+              )}
 
-            <h2>{photo.title}</h2>
+              {/* STUDENT TITLE */}
 
-            <p>{photo.description}</p>
+              <h2>{wildlife.title}</h2>
 
-          </div>
-        ))}
+              {/* STUDENT DESCRIPTION */}
 
-      </div>
+              <h3>About This Wildlife</h3>
+              <p>{wildlife.description}</p>
+
+              {/* STUDENT SOURCE */}
+
+              <h3>Image / Information Source</h3>
+              <p>{wildlife.source}</p>
+
+            </article>
+          ))}
+
+        </div>
+      </section>
 
     </main>
   );

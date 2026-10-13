@@ -5,34 +5,42 @@ export default function AnimalsPage() {
   return (
     <main className="container">
 
-      <Link href="/" className="back-link">
-        ← Back to Home
+      <Link href="/dashboard" className="back-link">
+        ← Back to Dashboard
       </Link>
 
-      <h1>Vermont Animals</h1>
+      <h1>Animals</h1>
 
-      <p>Learn about animals living in Vermont.</p>
+      <p>[STUDENTS: WRITE AN INTRODUCTION TO THIS PAGE]</p>
 
+      <section className="section">
+        <div className="card-grid">
 
-      {/* STUDENT-WRITTEN ANIMAL INFORMATION */}
+          {animals.map((animal, index) => (
+            <article className="info-card" key={index}>
 
-      <div className="card-grid">
+              <h2>Animal {index + 1}</h2>
 
-        {animals.map((animal, index) => (
-          <div className="info-card" key={index}>
+              <h3>Animal Name</h3>
+              <p>{animal.name}</p>
 
-            <h2>{animal.name}</h2>
+              <h3>Description</h3>
+              <p>{animal.description}</p>
 
-            <p>{animal.description}</p>
+              <h3>Why This Animal Matters</h3>
+              <p>{animal.importance}</p>
 
-            <h3>How You Can Help</h3>
+              <h3>How People Can Help</h3>
+              <p>{animal.conservationTip}</p>
 
-            <p>{animal.tip}</p>
+              <h3>Information Source</h3>
+              <p>{animal.source}</p>
 
-          </div>
-        ))}
+            </article>
+          ))}
 
-      </div>
+        </div>
+      </section>
 
     </main>
   );

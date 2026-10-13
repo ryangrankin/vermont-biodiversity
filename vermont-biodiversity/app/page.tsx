@@ -1,62 +1,42 @@
 import Link from "next/link";
-import { appInfo, dailyTips } from "@/data/studentContent";
+import { appInfo } from "@/data/studentContent";
 
 export default function Home() {
   return (
     <main className="container">
 
-      {/* APP INTRODUCTION */}
+      {/* =====================================
+          STUDENT APP NAME
+          ===================================== */}
 
-      <section className="hero">
-        <h1>{appInfo.name}</h1>
+      <section className="welcome-section">
 
-        <p>{appInfo.tagline}</p>
+        <h1>
+          {appInfo.name || "[STUDENTS: APP NAME]"}
+        </h1>
 
-        <p>{appInfo.welcome}</p>
-      </section>
+        <h2>
+          {appInfo.tagline || "[STUDENTS: APP SLOGAN]"}
+        </h2>
 
+        <p>
+          {appInfo.welcome || "[STUDENTS: WELCOME MESSAGE]"}
+        </p>
 
-      {/* MAIN NAVIGATION */}
-
-      <section className="navigation-grid">
-
-        <Link href="/animals" className="nav-card">
-          <h2>Animals</h2>
-          <p>Learn about Vermont wildlife.</p>
-        </Link>
-
-        <Link href="/plants" className="nav-card">
-          <h2>Plants & Gardens</h2>
-          <p>Learn about Vermont plants.</p>
-        </Link>
-
-        <Link href="/wildlife-cam" className="nav-card">
-          <h2>Wildlife Cam</h2>
-          <p>Explore wildlife photographs.</p>
+        <Link href="/survey" className="primary-button">
+          Get Started →
         </Link>
 
       </section>
 
 
-      {/* DAILY RECOMMENDATIONS */}
+      {/* =====================================
+          STUDENT DESIGN PLACEHOLDER
+          ===================================== */}
 
-      <section className="section">
+      <section className="design-placeholder">
 
-        <h2>Biodiversity Tips</h2>
-
-        <div className="card-grid">
-
-          {dailyTips.map((tip, index) => (
-            <div className="info-card" key={index}>
-
-              <h3>{tip.title}</h3>
-
-              <p>{tip.description}</p>
-
-            </div>
-          ))}
-
-        </div>
+        <p>STUDENTS: APP LOGO OR IMAGE</p>
 
       </section>
 
