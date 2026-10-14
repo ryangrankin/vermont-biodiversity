@@ -28,14 +28,14 @@ You only need to write inside the quotation marks.
 export const appInfo = {
 
   // STUDENTS: What is your app's name?
-  name: "replace this text with your answer",
+  name: "replace this text with your apps name",
 
   // STUDENTS: Write a short slogan for your app.
-  tagline: "replace this text with your answer",
+  tagline: "replace this text with your apps slogan",
 
   // STUDENTS: Write a welcome message explaining
   // what your app does and why it matters.
-  welcome: "replace this text with your answer",
+  welcome: "replace this text with your welcome message",
 
 };
 
@@ -77,7 +77,7 @@ export const surveyQuestions = [
     id: "location",
 
     // STUDENTS: How should we ask about location?
-    question: "replace this text with your answer",
+    question: "replace this text with your answer about location",
 
     // STUDENTS: What location choices should users have?
     options: [
@@ -92,7 +92,7 @@ export const surveyQuestions = [
     id: "lawn",
 
     // STUDENTS: Write your question about lawns.
-    question: "replace this text with your question",
+    question: "replace this text with your question about lawns",
 
     options: [
       "replace this text with choice 1", // STUDENTS: First answer choice
@@ -105,7 +105,7 @@ export const surveyQuestions = [
     id: "garden",
 
     // STUDENTS: Write your question about gardens.
-    question: "replace this text with your question",
+    question: "replace this text with your question about gardens",
 
     options: [
       "replace this text with choice 1",
@@ -118,7 +118,7 @@ export const surveyQuestions = [
     id: "pets",
 
     // STUDENTS: Write your question about pets.
-    question: "replace this text with your question",
+    question: "replace this text with your question about pets",
 
     options: [
       "replace this text with choice 1",
@@ -131,7 +131,7 @@ export const surveyQuestions = [
     id: "interests",
 
     // STUDENTS: Ask users what activities they enjoy.
-    question: "replace this text with your questions",
+    question: "replace this text with your questions about activities",
 
     // STUDENTS: Add activities people can choose.
     options: [
@@ -176,13 +176,13 @@ export const recommendations = [
     id: 1,
 
     // STUDENTS: Give your recommendation a title.
-    title: "replace this text with your answer",
+    title: "replace this text with your title",
 
     // STUDENTS: Explain what the user should do.
-    description: "replace this text with your answer",
+    description: "replace this text with your instructions",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "replace this text with your answer",
+    whyItMatters: "replace this text with your explanation",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -213,13 +213,13 @@ export const recommendations = [
     id: 2,
 
     // STUDENTS: Give your recommendation a title.
-    title: "replace this text with your answer",
+    title: "replace this text with your title",
 
     // STUDENTS: Explain what the user should do.
-    description: "replace this text with your answer",
+    description: "replace this text with your instructions",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "replace this text with your answer",
+    whyItMatters: "replace this text with your explanation",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -306,10 +306,10 @@ export const animals = [
 
   // ANIMAL 1
   {
-    name: "replace this text with your answer",
+    name: "replace this text with your animal name",
 
     // STUDENTS: Write about this animal.
-    description: "replace this text with your answer",
+    description: "replace this text with your animal description",
 
     // STUDENTS: Why is this animal important?
     importance: "replace this text with your answer",
@@ -326,7 +326,7 @@ export const animals = [
     name: "replace this text with your answer",
 
     // STUDENTS: Write about this animal.
-    description: "replace this text with your answer",
+    description: "replace this text with your 2nd animal",
 
     // STUDENTS: Why is this animal important?
     importance: "replace this text with your answer",
