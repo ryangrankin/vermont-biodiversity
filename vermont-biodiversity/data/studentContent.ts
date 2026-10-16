@@ -306,7 +306,7 @@ export const animals = [
 
   // ANIMAL 1
   {
-    name: "replace this text with your animal name",
+    name: "Beaver",
 
     // STUDENTS: Write about this animal.
     description: "replace this text with your animal description",
