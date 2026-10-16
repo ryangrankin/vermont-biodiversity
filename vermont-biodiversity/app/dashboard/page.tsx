@@ -78,56 +78,13 @@ export default function DashboardPage() {
   // ==========================================
 
 
-  const matchedRecommendations = recommendations.filter((tip) => {
+  
     // Hide recommendations that have not been written yet.
-    if (!tip.title.trim() || !tip.description.trim()) {
-      return false;
-    }
+   const matchedRecommendations = recommendations.filter((tip) => {
+  // Only show recommendations that students have written.
+  return tip.title.trim() !== "" && tip.description.trim() !== "";
+});
 
-    // Check whether the recommendation applies this month.
-    if (
-  currentMonth !== null &&
-  tip.months.length > 0 &&
-  !tip.months.includes(currentMonth)
-) {
-  return false;
-}
-
-    // Temporary lawn and garden matching.
-    // We will update this after students choose their answers.
-    if (tip.requiresLawn && answers.lawn !== "Yes") {
-      return false;
-    }
-
-    if (tip.requiresGarden && answers.garden !== "Yes") {
-      return false;
-    }
-
-    // Match recommendations to selected outdoor interests.
-    const tipInterests = tip.interests.filter(
-      (interest) => interest.trim() !== ""
-    );
-
-    if (tipInterests.length > 0) {
-      const savedInterests = answers.interests;
-
-      const userInterests = Array.isArray(savedInterests)
-        ? savedInterests
-        : typeof savedInterests === "string"
-          ? savedInterests.split(",")
-          : [];
-
-      const matches = tipInterests.some((interest) =>
-        userInterests.includes(interest)
-      );
-
-      if (!matches) {
-        return false;
-      }
-    }
-
-    return true;
-  });
 
   // ==========================================
   // LOADING SCREEN
