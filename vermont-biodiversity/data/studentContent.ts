@@ -176,10 +176,10 @@ export const recommendations = [
     id: 1,
 
     // STUDENTS: Give your recommendation a title.
-    title: "Black Bears and Birdfeeders Don't Mix",
+    title: "replace this text with your title",
 
     // STUDENTS: Explain what the user should do.
-    description: "Take in your bird feeder April through December to not attract bears",
+    description: "replace this text with your instructions",
 
     // STUDENTS: Explain why this helps biodiversity.
     whyItMatters: "replace this text with your explanation",
