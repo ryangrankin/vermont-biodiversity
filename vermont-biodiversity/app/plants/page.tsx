@@ -1,53 +1,44 @@
+
 import Link from "next/link";
-import { plantCategories } from "@/data/studentContent";
+import { plantCategories } from "../../data/studentContent";
+
+const categoryPaths = [
+  "pollinators",
+  "helpful",
+  "trees",
+  "wildlife",
+];
 
 export default function PlantsPage() {
   return (
     <main className="container">
-
-      {/* ======================================
-          BACK TO DASHBOARD
-          ====================================== */}
-
       <Link href="/dashboard" className="back-link">
         ← Back to Dashboard
       </Link>
 
-      {/* ======================================
-          PAGE HEADER
-          ====================================== */}
-
       <h1>Plants & Gardens</h1>
 
-      <p>[STUDENTS: WRITE AN INTRODUCTION TO THIS PAGE]</p>
+      <p>
+        Explore the different plant and garden categories
+        chosen by the LEGO Club.
+      </p>
 
-      {/* ======================================
-          PLANT CATEGORIES
-          ====================================== */}
+      <div className="info-grid">
+        {plantCategories.map((category, index) => (
+          <div className="info-card" key={index}>
+            <h2>{category.title}</h2>
 
-      <section className="section">
-        <div className="card-grid">
+            <p>{category.description}</p>
 
-          {plantCategories.map((category, index) => (
-            <article className="info-card" key={index}>
-
-              {/* CATEGORY NAME */}
-              <h2>{category.title}</h2>
-
-              {/* STUDENT DESCRIPTION */}
-              <h3>About This Category</h3>
-              <p>{category.description}</p>
-
-              {/* STUDENT CONSERVATION TIP */}
-              <h3>How You Can Help</h3>
-              <p>{category.conservationTip}</p>
-
-            </article>
-          ))}
-
-        </div>
-      </section>
-
+            <Link
+              href={`/plants/${categoryPaths[index]}`}
+              className="secondary-button"
+            >
+              Explore Category →
+            </Link>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }

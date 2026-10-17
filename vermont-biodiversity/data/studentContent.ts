@@ -537,3 +537,75 @@ export const wildlifeContent = [
   },
 
 ];
+
+
+/*
+==========================================
+INDIVIDUAL PLANTS
+==========================================
+
+STUDENT INSTRUCTIONS:
+
+Add plants that you want to feature in
+each Plants & Gardens category.
+
+For each plant, fill in:
+- Name
+- Description
+- Why it matters
+- Conservation tip
+- Research source
+
+Choose one of these category IDs:
+- pollinators
+- helpful
+- trees
+- wildlife
+
+Ask the developer for help adding more
+entries or uploading photographs.
+*/
+
+export const individualPlants = [
+  {
+    id: "plant-1",
+    category: "pollinators",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+  {
+    id: "plant-2",
+    category: "helpful",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+  {
+    id: "plant-3",
+    category: "trees",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+  {
+    id: "plant-4",
+    category: "wildlife",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+];
+

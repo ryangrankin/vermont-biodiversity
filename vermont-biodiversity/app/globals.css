@@ -425,3 +425,154 @@ h3 {
   border-radius: 12px;
   color: var(--forest-green);
 }
+
+
+/* Wildlife sighting form alignment */
+
+.info-card form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.info-card form label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.info-card form input,
+.info-card form textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.info-card form input[type="file"] {
+  padding: 10px 0;
+  border: none;
+}
+
+.info-card form button {
+  align-self: flex-start;
+  margin-top: 16px;
+}
+
+
+/* Wildlife Gallery */
+
+.wildlife-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.wildlife-gallery-card {
+  background: #ffffff;
+  border: 1px solid #d5e2d4;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+.wildlife-gallery-card h2 {
+  margin-top: 0;
+  color: #285c3b;
+}
+
+.wildlife-gallery-card p {
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+
+/* Wildlife Gallery Photographs */
+
+.wildlife-gallery-photo {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.wildlife-gallery-card {
+  overflow: hidden;
+}
+
+
+/* Administrator Account Signup */
+
+.admin-signup-container {
+  max-width: 480px;
+  margin: 60px auto;
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #d5e2d4;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.admin-signup-container h1 {
+  color: #285c3b;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.admin-signup-container p {
+  line-height: 1.6;
+  text-align: center;
+}
+
+.admin-signup-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.admin-signup-container label {
+  font-weight: 600;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.admin-signup-container input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.admin-signup-container input:focus {
+  outline: 2px solid #285c3b;
+  outline-offset: 2px;
+}
+
+.admin-signup-container button {
+  margin-top: 20px;
+  padding: 12px;
+  width: 100%;
+}
+
+.admin-signup-container a {
+  color: #285c3b;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .admin-signup-container {
+    margin: 24px 12px;
+    padding: 20px;
+  }
+}

@@ -241,6 +241,45 @@ export default function DashboardPage() {
   </Link>
 </div>
 
+{/* WILDLIFE GALLERY */}
+
+<div className="info-card">
+  <h3>Wildlife Sightings Gallery</h3>
+
+  <p>
+    Explore wildlife sightings shared by the community
+    and approved by the LEGO Club!
+  </p>
+
+  <Link
+    href="/gallery"
+    className="secondary-button"
+  >
+    View Wildlife Gallery →
+  </Link>
+</div>
+
+
+{/* SUBMIT A WILDLIFE SIGHTING */}
+
+<div className="info-card">
+  <h3>Share a Wildlife Sighting</h3>
+
+  <p>
+    Spotted an animal or plant in Vermont?
+    Share your discovery and upload a wildlife photograph!
+  </p>
+
+  <Link
+    href="/sightings"
+    className="secondary-button"
+  >
+    Submit a Sighting →
+  </Link>
+</div>
+
+
+
         </div>
       </section>
 
