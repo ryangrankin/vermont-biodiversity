@@ -24,6 +24,19 @@ async function checkRateLimit(request: NextRequest) {
     ? "127.0.0.1"
     : request.headers.get("x-vercel-forwarded-for");
 
+console.log("Rate-limit diagnostics:", {
+  environment: process.env.NODE_ENV,
+  hasRateLimitSecret: Boolean(
+    process.env.SIGHTING_RATE_LIMIT_SECRET
+  ),
+  hasVercelForwardedFor: Boolean(
+    request.headers.get("x-vercel-forwarded-for")
+  ),
+  hasForwardedFor: Boolean(
+    request.headers.get("x-forwarded-for")
+  ),
+});
+
   if (!forwardedFor) {
     throw new Error("Trusted client IP is unavailable.");
   }
@@ -45,8 +58,15 @@ async function checkRateLimit(request: NextRequest) {
   );
 
   if (error) {
-    throw new Error("Rate-limit check failed.");
-  }
+  console.error("Supabase rate-limit RPC error:", {
+    code: error.code,
+    message: error.message,
+    details: error.details,
+    hint: error.hint,
+  });
+
+  throw new Error("Rate-limit check failed.");
+}
 
   return data === true;
 }
