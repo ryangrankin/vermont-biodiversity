@@ -352,6 +352,37 @@ export const animalCategories = [
 // ============================================================
 
 export const individualAnimals = [
+  
+  // ==========================================================
+  // BEAVER
+  // ==========================================================
+
+  {
+    id: "beaver",
+    category: "mammals",
+    name: "Beaver",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+
+  // ==========================================================
+  // BLACK BEAR
+  // ==========================================================
+
+  {
+    id: "black-bear",
+    category: "mammals",
+    name: "Black Bear",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+
   {
     id: "animal-1",
     category: "mammals",
