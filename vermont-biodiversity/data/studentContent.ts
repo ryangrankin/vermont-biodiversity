@@ -285,74 +285,135 @@ export const recommendations = [
 ];
 
 
-// ==================================================
-// SECTION 4: ANIMALS PAGE
-// ==================================================
 
-/*
-STUDENTS:
+// ============================================================
+// ANIMAL CATEGORIES
+// ============================================================
+//
+// STUDENTS: This section is for your Animals page!
+//
+// HOW TO FILL THIS OUT:
+// 1. Find the words "REPLACE THIS TEXT".
+// 2. Replace them with your own writing.
+// 3. Keep your answers inside the quotation marks.
+// 4. Keep the commas at the end of each line.
+//
+// ============================================================
 
-Choose which Vermont animals you want
-to feature in your app.
 
-For each animal, write:
-- Its name
-- Information about the animal
-- Why it matters to Vermont's ecosystem
-- How people can help protect it
-*/
-
-export const animals = [
-
-  // ANIMAL 1
+export const animalCategories = [
   {
-    name: "Beaver",
-
-    // STUDENTS: Write about this animal.
-    description: "replace this text with your animal description",
-
-    // STUDENTS: Why is this animal important?
-    importance: "replace this text with your answer",
-
-    // STUDENTS: How can people help?
-    conservationTip: "replace this text with your answer",
-
-    // STUDENTS: Add a source for your information.
-    source: "replace this text with your source url",
+    title: "Mammals",
+    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
   },
-
-  // ANIMAL 2
-    {
-    name: "replace this text with your answer",
-
-    // STUDENTS: Write about this animal.
-    description: "replace this text with your 2nd animal",
-
-    // STUDENTS: Why is this animal important?
-    importance: "replace this text with your answer",
-
-    // STUDENTS: How can people help?
-    conservationTip: "replace this text with your answer",
-
-    // STUDENTS: Add a source for your information.
-    source: "replace this text with your source url",
+  {
+    title: "Fish",
+    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
   },
-
+  {
+    title: "Reptiles",
+    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+  },
+  {
+    title: "Amphibians",
+    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+  },
+  {
+    title: "Birds",
+    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+  },
+  {
+    title: "Insects",
+    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+  },
 ];
 
 
-// ==================================================
-// SECTION 5: PLANTS AND GARDENS PAGE
-// ==================================================
+// ============================================================
+// INDIVIDUAL ANIMALS
+// ============================================================
+//
+// STUDENTS: Add animals you want to feature.
+//
+// Choose one of these category IDs:
+// - mammals
+// - fish
+// - reptiles
+// - amphibians
+// - birds
+// - insects
+//
+// ============================================================
 
-/*
-STUDENTS:
+export const individualAnimals = [
+  {
+    id: "animal-1",
+    category: "mammals",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+  {
+    id: "animal-2",
+    category: "fish",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+  {
+    id: "animal-3",
+    category: "reptiles",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+  {
+    id: "animal-4",
+    category: "amphibians",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+  {
+    id: "animal-5",
+    category: "birds",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+  {
+    id: "animal-6",
+    category: "insects",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+];
 
-These four categories come from your
-original app drawings!
-
-Write information for each category.
-*/
 
 // ============================================================
 // SECTION 5: PLANTS & GARDENS
@@ -607,5 +668,38 @@ export const individualPlants = [
     source: "",
     image: "",
   },
+
+  {
+    id: "plant-5",
+    category: "rewilding",
+    name: "",
+    description: "",
+    importance: "",
+    conservationTip: "",
+    source: "",
+    image: "",
+  },
+
+
+
+  // ==========================================================
+  // CATEGORY 5: REWILDING THE LAWN
+  // ==========================================================
+
+  {
+    // STUDENTS: You can rename this category.
+    title: "Rewilding the Lawn",
+
+    // QUESTION 1:
+    // What does rewilding a lawn mean?
+    // How can it help Vermont biodiversity?
+    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+
+    // QUESTION 2:
+    // What can people do to make their lawns
+    // more wildlife-friendly?
+    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+  },
+
 ];
 

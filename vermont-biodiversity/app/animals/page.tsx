@@ -1,47 +1,46 @@
+
 import Link from "next/link";
-import { animals } from "@/data/studentContent";
+import { animalCategories } from "@/data/studentContent";
+
+const categoryPaths = [
+  "mammals",
+  "fish",
+  "reptiles",
+  "amphibians",
+  "birds",
+  "insects",
+];
 
 export default function AnimalsPage() {
   return (
     <main className="container">
-
       <Link href="/dashboard" className="back-link">
         ← Back to Dashboard
       </Link>
 
       <h1>Animals</h1>
 
-      <p>[STUDENTS: WRITE AN INTRODUCTION TO THIS PAGE]</p>
+      <p>
+        Explore the different animal categories
+        chosen by the LEGO Club.
+      </p>
 
-      <section className="section">
-        <div className="card-grid">
+      <div className="info-grid">
+        {animalCategories.map((category, index) => (
+          <div className="info-card" key={index}>
+            <h2>{category.title}</h2>
 
-          {animals.map((animal, index) => (
-            <article className="info-card" key={index}>
+            <p>{category.description}</p>
 
-              <h2>Animal {index + 1}</h2>
-
-              <h3>Animal Name</h3>
-              <p>{animal.name}</p>
-
-              <h3>Description</h3>
-              <p>{animal.description}</p>
-
-              <h3>Why This Animal Matters</h3>
-              <p>{animal.importance}</p>
-
-              <h3>How People Can Help</h3>
-              <p>{animal.conservationTip}</p>
-
-              <h3>Information Source</h3>
-              <p>{animal.source}</p>
-
-            </article>
-          ))}
-
-        </div>
-      </section>
-
+            <Link
+              href={`/animals/${categoryPaths[index]}`}
+              className="secondary-button"
+            >
+              Explore Category →
+            </Link>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }

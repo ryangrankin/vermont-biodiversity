@@ -7,6 +7,7 @@ const categoryPaths = [
   "helpful",
   "trees",
   "wildlife",
+  "rewilding",
 ];
 
 export default function PlantsPage() {

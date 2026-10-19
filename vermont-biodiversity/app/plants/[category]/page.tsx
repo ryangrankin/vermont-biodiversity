@@ -13,6 +13,7 @@ const categoryPaths = [
   "helpful",
   "trees",
   "wildlife",
+  "rewilding",
 ];
 
 type PageProps = {
