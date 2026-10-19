@@ -92,11 +92,11 @@ export const surveyQuestions = [
     id: "lawn",
 
     // STUDENTS: Write your question about lawns.
-    question: "replace this text with your question about lawns",
+    question: "Do you have a Lawn?",
 
     options: [
-      "replace this text with choice 1", // STUDENTS: First answer choice
-      "replace this text with choice 2", // STUDENTS: Second answer choice
+      "Yes", // STUDENTS: First answer choice
+      "No", // STUDENTS: Second answer choice
     ],
   },
 
@@ -105,11 +105,11 @@ export const surveyQuestions = [
     id: "garden",
 
     // STUDENTS: Write your question about gardens.
-    question: "replace this text with your question about gardens",
+    question: "Do you have a garden?",
 
     options: [
-      "replace this text with choice 1",
-      "replace this text with choice 2",
+      "Yes",
+      "No",
     ],
   },
 
@@ -118,11 +118,11 @@ export const surveyQuestions = [
     id: "pets",
 
     // STUDENTS: Write your question about pets.
-    question: "replace this text with your question about pets",
+    question: "Do you have a pet?",
 
     options: [
-      "replace this text with choice 1",
-      "replace this text with choice 2",
+      "Yes",
+      "No",
     ],
   },
 
@@ -131,14 +131,14 @@ export const surveyQuestions = [
     id: "interests",
 
     // STUDENTS: Ask users what activities they enjoy.
-    question: "replace this text with your questions about activities",
+    question: "What outdoor hobbies do you have?",
 
     // STUDENTS: Add activities people can choose.
     options: [
-      "replace this text with choice 1",
-      "replace this text with choice 2",
-      "replace this text with choice 3",
-      "replace this text with choice 4",
+      "Hiking",
+      "Mountian Biking",
+      "Boating",
+      "Birdwatching",
     ],
   },
 
@@ -182,13 +182,13 @@ export const recommendations = [
     description: "Take in your bird feder April through December to not attract bears",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "replace this text with your explanation",
+    whyItMatters: "Black Bears need lots of food, so if they spot your bird feeder",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
     interests: [
-      "interest1",
-      "interest2",
+      "Hiking",
+      "Birdwatching",
       "interest3",
     ],
 
@@ -198,11 +198,11 @@ export const recommendations = [
 
     // STUDENTS: Does the user need a garden?
     // Change to true if yes.
-    requiresGarden: false,
+    requiresGarden: true,
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [] as number[],
+    months: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
