@@ -65,7 +65,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="container">
+    <main className="container login-background">
       <div
         className="info-card"
         style={{ maxWidth: 450, margin: "60px auto" }}

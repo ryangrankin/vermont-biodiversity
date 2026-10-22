@@ -43,33 +43,39 @@ export default async function PlantCategoryPage({
       plant.name.trim() !== ""
   );
 
+  // Only the Trees category gets the forest background.
+  const backgroundClass =
+    category === "trees" ? "trees-background" : "";
+
   return (
-    <main className="container">
+    <main className={`container ${backgroundClass}`}>
       <Link href="/plants" className="back-link">
         ← Back to Plants & Gardens
       </Link>
 
       <h1>{plantCategory.title}</h1>
 
+      {/* ABOUT THIS CATEGORY */}
       <div className="info-card">
         <h2>About This Category</h2>
         <p>{plantCategory.description}</p>
       </div>
 
+      {/* CONSERVATION TIPS */}
       <div className="info-card">
         <h2>Conservation Tips</h2>
         <p>{plantCategory.conservationTip}</p>
       </div>
 
+      {/* EXPLORE PLANTS */}
       <section style={{ marginTop: "40px" }}>
         <h2>Explore Plants</h2>
 
         {categoryPlants.length === 0 ? (
           <div className="empty-state">
             <p>
-              The LEGO Club is still researching
-              plants for this category. Check back
-              soon!
+              The LEGO Club is still researching plants
+              for this category. Check back soon!
             </p>
           </div>
         ) : (

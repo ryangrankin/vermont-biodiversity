@@ -576,3 +576,329 @@ h3 {
     padding: 20px;
   }
 }
+
+
+/* ==========================================
+   VERMONT BIODIVERSITY BACKGROUND IMAGES
+   ========================================== */
+
+/* Login page */
+.login-background {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.35),
+      rgba(0, 0, 0, 0.45)
+    ),
+    url("/images/black-bear.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Main dashboard */
+.dashboard-background {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.35)
+    ),
+    url("/images/vermont-landscape.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Trees category */
+.trees-background {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.35)
+    ),
+    url("/images/forest.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Keep cards readable over photographs */
+.login-background .info-card,
+.dashboard-background .info-card,
+.trees-background .info-card {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Improve heading readability */
+.login-background h1,
+.dashboard-background h1,
+.trees-background h1 {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+
+/* Login page with black bear photograph */
+
+.login-background {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.35)
+    ),
+    url("/images/black-bear.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+/* Make the bear visible through the login card */
+
+.login-background > .info-card {
+  background: rgba(255, 255, 255, 0.3) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Keep form fields readable */
+.login-background input {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Keep text dark and readable */
+.login-background .info-card h1,
+.login-background .info-card p,
+.login-background .info-card label {
+  color: #183b27;
+  text-shadow: none;
+}
+
+
+/* ==========================================
+   LOGIN PAGE - WHITE TEXT WITH GREEN OUTLINE
+   ========================================== */
+
+/* Welcome heading */
+.login-background .info-card h1 {
+  color: #ffffff !important;
+  font-weight: 800;
+
+  -webkit-text-stroke: 1.2px #123b25;
+
+  text-shadow:
+    2px 2px 0 #123b25,
+    -1px -1px 0 #123b25,
+    1px -1px 0 #123b25,
+    -1px 1px 0 #123b25;
+}
+
+/* Introduction and signup text */
+.login-background .info-card p {
+  color: #ffffff !important;
+  font-weight: 700;
+
+  -webkit-text-stroke: 0.4px #123b25;
+
+  text-shadow:
+    1px 1px 2px #123b25,
+    -1px -1px 2px #123b25;
+}
+
+/* Email and password labels */
+.login-background .info-card label {
+  color: #ffffff !important;
+  font-weight: 800;
+
+  -webkit-text-stroke: 0.5px #123b25;
+
+  text-shadow:
+    1px 1px 2px #123b25,
+    -1px -1px 2px #123b25;
+}
+
+/* Keep typed text dark inside input fields */
+.login-background .info-card input {
+  color: #123b25 !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Make signup link visible */
+.login-background .info-card a {
+  color: #ffffff !important;
+  font-weight: 800;
+  text-decoration: underline;
+
+  text-shadow:
+    1px 1px 2px #123b25,
+    -1px -1px 2px #123b25;
+}
+
+
+/* ==========================================
+   ADMIN ACCOUNT PAGE STYLING
+   ========================================== */
+
+.admin-signup-container.login-background {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.admin-signup-container.login-background > .info-card {
+  background: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
+/* ==========================================
+   DASHBOARD - VERMONT LANDSCAPE BACKGROUND
+   ========================================== */
+
+main.container.dashboard-background {
+  min-height: 100vh;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.25)
+    ),
+    url("/images/vermont-landscape.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Make dashboard cards slightly translucent */
+.dashboard-background .info-card,
+.dashboard-background .empty-state {
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 14px;
+}
+
+/* Keep dashboard headings readable */
+.dashboard-background h1,
+.dashboard-background .section > h2 {
+  color: #ffffff;
+  font-weight: 800;
+
+  text-shadow:
+    2px 2px 3px rgba(15, 50, 25, 0.95),
+    -1px -1px 2px rgba(15, 50, 25, 0.85);
+}
+
+/* Keep text inside cards dark */
+.dashboard-background .info-card h3,
+.dashboard-background .info-card h4,
+.dashboard-background .info-card p,
+.dashboard-background .empty-state h3,
+.dashboard-background .empty-state p {
+  color: #173b25;
+  text-shadow: none;
+}
+
+/* Make dashboard welcome message readable */
+.dashboard-background .dashboard-header > p {
+  color: white;
+  font-weight: 700;
+  text-shadow: 1px 2px 3px #123b25;
+}
+
+/* Better mobile background behavior */
+@media (max-width: 768px) {
+  main.container.dashboard-background {
+    background-attachment: scroll;
+  }
+}
+
+
+/* TREES PAGE - READABLE TRANSLUCENT CARDS */
+
+.trees-background .info-card,
+.trees-background .empty-state {
+  background: rgba(255, 255, 255, 0.4) !important;
+
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark, readable text */
+.trees-background .info-card h2,
+.trees-background .info-card h3,
+.trees-background .info-card p,
+.trees-background .empty-state p {
+  color: #123b25 !important;
+  font-weight: 600;
+  text-shadow: none;
+}
+
+/* Stronger card headings */
+.trees-background .info-card h2,
+.trees-background .info-card h3 {
+  font-weight: 800;
+}
+
+
+/* TREES PAGE - SUBTLE WHITE OUTLINE */
+
+.trees-background > h1,
+.trees-background > section > h2 {
+  color: #123b25 !important;
+  font-weight: 800;
+
+  -webkit-text-stroke: 0.5px white;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+}
+
+/* Back link */
+.trees-background > .back-link {
+  color: #123b25 !important;
+  font-weight: 700;
+  -webkit-text-stroke: 0.3px white;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+}
+
+
+/* TREES PAGE - CLEAN HEADINGS */
+
+.trees-background > h1,
+.trees-background > section > h2 {
+  color: #ffffff !important;
+  font-weight: 800;
+  -webkit-text-stroke: 0;
+  text-shadow: 0 2px 6px rgba(10, 40, 20, 0.85);
+}
+
+/* Back to Plants & Gardens */
+.trees-background > .back-link {
+  color: #ffffff !important;
+  font-weight: 700;
+  -webkit-text-stroke: 0;
+  text-shadow: 0 2px 4px rgba(10, 40, 20, 0.85);
+}
+

@@ -103,7 +103,7 @@ export default function DashboardPage() {
   // ==========================================
 
   return (
-    <main className="container">
+    <main className="container dashboard-background">
 
       {/* ======================================
           DASHBOARD HEADER

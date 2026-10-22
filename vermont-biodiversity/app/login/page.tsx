@@ -41,7 +41,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="container">
+    <main className="container login-background">
       <div
         className="info-card"
         style={{ maxWidth: 450, margin: "60px auto" }}
