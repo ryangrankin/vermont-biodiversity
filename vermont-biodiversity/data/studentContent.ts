@@ -213,13 +213,13 @@ export const recommendations = [
     id: 2,
 
     // STUDENTS: Give your recommendation a title.
-    title: "replace this text with your title",
+    title: "When to say NO to Bats",
 
     // STUDENTS: Explain what the user should do.
-    description: "replace this text with your instructions",
+    description: "In the fall and spring when they don’t have vulnerable young, block holes in attics and other spaces so they don’t roost in your home",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "replace this text with your explanation",
+    whyItMatters: "Helps homeowners stop bats from living in their home in a way that keeps the bats alive.",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -239,10 +239,10 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [] as number[],
+    months: [4,9] as number[],
 
     // STUDENTS: Where did you find this information?
-    source: "replace this text with your source url",
+    source: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/mammals/little-brown-bat https://vtdigger.org/2026/10/20/vermont-experts-say-bats-need-our-help-how-do-we-get-over-our-fear-of-them/https://www.sevendaysvt.com/arts-culture/work-barry-and-maureen-genzlinger-rescue-bats-10444077/",
   },
 
   // RECOMMENDATION 3
