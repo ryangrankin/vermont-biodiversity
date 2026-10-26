@@ -176,19 +176,19 @@ export const recommendations = [
     id: 1,
 
     // STUDENTS: Give your recommendation a title.
-    title: "Black Bears and Birdfeeders Don't Mix",
+    title: "What to do with if you find a bat",
 
     // STUDENTS: Explain what the user should do.
-    description: "Take in your bird feder April through December to not attract bears",
+    description: "If you find a bat, don’t put it outside in the winter because it will freeze to death. Instead, contact the Vermont Bat Center. When bats are hibernating, they breathe slowly and their heart rate drops to one or two beats per minute. If you find one while it is asleep, it seems dead and takes 20 minutes to wake up. ",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "Black Bears need lots of food, so if they spot your bird feeder",
+    whyItMatters: "So you don't kill bats unknowingly",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
     interests: [
-      "Hiking",
-      "Birdwatching",
+      "Interest1",
+      "interest2",
       "interest3",
     ],
 
@@ -198,14 +198,14 @@ export const recommendations = [
 
     // STUDENTS: Does the user need a garden?
     // Change to true if yes.
-    requiresGarden: true,
+    requiresGarden: false,
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as number[],
+    months: [1, 11, 12] as number[],
 
     // STUDENTS: Where did you find this information?
-    source: "replace this text with your source url",
+    source: "https://www.vermontbatcenter.org/",
   },
 
   // RECOMMENDATION 2
@@ -250,13 +250,13 @@ export const recommendations = [
     id: 3,
 
     // STUDENTS: Give your recommendation a title.
-    title: "replace this text with your answer",
+    title: "Donate!",
 
     // STUDENTS: Explain what the user should do.
-    description: "replace this text with your answer",
+    description: "Check the box on your Vermont income tax return that adds a contribution to the Vermont Fish and Wildlife Department nongame wildlife fund which supports animal conservation in Vermont.",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "replace this text with your answer",
+    whyItMatters: "It helps Vermont Fish and Wildlife get tools and people to help biodiversity.",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -276,7 +276,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [] as number[],
+    months: [1, 2, 3, 4] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
