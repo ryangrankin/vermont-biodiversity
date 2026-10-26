@@ -44,9 +44,13 @@ export default async function PlantCategoryPage({
   );
 
   // Only the Trees category gets the forest background.
-  const backgroundClass =
-    category === "trees" ? "trees-background" : "";
+  const backgroundClasses: Record<string, string> = {
+  trees: "trees-background",
+  pollinators: "pollinators-background",
+  helpful: "helpful-background",
+};
 
+const backgroundClass = backgroundClasses[category] ?? "";
   return (
     <main className={`container ${backgroundClass}`}>
       <Link href="/plants" className="back-link">

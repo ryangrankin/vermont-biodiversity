@@ -12,7 +12,7 @@ const categoryPaths = [
 
 export default function PlantsPage() {
   return (
-    <main className="container">
+    <main className="container plants-background">
       <Link href="/dashboard" className="back-link">
         ← Back to Dashboard
       </Link>

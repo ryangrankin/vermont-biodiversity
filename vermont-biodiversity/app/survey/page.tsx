@@ -90,15 +90,15 @@ export default function SurveyPage() {
   }
 
   if (!loaded) {
-    return (
-      <main className="container">
-        <p>Loading survey...</p>
-      </main>
-    );
-  }
+  return (
+    <main className="container survey-background">
+      <p>Loading survey...</p>
+    </main>
+  );
+}
 
   return (
-    <main className="container">
+    <main className="container survey-background">
 
       <Link href="/" className="back-link">
         ← Back to Home

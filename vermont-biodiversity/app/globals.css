@@ -902,3 +902,239 @@ main.container.dashboard-background {
   text-shadow: 0 2px 4px rgba(10, 40, 20, 0.85);
 }
 
+
+/* POLLINATOR GARDEN BACKGROUND */
+main.container.pollinators-background {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.25)
+    ),
+    url("/images/pollinator-garden.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* HELPFUL PLANTS BACKGROUND */
+main.container.helpful-background {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.25)
+    ),
+    url("/images/goldenrod.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* MATCH THE TREES PAGE CARD STYLING */
+.pollinators-background .info-card,
+.pollinators-background .empty-state,
+.helpful-background .info-card,
+.helpful-background .empty-state {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+}
+
+/* HEADINGS OUTSIDE CARDS */
+.pollinators-background > h1,
+.pollinators-background > section > h2,
+.helpful-background > h1,
+.helpful-background > section > h2 {
+  color: white !important;
+  font-weight: 800;
+  text-shadow: 0 2px 6px rgba(10, 40, 20, 0.85);
+}
+
+/* BACK LINKS */
+.pollinators-background > .back-link,
+.helpful-background > .back-link {
+  color: white !important;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(10, 40, 20, 0.5);
+}
+
+/* MOBILE BACKGROUNDS */
+@media (max-width: 768px) {
+  main.container.pollinators-background,
+  main.container.helpful-background {
+    background-attachment: scroll;
+  }
+}
+
+
+/* ==========================================
+   PLANTS & GARDENS - WILDFLOWER BACKGROUND
+   ========================================== */
+
+main.container.plants-background {
+  min-height: 100vh;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.25)
+    ),
+    url("/images/wildflowers.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Translucent category cards */
+.plants-background .info-card {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+}
+
+/* Readable card text */
+.plants-background .info-card h2,
+.plants-background .info-card p {
+  color: #123b25;
+  text-shadow: none;
+}
+
+/* Main heading */
+.plants-background > h1 {
+  color: white !important;
+  font-weight: 800;
+  text-shadow: 0 2px 6px rgba(10, 40, 20, 0.85);
+}
+
+/* Introductory text */
+.plants-background > p {
+  color: white;
+  font-weight: 700;
+  text-shadow: 0 2px 5px rgba(10, 40, 20, 0.85);
+}
+
+/* Back link */
+.plants-background > .back-link {
+  color: white !important;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(10, 40, 20, 0.85);
+}
+
+/* Mobile-friendly background */
+@media (max-width: 768px) {
+  main.container.plants-background {
+    background-attachment: scroll;
+  }
+}
+
+
+/* PLANTS & GARDENS - WILDFLOWER BACKGROUND */
+
+main.container.plants-background {
+  min-height: 100vh;
+
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.25)
+    ),
+    url("/images/wildflowers.jpg") !important;
+
+  background-color: transparent !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed;
+}
+
+
+/* ==========================================
+   SURVEY - HIKING TRAIL BACKGROUND
+   ========================================== */
+
+main.container.survey-background {
+  min-height: 100vh;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.25)
+    ),
+    url("/images/hiking-trail.jpg") !important;
+
+  background-color: transparent !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed;
+}
+
+/* Translucent survey question boxes */
+.survey-background .survey-question {
+  background: rgba(255, 255, 255, 0.53) !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 24px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark green question headings */
+.survey-background .survey-question h2 {
+  color: #123b25 !important;
+  font-weight: 800;
+  text-shadow: none;
+}
+
+/* Keep answer options readable */
+.survey-background .answer-option {
+  color: #123b25 !important;
+  font-weight: 600;
+}
+
+/* Slightly translucent answer option backgrounds */
+.survey-background .answer-option {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+/* Main survey heading */
+.survey-background > h1 {
+  color: white !important;
+  font-weight: 800;
+  text-shadow: 0 2px 6px rgba(10, 40, 20, 0.85);
+}
+
+/* Survey introduction */
+.survey-background > p {
+  color: white !important;
+  font-weight: 700;
+  text-shadow: 0 2px 5px rgba(10, 40, 20, 0.85);
+}
+
+/* Back to Home link */
+.survey-background > .back-link {
+  color: white !important;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(10, 40, 20, 0.85);
+}
+
+/* Mobile-friendly background */
+@media (max-width: 768px) {
+  main.container.survey-background {
+    background-attachment: scroll;
+  }
+}
