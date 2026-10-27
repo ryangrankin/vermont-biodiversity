@@ -384,13 +384,13 @@ export const individualAnimals = [
   },
 
   {
-    id: "animal-1",
+    id: "little-brown-bat",
     category: "mammals",
-    name: "",
-    description: "",
-    importance: "",
+    name: "Little Brown Bat",
+    description: "Bats are the only mammals that fly. They live in buildings, in tree hollows and under peeling bark. They can eat up to half their weight in insects each night during the summer. This bat’s population in Vermont has been reduced by 90% by the white-nosed-syndrome, a fungal infection and is listed by Vermont as endangered.",
+    importance: "They eat insects that harm crops and carry diseases. Farmers can use less pest control if they have bats helping. They reduce the number of insects bothering you when you are outside like mosquitoes.",
     conservationTip: "",
-    source: "",
+    source: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/mammals/little-brown-bat https://vtdigger.org/2026/10/20/vermont-experts-say-bats-need-our-help-how-do-we-get-over-our-fear-of-them/https://www.sevendaysvt.com/arts-culture/work-barry-and-maureen-genzlinger-rescue-bats-10444077/",
     image: "",
   },
   {
