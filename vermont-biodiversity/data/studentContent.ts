@@ -65,7 +65,7 @@ You can also suggest additional questions.
 // why users should complete this survey.
 
 export const surveyContent = {
-  introduction: "write why users should complete survey here",
+  introduction: "Answer these questions so we can find the right recomandations for you!",
 };
 
 export const surveyQuestions = [
