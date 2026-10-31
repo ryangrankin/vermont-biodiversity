@@ -35,7 +35,7 @@ export const appInfo = {
 
   // STUDENTS: Write a welcome message explaining
   // what your app does and why it matters.
-  welcome: "replace this text with your welcome message",
+  welcome: "Sign in to explore Vermont wildlife, complete your biodiversity survey and get your personalized recommendations for helping to protect Vermont's natural environment",
 
 };
 
