@@ -28,7 +28,7 @@ You only need to write inside the quotation marks.
 export const appInfo = {
 
   // STUDENTS: What is your app's name?
-  name: "replace this text with your apps name",
+  name: "VTBiodiversity",
 
   // STUDENTS: Write a short slogan for your app.
   tagline: "replace this text with your apps slogan",
