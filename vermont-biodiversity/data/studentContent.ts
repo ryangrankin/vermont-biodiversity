@@ -284,6 +284,86 @@ export const recommendations = [
 
 ];
 
+  // RECOMMENDATION 4
+  {
+    id: 4,
+
+    // STUDENTS: Give your recommendation a title.
+    title: "Keep your eyes open for amphibians and report what you see!",
+
+    // STUDENTS: Explain what the user should do.
+    description: "Amphibians migrate when it is above 40 degrees, dark and raining and between March and May. Help conservationists by reporting sightings.",
+
+    // STUDENTS: Explain why this helps biodiversity.
+    whyItMatters: "This helps them understand the species and their range. Report sightings here: iNaturalist Vermont · iNaturalist",
+
+    // STUDENTS: Which survey interests match this tip?
+    // Use the same words as the survey answer choices.
+    interests: [
+      "interest1",
+      "interest2",
+      "interest3",
+    ],
+
+    // STUDENTS: Does the user need a lawn?
+    // Change to true if yes.
+    requiresLawn: false,
+
+    // STUDENTS: Does the user need a garden?
+    // Change to true if yes.
+    requiresGarden: false,
+
+    // STUDENTS: Which months should this tip appear?
+    // January = 1, February = 2 ... December = 12
+    months: [3, 4, 5] as number[],
+
+    // STUDENTS: Where did you find this information?
+    source: "replace this text with your source url",
+  },
+
+];
+
+
+  // RECOMMENDATION 5
+  {
+    id: 5,
+
+    // STUDENTS: Give your recommendation a title.
+    title: "Are you ready for a Big Night out? Go meet the amphibians and save some lives. ",
+
+    // STUDENTS: Explain what the user should do.
+    description: "Amphibians migrate when it is above 40 degrees, dark and raining and between March and May. Become a volunteer amphibian crossing reporter and stop traffic to help anphibians cross.",
+
+    // STUDENTS: Explain why this helps biodiversity.
+    whyItMatters: "This helps amphibians cross roads safely when they migrate",
+
+    // STUDENTS: Which survey interests match this tip?
+    // Use the same words as the survey answer choices.
+    interests: [
+      "interest1",
+      "interest2",
+      "interest3",
+    ],
+
+    // STUDENTS: Does the user need a lawn?
+    // Change to true if yes.
+    requiresLawn: false,
+
+    // STUDENTS: Does the user need a garden?
+    // Change to true if yes.
+    requiresGarden: false,
+
+    // STUDENTS: Which months should this tip appear?
+    // January = 1, February = 2 ... December = 12
+    months: [3, 4, 5] as number[],
+
+    // STUDENTS: Where did you find this information?
+    source: "replace this text with your source url",
+  },
+
+];
+
+
 
 
 // ============================================================
