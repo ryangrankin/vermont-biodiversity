@@ -13,7 +13,7 @@ const categoryPaths = [
 
 export default function AnimalsPage() {
   return (
-    <main className="container">
+    <main className="container animals-background">
       <Link href="/dashboard" className="back-link">
         ← Back to Dashboard
       </Link>

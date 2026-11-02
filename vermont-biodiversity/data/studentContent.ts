@@ -282,8 +282,6 @@ export const recommendations = [
     source: "replace this text with your source url",
   },
 
-];
-
   // RECOMMENDATION 4
   {
     id: 4,
@@ -320,9 +318,6 @@ export const recommendations = [
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
   },
-
-];
-
 
   // RECOMMENDATION 5
   {
