@@ -56,25 +56,50 @@ export default async function AnimalCategoryPage({
       <section className="section">
         <h2>Explore {categoryInfo.title}</h2>
 
-        <div className="info-grid">
-          {categoryAnimals.map((animal) => (
-            <article className="info-card" key={animal.id}>
-              <h3>{animal.name || "Animal Name Coming Soon"}</h3>
+        
+<div className="info-grid">
+  {categoryAnimals.map((animal) => (
+    <article
+      className="info-card"
+      key={animal.id}
+      id={animal.id}
+    >
+      <h3>{animal.name || "Animal Name Coming Soon"}</h3>
 
-              <h4>Description</h4>
-              <p>{animal.description}</p>
+      <h4>Description</h4>
+      <p>{animal.description}</p>
 
-              <h4>Why This Animal Matters</h4>
-              <p>{animal.importance}</p>
+      <h4>Why This Animal Matters</h4>
+      <p>{animal.importance}</p>
 
-              <h4>How People Can Help</h4>
-              <p>{animal.conservationTip}</p>
+      <h4>How People Can Help</h4>
+      <p>{animal.conservationTip}</p>
 
-              <h4>Information Source</h4>
-              <p>{animal.source}</p>
-            </article>
-          ))}
+      <h4>Information Sources</h4>
+
+        {"sources" in animal &&
+        Array.isArray(animal.sources) &&
+        animal.sources.length > 0 ? (
+          <ul className="animal-sources">
+            {animal.sources.map((source) => (
+              <li key={source.url}>
+                <a
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {source.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+              animal.source && <p>{animal.source}</p>
+            )}
+          </article>
+         ))}
         </div>
+
       </section>
     </main>
   );

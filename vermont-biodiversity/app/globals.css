@@ -1207,3 +1207,75 @@ main.container.animals-background {
     background-attachment: scroll;
   }
 }
+
+
+/* Animal research sources */
+
+.animal-sources {
+  margin-top: 8px;
+  padding-left: 22px;
+}
+
+.animal-sources li {
+  margin-bottom: 8px;
+}
+
+.animal-sources a {
+  color: #176b43;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.animal-sources a:hover {
+  color: #0b4027;
+}
+
+/* Position linked animals below navigation */
+.info-card[id] {
+  scroll-margin-top: 100px;
+}
+
+
+/* ==========================================
+   RECOMMENDATION LEARN MORE LINKS
+   ========================================== */
+
+.learn-more-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+
+  background: rgba(23, 107, 67, 0.12);
+  border: 1.5px solid #176b43;
+  border-radius: 8px;
+
+  color: #176b43 !important;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+
+  transition: all 0.2s ease;
+}
+
+.learn-more-link:hover {
+  background: #176b43;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.learn-more-link:focus-visible {
+  outline: 3px solid #176b43;
+  outline-offset: 3px;
+}
+
+/* Keep the completed button on its own line */
+.dashboard-background .info-card .secondary-button {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+}

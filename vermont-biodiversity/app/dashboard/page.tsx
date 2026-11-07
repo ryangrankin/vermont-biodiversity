@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { recommendations } from "@/data/studentContent";
+import {
+  recommendations,
+  individualAnimals,
+  individualPlants,
+} from "@/data/studentContent";
 
 type SurveyAnswers = Record<string, string | string[]>;
 
@@ -137,40 +141,73 @@ export default function DashboardPage() {
             </p>
           </div>
         ) : (
-          <div className="card-grid">
-            {matchedRecommendations.map((tip) => (
-              <article className="info-card" key={tip.id}>
+         
+<div className="card-grid">
+  {matchedRecommendations.map((tip) => {
+    // Find the animal or plant connected to this recommendation.
+    const linkedItem =
+      "learnMore" in tip && tip.learnMore
+        ? tip.learnMore.type === "animal"
+          ? individualAnimals.find(
+              (animal) => animal.id === tip.learnMore.id
+            )
+          : individualPlants.find(
+              (plant) => plant.id === tip.learnMore.id
+            )
+        : null;
 
-                {/* Recommendation title */}
-                <h3>{tip.title}</h3>
+    const learnMoreUrl =
+      "learnMore" in tip && tip.learnMore && linkedItem
+        ? tip.learnMore.type === "animal"
+          ? `/animals/${linkedItem.category}#${linkedItem.id}`
+          : `/plants/${linkedItem.category}#${linkedItem.id}`
+        : null;
 
-                {/* Recommendation description */}
-                <p>{tip.description}</p>
+    return (
+      <article className="info-card" key={tip.id}>
+        {/* Recommendation title */}
+        <h3>{tip.title}</h3>
 
-                {/* Why the recommendation matters */}
-                {tip.whyItMatters && (
-                  <>
-                    <h4>Why This Matters</h4>
-                    <p>{tip.whyItMatters}</p>
-                  </>
-                )}
+        {/* Recommendation description */}
+        <p>{tip.description}</p>
 
-                {/* Mark recommendation completed */}
-                <button
-                  type="button"
-                  className="secondary-button"
-                  onClick={() => toggleCompleted(tip.id)}
-                >
-                  {completed.includes(tip.id)
-                    ? "✓ Completed"
-                    : "Mark as Completed"}
-                </button>
-
-              </article>
-            ))}
-          </div>
+        {/* Why the recommendation matters */}
+        {tip.whyItMatters && (
+          <>
+            <h4>Why This Matters</h4>
+            <p>{tip.whyItMatters}</p>
+          </>
         )}
-      </section>
+
+        {/* Link to the related animal or plant */}
+        {"learnMore" in tip &&
+          tip.learnMore &&
+          learnMoreUrl && (
+            <Link
+              href={learnMoreUrl}
+              className="learn-more-link"
+            >
+              {tip.learnMore.label}
+            </Link>
+          )}
+
+        {/* Mark recommendation completed */}
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={() => toggleCompleted(tip.id)}
+        >
+          {completed.includes(tip.id)
+            ? "✓ Completed"
+            : "Mark as Completed"}
+        </button>
+      </article>
+    );
+  })}
+</div>
+      )}
+    </section>
+
 
       {/* ======================================
           COMPLETED ACTIVITIES
