@@ -494,6 +494,7 @@ learnMoreLinks: [
     label: "Learn more about Milkweed",
   },
 ],
+},
 
 
   
