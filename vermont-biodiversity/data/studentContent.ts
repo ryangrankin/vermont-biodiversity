@@ -429,7 +429,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [7, 8,] as number[],
+    months: [7, 8] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
@@ -474,7 +474,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [10,] as number[],
+    months: [10] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
