@@ -1,7 +1,9 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+
 import {
   recommendations,
   individualAnimals,
@@ -9,6 +11,17 @@ import {
 } from "@/data/studentContent";
 
 type SurveyAnswers = Record<string, string | string[]>;
+
+type LearnMoreItem = {
+  type: string;
+  id: string;
+  label: string;
+};
+
+type NamedSource = {
+  name: string;
+  url: string;
+};
 
 export default function DashboardPage() {
   // ==========================================
@@ -18,16 +31,9 @@ export default function DashboardPage() {
   const [answers, setAnswers] = useState<SurveyAnswers>({});
   const [completed, setCompleted] = useState<number[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState<number | null>(null);
-  useEffect(() => {
-  setCurrentMonth(new Date().getMonth() + 1);
-}, []);
 
   useEffect(() => {
-    // Load previously saved survey answers.
     const savedAnswers = localStorage.getItem("biodiversitySurvey");
-
-    // Load previously completed activities.
     const savedCompleted = localStorage.getItem("completedActivities");
 
     if (savedAnswers) {
@@ -67,28 +73,18 @@ export default function DashboardPage() {
   }
 
   // ==========================================
-  // FILTER PERSONALIZED RECOMMENDATIONS
-  // ==========================================
-  //
-  // This is the basic recommendation system.
-  //
-  // STUDENTS: You do NOT need to edit this code.
-  //
-  // Recommendations are written in:
-  // src/data/studentContent.ts
-  //
-  // We will finalize the matching rules after
-  // students write their survey questions.
+  // FILTER RECOMMENDATIONS
   // ==========================================
 
+  // For now, show all recommendations students have written.
+  // Survey-based filtering can be added when the matching rules
+  // are finalized.
 
-  
-    // Hide recommendations that have not been written yet.
-   const matchedRecommendations = recommendations.filter((tip) => {
-  // Only show recommendations that students have written.
-  return tip.title.trim() !== "" && tip.description.trim() !== "";
-});
-
+  const matchedRecommendations = recommendations.filter(
+    (tip) =>
+      tip.title.trim() !== "" &&
+      tip.description.trim() !== ""
+  );
 
   // ==========================================
   // LOADING SCREEN
@@ -96,7 +92,7 @@ export default function DashboardPage() {
 
   if (!loaded) {
     return (
-      <main className="container">
+      <main className="container dashboard-background">
         <p>Loading...</p>
       </main>
     );
@@ -109,14 +105,11 @@ export default function DashboardPage() {
   return (
     <main className="container dashboard-background">
 
-      {/* ======================================
-          DASHBOARD HEADER
-          ====================================== */}
+      {/* DASHBOARD HEADER */}
 
       <section className="dashboard-header">
         <h1>Your Biodiversity Dashboard</h1>
 
-        {/* STUDENTS: Dashboard introduction */}
         <p>[STUDENTS: WRITE DASHBOARD WELCOME MESSAGE]</p>
 
         <Link href="/survey" className="secondary-button">
@@ -124,9 +117,7 @@ export default function DashboardPage() {
         </Link>
       </section>
 
-      {/* ======================================
-          PERSONALIZED RECOMMENDATIONS
-          ====================================== */}
+      {/* PERSONALIZED RECOMMENDATIONS */}
 
       <section className="section">
         <h2>Your Recommendations</h2>
@@ -134,84 +125,147 @@ export default function DashboardPage() {
         {matchedRecommendations.length === 0 ? (
           <div className="empty-state">
             <h3>Recommendations Coming Soon!</h3>
-
             <p>
               [STUDENTS: YOUR BIODIVERSITY RECOMMENDATIONS
               WILL APPEAR HERE]
             </p>
           </div>
         ) : (
-         
-<div className="card-grid">
-  {matchedRecommendations.map((tip) => {
-    // Find the animal or plant connected to this recommendation.
-    const linkedItem =
-      "learnMore" in tip && tip.learnMore
-        ? tip.learnMore.type === "animal"
-          ? individualAnimals.find(
-              (animal) => animal.id === tip.learnMore.id
-            )
-          : individualPlants.find(
-              (plant) => plant.id === tip.learnMore.id
-            )
-        : null;
+          <div className="card-grid">
+            {matchedRecommendations.map((tip) => {
 
-    const learnMoreUrl =
-      "learnMore" in tip && tip.learnMore && linkedItem
-        ? tip.learnMore.type === "animal"
-          ? `/animals/${linkedItem.category}#${linkedItem.id}`
-          : `/plants/${linkedItem.category}#${linkedItem.id}`
-        : null;
+              // Support both the old single link and
+              // the new multiple-link format.
+              const tipWithLinks = tip as typeof tip & {
+                learnMore?: LearnMoreItem;
+                learnMoreLinks?: LearnMoreItem[];
+                sources?: NamedSource[];
+              };
 
-    return (
-      <article className="info-card" key={tip.id}>
-        {/* Recommendation title */}
-        <h3>{tip.title}</h3>
+              const links: LearnMoreItem[] =
+                Array.isArray(tipWithLinks.learnMoreLinks) &&
+                tipWithLinks.learnMoreLinks.length > 0
+                  ? tipWithLinks.learnMoreLinks
+                  : tipWithLinks.learnMore
+                    ? [tipWithLinks.learnMore]
+                    : [];
 
-        {/* Recommendation description */}
-        <p>{tip.description}</p>
+              // Find the matching animal or plant page.
+              const resolvedLinks = links.flatMap((item) => {
+                if (!item.id?.trim() || !item.label?.trim()) {
+                  return [];
+                }
 
-        {/* Why the recommendation matters */}
-        {tip.whyItMatters && (
-          <>
-            <h4>Why This Matters</h4>
-            <p>{tip.whyItMatters}</p>
-          </>
+                if (item.type === "animal") {
+                  const animal = individualAnimals.find(
+                    (entry) => entry.id === item.id
+                  );
+
+                  return animal
+                    ? [{
+                        href: `/animals/${animal.category}#${animal.id}`,
+                        label: item.label,
+                      }]
+                    : [];
+                }
+
+                if (item.type === "plant") {
+                  const plant = individualPlants.find(
+                    (entry) => entry.id === item.id
+                  );
+
+                  return plant
+                    ? [{
+                        href: `/plants/${plant.category}#${plant.id}`,
+                        label: item.label,
+                      }]
+                    : [];
+                }
+
+                return [];
+              });
+
+              // Only show valid clickable source names.
+              const validSources = (
+                tipWithLinks.sources ?? []
+              ).filter(
+                (source) =>
+                  source.name?.trim() &&
+                  /^https?:\/\//i.test(source.url?.trim() ?? "")
+              );
+
+              return (
+                <article className="info-card" key={tip.id}>
+
+                  {/* RECOMMENDATION TITLE */}
+                  <h3>{tip.title}</h3>
+
+                  {/* DESCRIPTION */}
+                  <p>{tip.description}</p>
+
+                  {/* WHY IT MATTERS */}
+                  {tip.whyItMatters && (
+                    <>
+                      <h4>Why This Matters</h4>
+                      <p>{tip.whyItMatters}</p>
+                    </>
+                  )}
+
+                  {/* CLICKABLE RESEARCH SOURCES */}
+                  {validSources.length > 0 && (
+                    <div className="recommendation-sources">
+                      <h4>Sources</h4>
+
+                      <ul>
+                        {validSources.map((source, index) => (
+                          <li key={`${source.url}-${index}`}>
+                            <a
+                              href={source.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {source.name}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* LINKS TO RELATED ANIMALS AND PLANTS */}
+                  {resolvedLinks.length > 0 && (
+                    <div className="recommendation-learn-more">
+                      {resolvedLinks.map((item, index) => (
+                        <Link
+                          key={`${item.href}-${index}`}
+                          href={item.href}
+                          className="learn-more-link"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* MARK AS COMPLETED */}
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    onClick={() => toggleCompleted(tip.id)}
+                  >
+                    {completed.includes(tip.id)
+                      ? "✓ Completed"
+                      : "Mark as Completed"}
+                  </button>
+
+                </article>
+              );
+            })}
+          </div>
         )}
+      </section>
 
-        {/* Link to the related animal or plant */}
-        {"learnMore" in tip &&
-          tip.learnMore &&
-          learnMoreUrl && (
-            <Link
-              href={learnMoreUrl}
-              className="learn-more-link"
-            >
-              {tip.learnMore.label}
-            </Link>
-          )}
-
-        {/* Mark recommendation completed */}
-        <button
-          type="button"
-          className="secondary-button"
-          onClick={() => toggleCompleted(tip.id)}
-        >
-          {completed.includes(tip.id)
-            ? "✓ Completed"
-            : "Mark as Completed"}
-        </button>
-      </article>
-    );
-  })}
-</div>
-      )}
-    </section>
-
-
-      {/* ======================================
-          COMPLETED ACTIVITIES
-          ====================================== */}
+      {/* COMPLETED ACTIVITIES */}
 
       <section className="section">
         <h2>Your Progress</h2>
@@ -224,102 +278,68 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* ======================================
-          EXPLORE MORE
-          ====================================== */}
+      {/* EXPLORE MORE */}
 
       <section className="section">
         <h2>Explore More</h2>
 
         <div className="card-grid">
 
-          {/* ==================================
-              ANIMALS
-              ================================== */}
-
           <div className="info-card">
             <h3>Animals</h3>
-
             <p>[STUDENTS: ANIMAL CONTENT]</p>
 
-            <Link
-              href="/animals"
-              className="secondary-button"
-            >
+            <Link href="/animals" className="secondary-button">
               Explore Animals →
             </Link>
           </div>
 
-          {/* ==================================
-    PLANTS & GARDENS
-    ================================== */}
+          <div className="info-card">
+            <h3>Plants & Gardens</h3>
+            <p>[STUDENTS: PLANT CONTENT]</p>
 
-<div className="info-card">
-  <h3>Plants & Gardens</h3>
-
-  <p>[STUDENTS: PLANT CONTENT]</p>
-
-  <Link href="/plants" className="secondary-button">
-    Explore Plants & Gardens →
-  </Link>
-</div>
-
-          {/* ==================================
-              WILDLIFE CAM
-              ================================== */}
+            <Link href="/plants" className="secondary-button">
+              Explore Plants & Gardens →
+            </Link>
+          </div>
 
           <div className="info-card">
-  <h3>Wildlife Cam</h3>
+            <h3>Wildlife Cam</h3>
+            <p>[STUDENTS: WILDLIFE CONTENT]</p>
 
-  <p>[STUDENTS: WILDLIFE CONTENT]</p>
+            <Link href="/wildlife-cam" className="secondary-button">
+              Explore Wildlife Photos & Videos →
+            </Link>
+          </div>
 
-  <Link href="/wildlife-cam" className="secondary-button">
-    Explore Wildlife Photos & Videos →
-  </Link>
-</div>
+          <div className="info-card">
+            <h3>Wildlife Sightings Gallery</h3>
 
-{/* WILDLIFE GALLERY */}
+            <p>
+              Explore wildlife sightings shared by the community
+              and approved by the LEGO Club!
+            </p>
 
-<div className="info-card">
-  <h3>Wildlife Sightings Gallery</h3>
+            <Link href="/gallery" className="secondary-button">
+              View Wildlife Gallery →
+            </Link>
+          </div>
 
-  <p>
-    Explore wildlife sightings shared by the community
-    and approved by the LEGO Club!
-  </p>
+          <div className="info-card">
+            <h3>Share a Wildlife Sighting</h3>
 
-  <Link
-    href="/gallery"
-    className="secondary-button"
-  >
-    View Wildlife Gallery →
-  </Link>
-</div>
+            <p>
+              Spotted an animal or plant in Vermont?
+              Share your discovery and upload a wildlife photograph!
+            </p>
 
-
-{/* SUBMIT A WILDLIFE SIGHTING */}
-
-<div className="info-card">
-  <h3>Share a Wildlife Sighting</h3>
-
-  <p>
-    Spotted an animal or plant in Vermont?
-    Share your discovery and upload a wildlife photograph!
-  </p>
-
-  <Link
-    href="/sightings"
-    className="secondary-button"
-  >
-    Submit a Sighting →
-  </Link>
-</div>
-
-
+            <Link href="/sightings" className="secondary-button">
+              Submit a Sighting →
+            </Link>
+          </div>
 
         </div>
       </section>
-
     </main>
   );
 }

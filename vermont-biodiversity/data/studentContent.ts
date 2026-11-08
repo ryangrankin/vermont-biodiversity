@@ -481,17 +481,22 @@ export const recommendations = [
   
     // STUDENTS: Link this recommendation to an animal or plant.
 
-  learnMore: {
+  
+learnMoreLinks: [
+  {
     type: "animal",
-    id: "american goldfinch",
+    id: "american-goldfinch",
     label: "Learn more about the American Goldfinch",
-
-  learnMore: {
+  },
+  {
     type: "plant",
     id: "milkweed",
     label: "Learn more about Milkweed",
   },
-  },
+],
+
+
+  
 ];
 
 
@@ -1108,7 +1113,7 @@ export const individualPlants = [
     image: "",
   },
   {
-    id: "plant-3",
+    id: "milkweed",
     category: "trees",
     name: "",
     description: "",

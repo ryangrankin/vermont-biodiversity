@@ -1279,3 +1279,18 @@ main.container.animals-background {
   width: fit-content;
   margin-top: 8px;
 }
+
+
+/* MULTIPLE LEARN MORE LINKS */
+
+.recommendation-learn-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.recommendation-learn-more .learn-more-link {
+  margin: 0;
+}
