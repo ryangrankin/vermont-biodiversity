@@ -406,7 +406,7 @@ export const recommendations = [
     title: "Attract American Goldfinches to your yard ",
 
     // STUDENTS: Explain what the user should do.
-    description: "It is easy to attract American Goldfinches your bird feeder with the right seeds: thistle, sunflower or nyjer. Put the seeds in an upright tube feeder that allows them to feed upright and upside down like they are used to when feeding from a plant. ",
+    description: "It is easy to attract American Goldfinches to your bird feeder with the right seeds: thistle, sunflower or nyjer. Put the seeds in an upright tube feeder that allows them to feed upright and upside down like they are used to when feeding from a plant. ",
 
     // STUDENTS: Explain why this helps biodiversity.
     whyItMatters: "This helps the American Goldfinch get food for winter and gives you glimpses of the state bird for multiple states!",
