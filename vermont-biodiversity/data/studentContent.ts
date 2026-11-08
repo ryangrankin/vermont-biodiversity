@@ -491,9 +491,8 @@ export const recommendations = [
     id: "milkweed",
     label: "Learn more about Milkweed",
   },
+  },
 ];
-
-
 
 
 // ============================================================
