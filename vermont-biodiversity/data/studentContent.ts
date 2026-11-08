@@ -398,6 +398,99 @@ export const recommendations = [
   },
   },
 
+  // RECOMMENDATION 6
+  {
+    id: 6,
+
+    // STUDENTS: Give your recommendation a title.
+    title: "Attract American Goldfinches to your yard ",
+
+    // STUDENTS: Explain what the user should do.
+    description: "It is easy to attract American Goldfinches your bird feeder with the right seeds: thistle, sunflower or nyjer. Put the seeds in an upright tube feeder that allows them to feed upright and upside down like they are used to when feeding from a plant. ",
+
+    // STUDENTS: Explain why this helps biodiversity.
+    whyItMatters: "This helps the American Goldfinch get food for winter and gives you glimpses of the state bird for multiple states!",
+
+    // STUDENTS: Which survey interests match this tip?
+    // Use the same words as the survey answer choices.
+    interests: [
+      "interest1",
+      "interest2",
+      "interest3",
+    ],
+
+    // STUDENTS: Does the user need a lawn?
+    // Change to true if yes.
+    requiresLawn: false,
+
+    // STUDENTS: Does the user need a garden?
+    // Change to true if yes.
+    requiresGarden: false,
+
+    // STUDENTS: Which months should this tip appear?
+    // January = 1, February = 2 ... December = 12
+    months: [7, 8,] as number[],
+
+    // STUDENTS: Where did you find this information?
+    source: "replace this text with your source url",
+  
+    // STUDENTS: Link this recommendation to an animal or plant.
+
+  learnMore: {
+    type: "animal",
+    id: "american goldfinch",
+    label: "Learn more about the American Goldfinch",
+  },
+  },
+
+  // RECOMMENDATION 7
+  {
+    id: 7,
+
+    // STUDENTS: Give your recommendation a title.
+    title: "What to plant to help American Goldfinches ",
+
+    // STUDENTS: Explain what the user should do.
+    description: "You can plant native thistle and/or milkweed in your yard. They will eat the seeds of these plants in July and August. Also, they also use these plants to make their nests along with other materials. ",
+
+    // STUDENTS: Explain why this helps biodiversity.
+    whyItMatters: "This helps the American Goldfinch get food and materials to build nests!",
+
+    // STUDENTS: Which survey interests match this tip?
+    // Use the same words as the survey answer choices.
+    interests: [
+      "interest1",
+      "interest2",
+      "interest3",
+    ],
+
+    // STUDENTS: Does the user need a lawn?
+    // Change to true if yes.
+    requiresLawn: false,
+
+    // STUDENTS: Does the user need a garden?
+    // Change to true if yes.
+    requiresGarden: true,
+
+    // STUDENTS: Which months should this tip appear?
+    // January = 1, February = 2 ... December = 12
+    months: [10,] as number[],
+
+    // STUDENTS: Where did you find this information?
+    source: "replace this text with your source url",
+  
+    // STUDENTS: Link this recommendation to an animal or plant.
+
+  learnMore: {
+    type: "animal",
+    id: "american goldfinch",
+    label: "Learn more about the American Goldfinch",
+
+  learnMore: {
+    type: "plant",
+    id: "milkweed",
+    label: "Learn more about Milkweed",
+  },
 ];
 
 
@@ -672,11 +765,11 @@ export const individualAnimals = [
     image: "",
   },
   {
-    id: "animal-5",
+    id: "american goldfinch",
     category: "birds",
-    name: "",
-    description: "",
-    importance: "",
+    name: "American Goldfinch",
+    description: "The American Goldfinch lives in Vermont year-round. In the spring and summer, males are bright yellow with black on their head and wings and the females are yellowish green. In the winter, they turn brown. They are almost entirely vegetarian. Their favorite seed is from thistle plants. They use grass, bark, milkweed, thistle, cattail down and spider webs to weave their nests. They nest in July and August when there are a lot of thistles seeds. One of their calls is po-ta-to-chip ",
+    importance: "Similar to other songbirds, there are fewer American Goldfinches than there used to be. Because they eat several types of seeds, if you see a lot of these birds, it is a sign of a healthy and diverse plant community. ",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -688,12 +781,12 @@ export const individualAnimals = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "Audubon Ten Fun Facts About the American Goldfinch",
+      url: "https://www.audubon.org/magazine/10-fun-facts-about-american-goldfinch",
     },
     {
-      name: "",
-      url: "",
+      name: "Fish & Wildlife American Goldfinch",
+      url: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/birds/american-goldfinch",
     },
     {
       name: "",
