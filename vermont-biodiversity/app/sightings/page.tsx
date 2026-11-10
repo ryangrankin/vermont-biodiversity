@@ -41,9 +41,10 @@ export default function SightingsPage() {
   // RECOMMENDATION IDEA FORM
   // ============================================================
 
-  const [ideaDescription, setIdeaDescription] = useState("");
-  const [ideaMonth, setIdeaMonth] = useState("");
-  const [ideaUrl, setIdeaUrl] = useState("");
+ const [ideaTitle, setIdeaTitle] = useState("");
+const [ideaDescription, setIdeaDescription] = useState("");
+const [ideaMonths, setIdeaMonths] = useState<number[]>([]);
+const [ideaUrl, setIdeaUrl] = useState("");
 
   const [ideaSubmitting, setIdeaSubmitting] = useState(false);
   const [ideaError, setIdeaError] = useState("");
@@ -162,8 +163,9 @@ export default function SightingsPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            title: ideaTitle.trim(),
             description: ideaDescription.trim(),
-            suggested_month: ideaMonth || null,
+            months: ideaMonths,
             information_url: ideaUrl.trim() || null,
           }),
         }
@@ -197,8 +199,9 @@ export default function SightingsPage() {
       );
 
       // Reset recommendation form
+      setIdeaTitle("");
       setIdeaDescription("");
-      setIdeaMonth("");
+      setIdeaMonths([]);
       setIdeaUrl("");
     } catch (error) {
       setIdeaError(
@@ -400,6 +403,23 @@ export default function SightingsPage() {
         </p>
 
         <form onSubmit={handleIdeaSubmit}>
+
+{/* RECOMMENDATION TITLE */}
+
+<label htmlFor="idea-title">
+  Recommendation Title
+</label>
+
+<input
+  id="idea-title"
+  type="text"
+  value={ideaTitle}
+  onChange={(event) => setIdeaTitle(event.target.value)}
+  placeholder="e.g., Help Vermont's Pollinators"
+  maxLength={150}
+  required
+/>
+
           {/* IDEA DESCRIPTION */}
 
           <label htmlFor="idea-description">
@@ -418,29 +438,71 @@ export default function SightingsPage() {
             required
           />
 
-          {/* SUGGESTED MONTH */}
+          
+{/* RECOMMENDATION MONTHS */}
 
-          <label htmlFor="idea-month">
-            Suggested Month (Optional)
-          </label>
+<fieldset
+  style={{
+    border: "none",
+    padding: 0,
+    marginTop: 24,
+    marginBottom: 24,
+  }}
+>
+  <legend style={{ fontWeight: 600 }}>
+    Which months is this recommendation relevant?
+  </legend>
 
-          <select
-            id="idea-month"
-            value={ideaMonth}
-            onChange={(event) =>
-              setIdeaMonth(event.target.value)
-            }
-          >
-            <option value="">
-              Any Month / Not Sure
-            </option>
+  <p>
+    Select all that apply. Leave everything unchecked
+    if this recommendation is relevant year-round.
+  </p>
 
-            {MONTHS.map((month) => (
-              <option key={month} value={month}>
-                {month}
-              </option>
-            ))}
-          </select>
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns:
+        "repeat(auto-fit, minmax(140px, 1fr))",
+      gap: 12,
+      marginTop: 16,
+    }}
+  >
+    {MONTHS.map((month, index) => {
+      const monthNumber = index + 1;
+
+      return (
+        <label
+          key={month}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            cursor: "pointer",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={ideaMonths.includes(monthNumber)}
+            onChange={(event) => {
+              setIdeaMonths((previous) =>
+                event.target.checked
+                  ? [...previous, monthNumber].sort(
+                      (a, b) => a - b
+                    )
+                  : previous.filter(
+                      (value) => value !== monthNumber
+                    )
+              );
+            }}
+          />
+
+          {month}
+        </label>
+      );
+    })}
+  </div>
+</fieldset>
+
 
           {/* INFORMATION URL */}
 

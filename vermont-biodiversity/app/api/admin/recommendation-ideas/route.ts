@@ -1,9 +1,10 @@
 
-import { NextRequest, NextResponse } from "next/server";
+import { connection, NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function GET(request: NextRequest) {
+    await connection();
   try {
     const authorization =
       request.headers.get("authorization");
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
       await supabaseAdmin
         .from("recommendation_ideas")
         .select(
-          "id, description, suggested_month, information_url, created_at"
+            "id, title, description, months, suggested_month, information_url, created_at"
         )
         .eq("status", "pending")
         .order("created_at", { ascending: false });

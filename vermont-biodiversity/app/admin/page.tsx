@@ -18,10 +18,20 @@ type Sighting = {
 
 type RecommendationIdea = {
   id: string;
+  title: string | null;
   description: string;
+  months: number[] | null;
   suggested_month: string | null;
   information_url: string | null;
   created_at: string;
+};
+
+type IdeaReview = {
+  title: string;
+  interests: string[];
+  months: number[];
+  requires_lawn: boolean;
+  requires_garden: boolean;
 };
 
 type DashboardStatus =
@@ -29,6 +39,77 @@ type DashboardStatus =
   | "authorized"
   | "denied"
   | "error";
+
+// Keep these identical to the survey answer options.
+const INTEREST_OPTIONS = [
+  "Hiking",
+  "Mountian Biking",
+  "Boating",
+  "Birdwatching",
+];
+
+const MONTH_NAMES = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+
+function initialReview(idea: RecommendationIdea): IdeaReview {
+  const suggested = idea.suggested_month?.trim().toLowerCase();
+
+  const monthIndex = MONTH_NAMES.findIndex(
+    (name) =>
+      Boolean(suggested) &&
+      (name.toLowerCase() === suggested ||
+        name.slice(0, 3).toLowerCase() === suggested?.slice(0, 3))
+  );
+
+  return {
+    title: idea.title ?? "",
+    interests: [],
+    months: Array.isArray(idea.months)
+      ? idea.months
+      : monthIndex >= 0
+        ? [monthIndex + 1]
+        : [],
+    requires_lawn: false,
+    requires_garden: false,
+  };
+}
+
+
+const cardStyle: React.CSSProperties = {
+  border: "1px solid #ccc",
+  borderRadius: 12,
+  padding: 20,
+};
+
+const fieldStyle: React.CSSProperties = {
+  display: "block",
+  width: "100%",
+  padding: 10,
+  marginTop: 8,
+  border: "1px solid #aaa",
+  borderRadius: 8,
+};
+
+const buttonStyle: React.CSSProperties = {
+  padding: "10px 18px",
+  color: "white",
+  border: "none",
+  borderRadius: 8,
+  cursor: "pointer",
+};
 
 export default function AdminPage() {
   const router = useRouter();
@@ -50,8 +131,10 @@ export default function AdminPage() {
   const [loadingSightings, setLoadingSightings] = useState(true);
   const [processingId, setProcessingId] =
     useState<string | null>(null);
+
   const [reviewedPhotos, setReviewedPhotos] =
     useState<string[]>([]);
+
   const [moderationError, setModerationError] = useState("");
 
   // ============================================================
@@ -60,9 +143,31 @@ export default function AdminPage() {
 
   const [ideas, setIdeas] = useState<RecommendationIdea[]>([]);
   const [loadingIdeas, setLoadingIdeas] = useState(true);
+
   const [processingIdeaId, setProcessingIdeaId] =
     useState<string | null>(null);
+
   const [ideaError, setIdeaError] = useState("");
+
+  const [ideaReviews, setIdeaReviews] =
+    useState<Record<string, IdeaReview>>({});
+
+  function updateIdeaReview(
+    id: string,
+    changes: Partial<IdeaReview>
+  ) {
+    const idea = ideas.find((item) => item.id === id);
+
+    if (!idea) return;
+
+    setIdeaReviews((previous) => ({
+      ...previous,
+      [id]: {
+        ...(previous[id] ?? initialReview(idea)),
+        ...changes,
+      },
+    }));
+  }
 
   // ============================================================
   // LOAD ADMIN DASHBOARD
@@ -83,7 +188,6 @@ export default function AdminPage() {
 
         const token = data.session.access_token;
 
-        // Verify administrator permissions.
         const verifyResponse = await fetch(
           "/api/admin/verify",
           {
@@ -119,8 +223,7 @@ export default function AdminPage() {
 
         if (!cancelled) setStatus("authorized");
 
-        // Load wildlife sightings and recommendation ideas
-        // independently so one failure does not hide the other.
+        // Load both review queues independently.
         const [sightingsResult, ideasResult] =
           await Promise.allSettled([
             fetch("/api/admin/sightings", {
@@ -137,7 +240,6 @@ export default function AdminPage() {
             }),
           ]);
 
-        // Wildlife sightings
         if (sightingsResult.status === "fulfilled") {
           try {
             const response = sightingsResult.value;
@@ -165,7 +267,6 @@ export default function AdminPage() {
           setModerationError("Unable to load sightings.");
         }
 
-        // Recommendation ideas
         if (ideasResult.status === "fulfilled") {
           try {
             const response = ideasResult.value;
@@ -179,7 +280,18 @@ export default function AdminPage() {
             }
 
             if (!cancelled) {
-              setIdeas(result.ideas ?? []);
+              const loadedIdeas: RecommendationIdea[] =
+                result.ideas ?? [];
+
+              setIdeas(loadedIdeas);
+
+              const initial: Record<string, IdeaReview> = {};
+
+              loadedIdeas.forEach((idea) => {
+                initial[idea.id] = initialReview(idea);
+              });
+
+              setIdeaReviews(initial);
             }
           } catch (error) {
             if (!cancelled) {
@@ -220,7 +332,7 @@ export default function AdminPage() {
   }, [router]);
 
   // ============================================================
-  // APPROVE OR REJECT WILDLIFE SIGHTING
+  // APPROVE OR REJECT WILDLIFE SIGHTINGS
   // ============================================================
 
   async function moderateSighting(
@@ -293,13 +405,27 @@ export default function AdminPage() {
   }
 
   // ============================================================
-  // APPROVE OR REJECT RECOMMENDATION IDEA
+  // APPROVE OR REJECT RECOMMENDATION IDEAS
   // ============================================================
 
   async function moderateIdea(
     id: string,
     newStatus: "approved" | "rejected"
   ) {
+    const idea = ideas.find((item) => item.id === id);
+
+    if (!idea) return;
+
+    const review =
+      ideaReviews[id] ?? initialReview(idea);
+
+    if (newStatus === "approved" && !review.title.trim()) {
+      setIdeaError(
+        "Please enter a title before approving the recommendation."
+      );
+      return;
+    }
+
     const action =
       newStatus === "approved" ? "approve" : "reject";
 
@@ -323,6 +449,20 @@ export default function AdminPage() {
         return;
       }
 
+      const body =
+        newStatus === "approved"
+          ? {
+              status: "approved",
+              title: review.title.trim(),
+              interests: review.interests,
+              months: review.months,
+              requires_lawn: review.requires_lawn,
+              requires_garden: review.requires_garden,
+            }
+          : {
+              status: "rejected",
+            };
+
       const response = await fetch(
         `/api/admin/recommendation-ideas/${encodeURIComponent(id)}`,
         {
@@ -332,9 +472,7 @@ export default function AdminPage() {
             Authorization:
               `Bearer ${data.session.access_token}`,
           },
-          body: JSON.stringify({
-            status: newStatus,
-          }),
+          body: JSON.stringify(body),
         }
       );
 
@@ -348,8 +486,14 @@ export default function AdminPage() {
       }
 
       setIdeas((previous) =>
-        previous.filter((idea) => idea.id !== id)
+        previous.filter((item) => item.id !== id)
       );
+
+      setIdeaReviews((previous) => {
+        const updated = { ...previous };
+        delete updated[id];
+        return updated;
+      });
     } catch (error) {
       setIdeaError(
         error instanceof Error
@@ -418,7 +562,7 @@ export default function AdminPage() {
       </header>
 
       {/* ======================================================
-          WILDLIFE SIGHTINGS SECTION
+          WILDLIFE SIGHTINGS
       ====================================================== */}
 
       <section>
@@ -443,14 +587,7 @@ export default function AdminPage() {
             }}
           >
             {sightings.map((sighting) => (
-              <article
-                key={sighting.id}
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: 12,
-                  padding: 20,
-                }}
-              >
+              <article key={sighting.id} style={cardStyle}>
                 <h3>{sighting.species}</h3>
 
                 <p>
@@ -481,9 +618,7 @@ export default function AdminPage() {
 
                 {sighting.photo_path && (
                   <div>
-                    <SightingPhoto
-                      sightingId={sighting.id}
-                    />
+                    <SightingPhoto sightingId={sighting.id} />
 
                     <label
                       style={{
@@ -508,6 +643,7 @@ export default function AdminPage() {
                           );
                         }}
                       />
+
                       I have reviewed this wildlife photograph.
                     </label>
                   </div>
@@ -535,11 +671,8 @@ export default function AdminPage() {
                       )
                     }
                     style={{
-                      padding: "10px 18px",
+                      ...buttonStyle,
                       backgroundColor: "#276749",
-                      color: "white",
-                      border: "none",
-                      borderRadius: 8,
                     }}
                   >
                     {processingId === sighting.id
@@ -557,11 +690,8 @@ export default function AdminPage() {
                       )
                     }
                     style={{
-                      padding: "10px 18px",
+                      ...buttonStyle,
                       backgroundColor: "#9b2c2c",
-                      color: "white",
-                      border: "none",
-                      borderRadius: 8,
                     }}
                   >
                     Reject
@@ -574,16 +704,17 @@ export default function AdminPage() {
       </section>
 
       {/* ======================================================
-          RECOMMENDATION IDEAS SECTION
+          RECOMMENDATION IDEAS
       ====================================================== */}
 
       <section style={{ marginTop: 56 }}>
         <h2>Pending Recommendation Ideas</h2>
 
         <p>
-          Review activity and project ideas submitted by
-          visitors. Approved ideas can be added to the app
-          by LEGO Club students.
+          Review submitted ideas and assign categories before
+          approving them. Approved recommendations will be
+          eligible for the personalized dashboard once the
+          public recommendation integration is complete.
         </p>
 
         {ideaError && (
@@ -604,92 +735,314 @@ export default function AdminPage() {
               marginTop: 20,
             }}
           >
-            {ideas.map((idea) => (
-              <article
-                key={idea.id}
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: 12,
-                  padding: 20,
-                }}
-              >
-                <h3>Recommendation Idea</h3>
+            {ideas.map((idea) => {
+              const review =
+                ideaReviews[idea.id] ?? initialReview(idea);
 
-                <p style={{ whiteSpace: "pre-wrap" }}>
-                  {idea.description}
-                </p>
+              return (
+                <article key={idea.id} style={cardStyle}>
+                  <h3>Recommendation Idea</h3>
 
-                <p>
-                  <strong>Suggested Month:</strong>{" "}
-                  {idea.suggested_month || "Any month"}
-                </p>
-
-                {idea.information_url && (
-                  <p>
-                    <strong>More Information:</strong>{" "}
-                    <a
-                      href={idea.information_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Resource
-                    </a>
+                  <p style={{ whiteSpace: "pre-wrap" }}>
+                    {idea.description}
                   </p>
-                )}
 
-                <p>
-                  <strong>Submitted:</strong>{" "}
-                  {new Date(
-                    idea.created_at
-                  ).toLocaleDateString()}
-                </p>
+                  <p>
+                    <strong>Suggested Month:</strong>{" "}
+                    {idea.suggested_month || "Any month"}
+                  </p>
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 12,
-                    marginTop: 20,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <button
-                    type="button"
-                    disabled={processingIdeaId !== null}
-                    onClick={() =>
-                      moderateIdea(idea.id, "approved")
-                    }
+                  {idea.information_url && (
+                    <p>
+                      <strong>More Information:</strong>{" "}
+                      <a
+                        href={idea.information_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Resource
+                      </a>
+                    </p>
+                  )}
+
+                  <p>
+                    <strong>Submitted:</strong>{" "}
+                    {new Date(
+                      idea.created_at
+                    ).toLocaleDateString()}
+                  </p>
+
+                  {/* ------------------------------------------
+                      ADMIN CATEGORIZATION
+                  ------------------------------------------ */}
+
+                  <div
                     style={{
-                      padding: "10px 18px",
-                      backgroundColor: "#276749",
-                      color: "white",
-                      border: "none",
-                      borderRadius: 8,
+                      marginTop: 24,
+                      padding: 20,
+                      backgroundColor: "#f3f6f2",
+                      borderRadius: 10,
+                      color: "#222",
                     }}
                   >
-                    {processingIdeaId === idea.id
-                      ? "Processing..."
-                      : "Approve"}
-                  </button>
+                    <h4>Prepare Recommendation for Publishing</h4>
 
-                  <button
-                    type="button"
-                    disabled={processingIdeaId !== null}
-                    onClick={() =>
-                      moderateIdea(idea.id, "rejected")
-                    }
+                    <p>
+                      Choose who should receive this recommendation
+                      and when it should appear.
+                    </p>
+
+                    {/* TITLE */}
+
+                    <label
+                      htmlFor={`title-${idea.id}`}
+                      style={{ fontWeight: 600 }}
+                    >
+                      Recommendation Title
+                    </label>
+
+                    <input
+                      id={`title-${idea.id}`}
+                      type="text"
+                      maxLength={150}
+                      placeholder="Enter a short title"
+                      value={review.title}
+                      onChange={(event) =>
+                        updateIdeaReview(idea.id, {
+                          title: event.target.value,
+                        })
+                      }
+                      style={fieldStyle}
+                    />
+
+                    {/* INTERESTS */}
+
+                    <fieldset
+                      style={{
+                        marginTop: 24,
+                        border: "none",
+                        padding: 0,
+                      }}
+                    >
+                      <legend style={{ fontWeight: 600 }}>
+                        Relevant Interests
+                      </legend>
+
+                      <p>
+                        Select all that apply. Leave everything
+                        unchecked if this idea is relevant to
+                        everyone.
+                      </p>
+
+                      {INTEREST_OPTIONS.map((interest) => (
+                        <label
+                          key={interest}
+                          style={{
+                            display: "flex",
+                            gap: 10,
+                            alignItems: "center",
+                            marginBottom: 10,
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={review.interests.includes(
+                              interest
+                            )}
+                            onChange={(event) => {
+                              const updated = event.target.checked
+                                ? [...review.interests, interest]
+                                : review.interests.filter(
+                                    (item) => item !== interest
+                                  );
+
+                              updateIdeaReview(idea.id, {
+                                interests: updated,
+                              });
+                            }}
+                          />
+
+                          {interest}
+                        </label>
+                      ))}
+                    </fieldset>
+
+                    {/* MONTHS */}
+
+                    <fieldset
+                      style={{
+                        marginTop: 24,
+                        border: "none",
+                        padding: 0,
+                      }}
+                    >
+                      <legend style={{ fontWeight: 600 }}>
+                        Applicable Months
+                      </legend>
+
+                      <p>
+                        Select all months when this recommendation
+                        is relevant. Leave all unchecked for
+                        year-round recommendations.
+                      </p>
+
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            "repeat(auto-fit, minmax(120px, 1fr))",
+                          gap: 10,
+                        }}
+                      >
+                        {MONTH_NAMES.map((month, index) => {
+                          const monthNumber = index + 1;
+
+                          return (
+                            <label
+                              key={month}
+                              style={{
+                                display: "flex",
+                                gap: 8,
+                                alignItems: "center",
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={review.months.includes(
+                                  monthNumber
+                                )}
+                                onChange={(event) => {
+                                  const updated =
+                                    event.target.checked
+                                      ? [
+                                          ...review.months,
+                                          monthNumber,
+                                        ]
+                                      : review.months.filter(
+                                          (value) =>
+                                            value !== monthNumber
+                                        );
+
+                                  updateIdeaReview(idea.id, {
+                                    months: updated.sort(
+                                      (a, b) => a - b
+                                    ),
+                                  });
+                                }}
+                              />
+
+                              {month}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
+
+                    {/* LAWN AND GARDEN */}
+
+                    <fieldset
+                      style={{
+                        marginTop: 24,
+                        border: "none",
+                        padding: 0,
+                      }}
+                    >
+                      <legend style={{ fontWeight: 600 }}>
+                        Space Requirements
+                      </legend>
+
+                      <label
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          marginTop: 12,
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={review.requires_lawn}
+                          onChange={(event) =>
+                            updateIdeaReview(idea.id, {
+                              requires_lawn: event.target.checked,
+                            })
+                          }
+                        />
+
+                        Requires a lawn
+                      </label>
+
+                      <label
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          marginTop: 12,
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={review.requires_garden}
+                          onChange={(event) =>
+                            updateIdeaReview(idea.id, {
+                              requires_garden: event.target.checked,
+                            })
+                          }
+                        />
+
+                        Requires a garden
+                      </label>
+                    </fieldset>
+                  </div>
+
+                  {/* ------------------------------------------
+                      APPROVAL BUTTONS
+                  ------------------------------------------ */}
+
+                  <div
                     style={{
-                      padding: "10px 18px",
-                      backgroundColor: "#9b2c2c",
-                      color: "white",
-                      border: "none",
-                      borderRadius: 8,
+                      display: "flex",
+                      gap: 12,
+                      marginTop: 20,
+                      flexWrap: "wrap",
                     }}
                   >
-                    Reject
-                  </button>
-                </div>
-              </article>
-            ))}
+                    <button
+                      type="button"
+                      disabled={
+                        processingIdeaId !== null ||
+                        !review.title.trim()
+                      }
+                      onClick={() =>
+                        moderateIdea(idea.id, "approved")
+                      }
+                      style={{
+                        ...buttonStyle,
+                        backgroundColor: "#276749",
+                      }}
+                    >
+                      {processingIdeaId === idea.id
+                        ? "Processing..."
+                        : "Approve Recommendation"}
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={processingIdeaId !== null}
+                      onClick={() =>
+                        moderateIdea(idea.id, "rejected")
+                      }
+                      style={{
+                        ...buttonStyle,
+                        backgroundColor: "#9b2c2c",
+                      }}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
