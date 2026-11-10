@@ -8,7 +8,11 @@ export async function POST(request: NextRequest) {
 
     const email = String(body.email ?? "").trim().toLowerCase();
     const password = body.password;
-    const signupCode = body.code ?? body.signupCode;
+    const signupCode =
+  body.code ??
+  body.signupCode ??
+  body.adminCode ??
+  body.inviteCode;
 
     // Shared code stored securely on the server
     const correctCode = process.env.ADMIN_SIGNUP_CODE;
