@@ -326,11 +326,11 @@ export default function DashboardPage() {
           </div>
 
           <div className="info-card">
-            <h3>Share a Wildlife Sighting</h3>
+            <h3>Share a Wildlife Sighting or Reccommendation</h3>
 
             <p>
-              Spotted an animal or plant in Vermont?
-              Share your discovery and upload a wildlife photograph!
+              Spotted an animal or plant in Vermont? Have a useful tip for other Vermonters?
+              Share your tip or upload a wildlife photograph!
             </p>
 
             <Link href="/sightings" className="secondary-button">
