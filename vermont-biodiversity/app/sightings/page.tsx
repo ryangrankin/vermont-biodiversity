@@ -6,7 +6,26 @@ import { useEffect, useState, type FormEvent } from "react";
 
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 export default function SightingsPage() {
+  // ============================================================
+  // WILDLIFE SIGHTING FORM
+  // ============================================================
+
   const [species, setSpecies] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -18,16 +37,37 @@ export default function SightingsPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  useEffect(() => {
-  const now = new Date();
-  const localDate = [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0"),
-  ].join("-");
+  // ============================================================
+  // RECOMMENDATION IDEA FORM
+  // ============================================================
 
-  setToday(localDate);
-}, []);
+  const [ideaDescription, setIdeaDescription] = useState("");
+  const [ideaMonth, setIdeaMonth] = useState("");
+  const [ideaUrl, setIdeaUrl] = useState("");
+
+  const [ideaSubmitting, setIdeaSubmitting] = useState(false);
+  const [ideaError, setIdeaError] = useState("");
+  const [ideaSuccess, setIdeaSuccess] = useState("");
+
+  // ============================================================
+  // SET TODAY'S DATE
+  // ============================================================
+
+  useEffect(() => {
+    const now = new Date();
+
+    const localDate = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("-");
+
+    setToday(localDate);
+  }, []);
+
+  // ============================================================
+  // SUBMIT WILDLIFE SIGHTING
+  // ============================================================
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,7 +113,7 @@ export default function SightingsPage() {
         "Your wildlife sighting was submitted! The LEGO Club will review it before it appears publicly."
       );
 
-      // Reset the form.
+      // Reset wildlife form
       setSpecies("");
       setDescription("");
       setDate("");
@@ -98,6 +138,83 @@ export default function SightingsPage() {
     }
   }
 
+  // ============================================================
+  // SUBMIT RECOMMENDATION IDEA
+  // ============================================================
+
+  async function handleIdeaSubmit(
+    event: FormEvent<HTMLFormElement>
+  ) {
+    event.preventDefault();
+
+    if (ideaSubmitting) return;
+
+    setIdeaError("");
+    setIdeaSuccess("");
+    setIdeaSubmitting(true);
+
+    try {
+      const response = await fetch(
+        "/api/recommendation-ideas",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            description: ideaDescription.trim(),
+            suggested_month: ideaMonth || null,
+            information_url: ideaUrl.trim() || null,
+          }),
+        }
+      );
+
+      // Safely handle API responses
+      const responseText = await response.text();
+
+      let result: {
+        success?: boolean;
+        error?: string;
+      } = {};
+
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        throw new Error(
+          "The server returned an invalid response. Please try again."
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            "Unable to submit your recommendation idea."
+        );
+      }
+
+      setIdeaSuccess(
+        "Thank you for sharing your idea! The LEGO Club will review it and decide whether to add it to the app."
+      );
+
+      // Reset recommendation form
+      setIdeaDescription("");
+      setIdeaMonth("");
+      setIdeaUrl("");
+    } catch (error) {
+      setIdeaError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setIdeaSubmitting(false);
+    }
+  }
+
+  // ============================================================
+  // PAGE CONTENT
+  // ============================================================
+
   return (
     <main className="container">
       <Link href="/dashboard" className="back-link">
@@ -110,6 +227,10 @@ export default function SightingsPage() {
         Help the LEGO Club learn about biodiversity by sharing
         an animal or plant you spotted in Vermont!
       </p>
+
+      {/* ======================================================
+          WILDLIFE SIGHTING FORM
+      ====================================================== */}
 
       <div className="info-card">
         <h2>Submit a Sighting</h2>
@@ -250,6 +371,138 @@ export default function SightingsPage() {
             {submitting
               ? "Submitting..."
               : "Submit Sighting"}
+          </button>
+        </form>
+      </div>
+
+      {/* ======================================================
+          SHARE A RECOMMENDATION IDEA
+          Visitors can suggest biodiversity activities.
+          LEGO Club admins review ideas before publication.
+      ====================================================== */}
+
+      <div
+        className="info-card"
+        style={{ marginTop: 32 }}
+      >
+        <h2>Share a Recommendation Idea</h2>
+
+        <p>
+          Have an idea for an activity, project, or way to
+          help Vermont&apos;s biodiversity? Share it with
+          the LEGO Club!
+        </p>
+
+        <p>
+          The LEGO Club will review your recommendation
+          and decide whether to add it to the app.
+          Please do not include personal information.
+        </p>
+
+        <form onSubmit={handleIdeaSubmit}>
+          {/* IDEA DESCRIPTION */}
+
+          <label htmlFor="idea-description">
+            Describe Your Idea
+          </label>
+
+          <textarea
+            id="idea-description"
+            value={ideaDescription}
+            onChange={(event) =>
+              setIdeaDescription(event.target.value)
+            }
+            placeholder="Describe your activity or recommendation idea..."
+            maxLength={2000}
+            rows={5}
+            required
+          />
+
+          {/* SUGGESTED MONTH */}
+
+          <label htmlFor="idea-month">
+            Suggested Month (Optional)
+          </label>
+
+          <select
+            id="idea-month"
+            value={ideaMonth}
+            onChange={(event) =>
+              setIdeaMonth(event.target.value)
+            }
+          >
+            <option value="">
+              Any Month / Not Sure
+            </option>
+
+            {MONTHS.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+
+          {/* INFORMATION URL */}
+
+          <label htmlFor="idea-url">
+            URL for More Information (Optional)
+          </label>
+
+          <input
+            id="idea-url"
+            type="url"
+            value={ideaUrl}
+            onChange={(event) =>
+              setIdeaUrl(event.target.value)
+            }
+            placeholder="https://example.com"
+            maxLength={2000}
+          />
+
+          <p>
+            You can include a link to an article,
+            educational resource, or website that
+            explains your idea.
+          </p>
+
+          {/* ERROR MESSAGE */}
+
+          {ideaError && (
+            <p
+              role="alert"
+              style={{
+                color: "#b91c1c",
+                marginTop: 16,
+              }}
+            >
+              {ideaError}
+            </p>
+          )}
+
+          {/* SUCCESS MESSAGE */}
+
+          {ideaSuccess && (
+            <p
+              role="status"
+              style={{
+                color: "#276749",
+                marginTop: 16,
+              }}
+            >
+              {ideaSuccess}
+            </p>
+          )}
+
+          {/* SUBMIT BUTTON */}
+
+          <button
+            type="submit"
+            className="primary-button"
+            disabled={ideaSubmitting}
+          >
+            {ideaSubmitting
+              ? "Submitting..."
+              : "Submit Recommendation Idea"}
           </button>
         </form>
       </div>
