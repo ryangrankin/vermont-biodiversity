@@ -13,67 +13,64 @@ export default function AdminSignupPage() {
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setMessage("");
 
     try {
-     // Try signing in first if the student already has an account.
-const { data: loginData, error: authError } =
-  await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-let session = loginData.session;
-
-if (authError || !session) {
-  const signup = await supabase.auth.signUp({
-    email,
-    password,
-  });
-
-  if (signup.error) {
-    throw new Error(signup.error.message);
-  }
-
-  session = signup.data.session;
-}
-
-if (!session) {
-  throw new Error(
-    "No active session. Please check your account and try again."
-  );
-}
-
-      // Email confirmation may be required.
-      if (!session) {
-  throw new Error(
-    "Account created, but no session was returned. Please sign in."
-  );
-}
-
-      // Redeem the shared administrator code.
+      // Send all three fields to our signup API.
       const response = await fetch("/api/admin/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+          code,
+        }),
       });
 
-      const result = await response.json();
+      // Safely handle empty or invalid server responses.
+      const responseText = await response.text();
 
-      if (!response.ok) {
-        throw new Error(result.error || "Unable to activate admin access.");
+      let result: {
+        success?: boolean;
+        error?: string;
+      } = {};
+
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        throw new Error(
+          "The signup server returned an invalid response."
+        );
       }
 
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error || "Unable to create admin account."
+        );
+      }
+
+      // Sign in with the newly created credentials.
+      const { error: loginError } =
+        await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+
+      if (loginError) {
+        throw new Error(
+          "Account created, but automatic login failed. " +
+          "Please sign in using the login page."
+        );
+      }
+
+      // Open the administrator dashboard.
       router.push("/admin");
       router.refresh();
     } catch (err) {
@@ -116,7 +113,9 @@ if (!session) {
           autoComplete="new-password"
         />
 
-        <label htmlFor="code">Teacher-provided admin code</label>
+        <label htmlFor="code">
+          Teacher-provided admin code
+        </label>
         <input
           id="code"
           type="password"
@@ -131,8 +130,11 @@ if (!session) {
         </button>
       </form>
 
-      {error && <p role="alert" style={{ color: "red" }}>{error}</p>}
-      {message && <p role="status">{message}</p>}
+      {error && (
+        <p role="alert" style={{ color: "red" }}>
+          {error}
+        </p>
+      )}
 
       <p>
         Already have an account?{" "}
