@@ -458,49 +458,39 @@ const [ideaUrl, setIdeaUrl] = useState("");
     if this recommendation is relevant year-round.
   </p>
 
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns:
-        "repeat(auto-fit, minmax(140px, 1fr))",
-      gap: 12,
-      marginTop: 16,
-    }}
-  >
-    {MONTHS.map((month, index) => {
-      const monthNumber = index + 1;
+  
+<div className="month-checkbox-grid">
+  {MONTHS.map((month, index) => {
+    const monthNumber = index + 1;
 
-      return (
-        <label
-          key={month}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            cursor: "pointer",
+    return (
+      <label
+        key={month}
+        className="month-checkbox-option"
+      >
+        <input
+          type="checkbox"
+          checked={ideaMonths.includes(monthNumber)}
+          onChange={(event) => {
+            setIdeaMonths((previous) =>
+              event.target.checked
+                ? [...previous, monthNumber].sort(
+                    (a, b) => a - b
+                  )
+                : previous.filter(
+                    (value) => value !== monthNumber
+                  )
+            );
           }}
-        >
-          <input
-            type="checkbox"
-            checked={ideaMonths.includes(monthNumber)}
-            onChange={(event) => {
-              setIdeaMonths((previous) =>
-                event.target.checked
-                  ? [...previous, monthNumber].sort(
-                      (a, b) => a - b
-                    )
-                  : previous.filter(
-                      (value) => value !== monthNumber
-                    )
-              );
-            }}
-          />
+        />
 
-          {month}
-        </label>
-      );
-    })}
-  </div>
+        <span>{month}</span>
+      </label>
+    );
+  })}
+</div>
+
+  
 </fieldset>
 
 

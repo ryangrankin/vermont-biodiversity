@@ -1294,3 +1294,43 @@ main.container.animals-background {
 .recommendation-learn-more .learn-more-link {
   margin: 0;
 }
+
+
+.month-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 16px 0 24px;
+}
+
+.month-checkbox-option {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: auto !important;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 8px 0;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.month-checkbox-option input[type="checkbox"] {
+  appearance: auto;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px;
+  margin: 0 !important;
+  flex: 0 0 18px;
+}
+
+.month-checkbox-option span {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .month-checkbox-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
