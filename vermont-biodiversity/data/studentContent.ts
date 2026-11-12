@@ -1442,35 +1442,5 @@ export const individualPlants = [
     conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
   },
 
-
-
-
-  // ============================================================
-  // ADDITIONAL STUDENT RECOMMENDATIONS
-  // ============================================================
-  // STUDENTS: Fill in the blanks below.
-  // Leave unused recommendations blank.
-  // Blank recommendations will not appear on the dashboard.
-  // ============================================================
-
-  ...Array.from({ length: 10 }, (_, index) => ({
-    id: index + 8,
-    title: "",
-    description: "",
-    whyItMatters: "",
-    interests: [] as string[],
-    requiresLawn: false,
-    requiresGarden: false,
-    months: [] as number[],
-    source: "",
-    sources: [] as { name: string; url: string }[],
-    learnMoreLinks: [] as {
-      type: string;
-      id: string;
-      label: string;
-    }[],
-  })),
-
-
 ];
 
