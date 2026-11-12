@@ -17,6 +17,10 @@ export default function GalleryPage() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Currently enlarged wildlife photograph
+  const [selectedSighting, setSelectedSighting] =
+    useState<Sighting | null>(null);
+
   useEffect(() => {
     async function loadSightings() {
       try {
@@ -41,6 +45,28 @@ export default function GalleryPage() {
 
     loadSightings();
   }, []);
+
+  // Close enlarged photo with Escape and prevent
+  // background scrolling while the viewer is open.
+  useEffect(() => {
+    if (!selectedSighting) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelectedSighting(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedSighting]);
 
   return (
     <main className="container">
@@ -76,20 +102,37 @@ export default function GalleryPage() {
         <div className="wildlife-gallery-grid">
           {sightings.map((sighting) => (
             <article
-  key={sighting.id}
-  className="wildlife-gallery-card"
->
-  <img
-    src={`/api/gallery/${sighting.id}/photo`}
-    alt={`Wildlife sighting of ${sighting.species}`}
-    className="wildlife-gallery-photo"
-    loading="lazy"
-    onError={(event) => {
-      event.currentTarget.style.display = "none";
-    }}
-  />
+              key={sighting.id}
+              className="wildlife-gallery-card"
+            >
+              {/* Clickable wildlife photograph */}
+              <button
+                type="button"
+                onClick={() => setSelectedSighting(sighting)}
+                aria-label={`Enlarge photograph of ${sighting.species}`}
+                title="Click to enlarge photograph"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  padding: 0,
+                  margin: 0,
+                  border: "none",
+                  background: "transparent",
+                  cursor: "zoom-in",
+                }}
+              >
+                <img
+                  src={`/api/gallery/${encodeURIComponent(sighting.id)}/photo`}
+                  alt={`Wildlife sighting of ${sighting.species}`}
+                  className="wildlife-gallery-photo"
+                  loading="lazy"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                />
+              </button>
 
-  <h2>{sighting.species}</h2>
+              <h2>{sighting.species}</h2>
 
               {sighting.description && (
                 <p>{sighting.description}</p>
@@ -105,6 +148,103 @@ export default function GalleryPage() {
               </p>
             </article>
           ))}
+        </div>
+      )}
+
+      {/* ==========================================
+          FULL-SIZE PHOTO VIEWER
+      ========================================== */}
+
+      {selectedSighting && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Photograph of ${selectedSighting.species}`}
+          onClick={() => setSelectedSighting(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: "rgba(0, 0, 0, 0.94)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+            boxSizing: "border-box",
+          }}
+        >
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={() => setSelectedSighting(null)}
+            aria-label="Close enlarged photograph"
+            style={{
+              position: "absolute",
+              top: 16,
+              right: 20,
+              zIndex: 10000,
+              background: "rgba(255,255,255,0.15)",
+              color: "white",
+              border: "none",
+              borderRadius: "50%",
+              width: 44,
+              height: 44,
+              fontSize: 28,
+              cursor: "pointer",
+            }}
+          >
+            ×
+          </button>
+
+          <div
+            onClick={(event) => event.stopPropagation()}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              maxWidth: "100%",
+              maxHeight: "100%",
+              gap: 14,
+            }}
+          >
+            <img
+              src={`/api/gallery/${encodeURIComponent(selectedSighting.id)}/photo`}
+              alt={`Full-size wildlife sighting of ${selectedSighting.species}`}
+              style={{
+                display: "block",
+                maxWidth: "95vw",
+                maxHeight: "78vh",
+                width: "auto",
+                height: "auto",
+                objectFit: "contain",
+                borderRadius: 8,
+              }}
+            />
+
+            <div
+              style={{
+                color: "white",
+                textAlign: "center",
+                maxWidth: 600,
+              }}
+            >
+              <h2
+                style={{
+                  margin: "0 0 6px",
+                  color: "white",
+                }}
+              >
+                {selectedSighting.species}
+              </h2>
+
+              <p style={{ margin: 0, opacity: 0.85 }}>
+                {selectedSighting.location}
+                {" • "}
+                {selectedSighting.observed_at.slice(0, 10)}
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </main>
