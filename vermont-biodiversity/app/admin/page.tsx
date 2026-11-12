@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import SightingPhoto from "./SightingPhoto";
 
+
 type Sighting = {
   id: string;
   species: string;
@@ -13,9 +14,13 @@ type Sighting = {
   observed_at: string;
   location: string;
   photo_path: string | null;
+  video_path: string | null;
+  video_url: string | null;
+  media_type: "none" | "photo" | "video";
   created_at: string;
   status: "pending" | "approved";
 };
+
 
 type SightingEdit = {
   species: string;
@@ -453,10 +458,12 @@ export default function AdminPage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            status: newStatus,
-            photoReviewed: reviewedPhotos.includes(id),
-          }),
+         
+body: JSON.stringify({
+  status: newStatus,
+  photoReviewed: reviewedPhotos.includes(id),
+}),
+
         }
       );
 
@@ -908,6 +915,73 @@ export default function AdminPage() {
                     {formatDate(sighting.created_at)}
                   </p>
 
+
+{/* VIDEO DISPLAY */}
+
+{sighting.video_path && (
+  <div style={{ marginTop: 16 }}>
+    <h4>Wildlife Video</h4>
+
+    {sighting.video_url ? (
+      <video
+        key={sighting.video_url}
+        controls
+        playsInline
+        preload="metadata"
+        src={sighting.video_url}
+        style={{
+          display: "block",
+          width: "100%",
+          maxWidth: 600,
+          maxHeight: 400,
+          borderRadius: 10,
+          backgroundColor: "#000",
+        }}
+      >
+        Your browser does not support video playback.
+      </video>
+    ) : (
+      <p>
+        Video preview unavailable. Try refreshing the page.
+      </p>
+    )}
+
+    <p style={{ fontSize: 13, marginTop: 8 }}>
+      Review the entire video before approving it.
+      Check that it contains appropriate wildlife content
+      and no personal information.
+    </p>
+
+    {sighting.status === "pending" && (
+      <label
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 16,
+        }}
+      >
+        <input
+          type="checkbox"
+          checked={reviewedPhotos.includes(sighting.id)}
+          disabled={!sighting.video_url}
+          onChange={(event) => {
+            setReviewedPhotos((previous) =>
+              event.target.checked
+                ? [...previous, sighting.id]
+                : previous.filter(
+                    (id) => id !== sighting.id
+                  )
+            );
+          }}
+        />
+        I have reviewed this wildlife video.
+      </label>
+    )}
+  </div>
+)}
+
+
                   {/* PHOTO DISPLAY */}
 
                   {sighting.photo_path && (
@@ -981,13 +1055,15 @@ export default function AdminPage() {
                     >
                       <button
                         type="button"
-                        disabled={
-                          processingId !== null ||
-                          (Boolean(sighting.photo_path) &&
-                            !reviewedPhotos.includes(
-                              sighting.id
-                            ))
-                        }
+                        
+disabled={
+  processingId !== null ||
+  (Boolean(
+    sighting.photo_path || sighting.video_path
+  ) &&
+    !reviewedPhotos.includes(sighting.id))
+}
+
                         onClick={() =>
                           moderateSighting(
                             sighting.id,

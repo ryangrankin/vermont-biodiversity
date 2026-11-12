@@ -10,6 +10,9 @@ type Sighting = {
   description: string | null;
   observed_at: string;
   location: string;
+  photo_path?: string | null;
+  video_path?: string | null;
+  media_type?: "none" | "photo" | "video";
 };
 
 export default function GalleryPage() {
@@ -17,11 +20,16 @@ export default function GalleryPage() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Currently enlarged wildlife photograph
   const [selectedSighting, setSelectedSighting] =
     useState<Sighting | null>(null);
 
+  // ============================================================
+  // LOAD APPROVED WILDLIFE SIGHTINGS
+  // ============================================================
+
   useEffect(() => {
+    let cancelled = false;
+
     async function loadSightings() {
       try {
         const response = await fetch("/api/gallery", {
@@ -33,21 +41,34 @@ export default function GalleryPage() {
         }
 
         const data = await response.json();
-        setSightings(data.sightings ?? []);
+
+        if (!cancelled) {
+          setSightings(data.sightings ?? []);
+        }
       } catch {
-        setErrorMessage(
-          "Something went wrong while loading the gallery."
-        );
+        if (!cancelled) {
+          setErrorMessage(
+            "Something went wrong while loading the gallery."
+          );
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
     loadSightings();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // Close enlarged photo with Escape and prevent
-  // background scrolling while the viewer is open.
+  // ============================================================
+  // PHOTO VIEWER KEYBOARD AND SCROLL HANDLING
+  // ============================================================
+
   useEffect(() => {
     if (!selectedSighting) return;
 
@@ -67,6 +88,10 @@ export default function GalleryPage() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedSighting]);
+
+  // ============================================================
+  // GALLERY
+  // ============================================================
 
   return (
     <main className="container">
@@ -88,72 +113,144 @@ export default function GalleryPage() {
         <p role="alert">{errorMessage}</p>
       )}
 
-      {!loading && !errorMessage && sightings.length === 0 && (
-        <div className="info-card">
-          <h2>No sightings yet!</h2>
-          <p>
-            Once wildlife sightings are approved, they will
-            appear here.
-          </p>
-        </div>
-      )}
+      {!loading &&
+        !errorMessage &&
+        sightings.length === 0 && (
+          <div className="info-card">
+            <h2>No sightings yet!</h2>
+            <p>
+              Once wildlife sightings are approved, they
+              will appear here.
+            </p>
+          </div>
+        )}
 
-      {!loading && !errorMessage && sightings.length > 0 && (
-        <div className="wildlife-gallery-grid">
-          {sightings.map((sighting) => (
-            <article
-              key={sighting.id}
-              className="wildlife-gallery-card"
-            >
-              {/* Clickable wildlife photograph */}
-              <button
-                type="button"
-                onClick={() => setSelectedSighting(sighting)}
-                aria-label={`Enlarge photograph of ${sighting.species}`}
-                title="Click to enlarge photograph"
-                style={{
-                  display: "block",
-                  width: "100%",
-                  padding: 0,
-                  margin: 0,
-                  border: "none",
-                  background: "transparent",
-                  cursor: "zoom-in",
-                }}
-              >
-                <img
-                  src={`/api/gallery/${encodeURIComponent(sighting.id)}/photo`}
-                  alt={`Wildlife sighting of ${sighting.species}`}
-                  className="wildlife-gallery-photo"
-                  loading="lazy"
-                  onError={(event) => {
-                    event.currentTarget.style.display = "none";
-                  }}
-                />
-              </button>
+      {!loading &&
+        !errorMessage &&
+        sightings.length > 0 && (
+          <div className="wildlife-gallery-grid">
+            {sightings.map((sighting) => {
+              const hasVideo =
+                sighting.media_type === "video" &&
+                Boolean(sighting.video_path);
 
-              <h2>{sighting.species}</h2>
+              const hasPhoto =
+                Boolean(sighting.photo_path) &&
+                !hasVideo;
 
-              {sighting.description && (
-                <p>{sighting.description}</p>
-              )}
+              return (
+                <article
+                  key={sighting.id}
+                  className="wildlife-gallery-card"
+                >
+                  {/* =====================================
+                      VIDEO PLAYER
+                  ===================================== */}
 
-              <p>
-                <strong>Location:</strong> {sighting.location}
-              </p>
+                  {hasVideo && (
+                    <div>
+                      <video
+                        controls
+                        playsInline
+                        preload="metadata"
+                        aria-label={`Wildlife video of ${sighting.species}`}
+                        className="wildlife-gallery-photo"
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          height: "auto",
+                          maxHeight: 350,
+                          objectFit: "contain",
+                          backgroundColor: "#111",
+                          borderRadius: 10,
+                        }}
+                      >
+                        <source
+                          src={`/api/gallery/${encodeURIComponent(
+                            sighting.id
+                          )}/video`}
+                        />
+                        Your browser does not support video
+                        playback.
+                      </video>
 
-              <p>
-                <strong>Date observed:</strong>{" "}
-                {sighting.observed_at.slice(0, 10)}
-              </p>
-            </article>
-          ))}
-        </div>
-      )}
+                      <p
+                        style={{
+                          fontSize: 13,
+                          marginTop: 8,
+                          opacity: 0.8,
+                        }}
+                      >
+                        Wildlife video
+                      </p>
+                    </div>
+                  )}
 
-      {/* ==========================================
+                  {/* =====================================
+                      CLICKABLE PHOTO
+                  ===================================== */}
+
+                  {hasPhoto && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSelectedSighting(sighting)
+                      }
+                      aria-label={`Enlarge photograph of ${sighting.species}`}
+                      title="Click to enlarge photograph"
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: 0,
+                        margin: 0,
+                        border: "none",
+                        background: "transparent",
+                        cursor: "zoom-in",
+                      }}
+                    >
+                      <img
+                        src={`/api/gallery/${encodeURIComponent(
+                          sighting.id
+                        )}/photo`}
+                        alt={`Wildlife sighting of ${sighting.species}`}
+                        className="wildlife-gallery-photo"
+                        loading="lazy"
+                        onError={(event) => {
+                          event.currentTarget.style.display =
+                            "none";
+                        }}
+                      />
+                    </button>
+                  )}
+
+                  {/* =====================================
+                      SIGHTING DETAILS
+                  ===================================== */}
+
+                  <h2>{sighting.species}</h2>
+
+                  {sighting.description && (
+                    <p>{sighting.description}</p>
+                  )}
+
+                  <p>
+                    <strong>Location:</strong>{" "}
+                    {sighting.location}
+                  </p>
+
+                  <p>
+                    <strong>Date observed:</strong>{" "}
+                    {sighting.observed_at.slice(0, 10)}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
+        )}
+
+      {/* ======================================================
           FULL-SIZE PHOTO VIEWER
-      ========================================== */}
+      ====================================================== */}
 
       {selectedSighting && (
         <div
@@ -173,7 +270,6 @@ export default function GalleryPage() {
             boxSizing: "border-box",
           }}
         >
-          {/* Close button */}
           <button
             type="button"
             onClick={() => setSelectedSighting(null)}
@@ -209,7 +305,9 @@ export default function GalleryPage() {
             }}
           >
             <img
-              src={`/api/gallery/${encodeURIComponent(selectedSighting.id)}/photo`}
+              src={`/api/gallery/${encodeURIComponent(
+                selectedSighting.id
+              )}/photo`}
               alt={`Full-size wildlife sighting of ${selectedSighting.species}`}
               style={{
                 display: "block",

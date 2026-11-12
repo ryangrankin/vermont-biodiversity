@@ -9,7 +9,7 @@ export async function GET() {
   const { data: sightings, error } = await supabaseAdmin
     .from("wildlife_sightings")
     .select(
-      "id, species, description, observed_at, location"
+      "id, species, description, observed_at, location, photo_path, video_path, media_type"
     )
     .eq("status", "approved")
     .order("observed_at", { ascending: false });

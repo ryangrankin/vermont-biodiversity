@@ -3,8 +3,14 @@
 
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
+import { supabase } from "@/lib/supabase";
 
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024;
+const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm"];
+
+// Enable after the sightings API supports videoUploadId.
+const VIDEO_SUBMISSIONS_ENABLED = true;
 
 const MONTHS = [
   "January",
@@ -31,6 +37,7 @@ export default function SightingsPage() {
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
+  const [video, setVideo] = useState<File | null>(null);
   const [today, setToday] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
@@ -41,10 +48,10 @@ export default function SightingsPage() {
   // RECOMMENDATION IDEA FORM
   // ============================================================
 
- const [ideaTitle, setIdeaTitle] = useState("");
-const [ideaDescription, setIdeaDescription] = useState("");
-const [ideaMonths, setIdeaMonths] = useState<number[]>([]);
-const [ideaUrl, setIdeaUrl] = useState("");
+  const [ideaTitle, setIdeaTitle] = useState("");
+  const [ideaDescription, setIdeaDescription] = useState("");
+  const [ideaMonths, setIdeaMonths] = useState<number[]>([]);
+  const [ideaUrl, setIdeaUrl] = useState("");
 
   const [ideaSubmitting, setIdeaSubmitting] = useState(false);
   const [ideaError, setIdeaError] = useState("");
@@ -67,10 +74,78 @@ const [ideaUrl, setIdeaUrl] = useState("");
   }, []);
 
   // ============================================================
+  // UPLOAD VIDEO TO PRIVATE SUPABASE STORAGE
+  // ============================================================
+
+  async function uploadWildlifeVideo(file: File) {
+    if (
+      !ALLOWED_VIDEO_TYPES.includes(file.type) ||
+      file.size === 0 ||
+      file.size > MAX_VIDEO_SIZE
+    ) {
+      throw new Error(
+        "Please select an MP4 or WebM video under 50 MB."
+      );
+    }
+
+    const authorizationResponse = await fetch(
+      "/api/sightings/video-upload",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileSize: file.size,
+          fileType: file.type,
+        }),
+      }
+    );
+
+    const authorization = await authorizationResponse.json();
+
+    if (!authorizationResponse.ok) {
+      throw new Error(
+        authorization.error ||
+          "Unable to authorize video upload."
+      );
+    }
+
+    if (
+      typeof authorization.path !== "string" ||
+      typeof authorization.token !== "string" ||
+      typeof authorization.uploadId !== "string"
+    ) {
+      throw new Error("Invalid video upload authorization.");
+    }
+
+    const { error: uploadError } = await supabase.storage
+      .from("wildlife-videos")
+      .uploadToSignedUrl(
+        authorization.path,
+        authorization.token,
+        file,
+        {
+          contentType: file.type,
+        }
+      );
+
+    if (uploadError) {
+      throw new Error(
+        "Unable to upload video. Please try again."
+      );
+    }
+
+    return authorization.uploadId as string;
+  }
+
+  // ============================================================
   // SUBMIT WILDLIFE SIGHTING
   // ============================================================
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    event: FormEvent<HTMLFormElement>
+  ) {
     event.preventDefault();
 
     if (submitting) return;
@@ -78,25 +153,61 @@ const [ideaUrl, setIdeaUrl] = useState("");
     setErrorMessage("");
     setSuccessMessage("");
 
-    if (photo && photo.size > MAX_PHOTO_SIZE) {
-      setErrorMessage("Photographs must be smaller than 5 MB.");
+    if (photo && video) {
+      setErrorMessage(
+        "Please choose either a photograph or a video."
+      );
       return;
     }
 
-    const formData = new FormData();
+    if (photo && photo.size > MAX_PHOTO_SIZE) {
+      setErrorMessage(
+        "Photographs must be smaller than 5 MB."
+      );
+      return;
+    }
 
-    formData.append("species", species.trim());
-    formData.append("description", description.trim());
-    formData.append("date", date);
-    formData.append("location", location.trim());
+    if (video && !VIDEO_SUBMISSIONS_ENABLED) {
+      setErrorMessage(
+        "Video submissions are not available yet."
+      );
+      return;
+    }
 
-    if (photo) {
-      formData.append("photo", photo);
+    if (
+      video &&
+      (!ALLOWED_VIDEO_TYPES.includes(video.type) ||
+        video.size === 0 ||
+        video.size > MAX_VIDEO_SIZE)
+    ) {
+      setErrorMessage(
+        "Please select an MP4 or WebM video under 50 MB."
+      );
+      return;
     }
 
     setSubmitting(true);
 
     try {
+      const formData = new FormData();
+
+      formData.append("species", species.trim());
+      formData.append(
+        "description",
+        description.trim()
+      );
+      formData.append("date", date);
+      formData.append("location", location.trim());
+
+      if (photo) {
+        formData.append("photo", photo);
+      }
+
+      if (video) {
+        const uploadId = await uploadWildlifeVideo(video);
+        formData.append("videoUploadId", uploadId);
+      }
+
       const response = await fetch("/api/sightings", {
         method: "POST",
         body: formData,
@@ -106,7 +217,8 @@ const [ideaUrl, setIdeaUrl] = useState("");
 
       if (!response.ok) {
         throw new Error(
-          result.error || "Unable to submit your sighting."
+          result.error ||
+            "Unable to submit your sighting."
         );
       }
 
@@ -114,12 +226,13 @@ const [ideaUrl, setIdeaUrl] = useState("");
         "Your wildlife sighting was submitted! The LEGO Club will review it before it appears publicly."
       );
 
-      // Reset wildlife form
+      // Reset wildlife form.
       setSpecies("");
       setDescription("");
       setDate("");
       setLocation("");
       setPhoto(null);
+      setVideo(null);
 
       const photoInput = document.getElementById(
         "photo"
@@ -127,6 +240,14 @@ const [ideaUrl, setIdeaUrl] = useState("");
 
       if (photoInput) {
         photoInput.value = "";
+      }
+
+      const videoInput = document.getElementById(
+        "video"
+      ) as HTMLInputElement | null;
+
+      if (videoInput) {
+        videoInput.value = "";
       }
     } catch (error) {
       setErrorMessage(
@@ -171,7 +292,6 @@ const [ideaUrl, setIdeaUrl] = useState("");
         }
       );
 
-      // Safely handle API responses
       const responseText = await response.text();
 
       let result: {
@@ -198,7 +318,6 @@ const [ideaUrl, setIdeaUrl] = useState("");
         "Thank you for sharing your idea! The LEGO Club will review it and decide whether to add it to the app."
       );
 
-      // Reset recommendation form
       setIdeaTitle("");
       setIdeaDescription("");
       setIdeaMonths([]);
@@ -227,13 +346,13 @@ const [ideaUrl, setIdeaUrl] = useState("");
       <h1>Share a Wildlife Sighting</h1>
 
       <p>
-        Help the LEGO Club learn about biodiversity by sharing
-        an animal or plant you spotted in Vermont!
+        Help the LEGO Club learn about biodiversity by
+        sharing an animal or plant you spotted in Vermont!
       </p>
 
-      {/* ======================================================
+      {/* ================================================
           WILDLIFE SIGHTING FORM
-      ====================================================== */}
+      ================================================= */}
 
       <div className="info-card">
         <h2>Submit a Sighting</h2>
@@ -245,8 +364,8 @@ const [ideaUrl, setIdeaUrl] = useState("");
 
         <p>
           Please share only a town or general area.
-          Do not include home addresses, names, or other
-          personal information.
+          Do not include home addresses, names, or
+          other personal information.
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -310,6 +429,8 @@ const [ideaUrl, setIdeaUrl] = useState("");
             required
           />
 
+          {/* PHOTOGRAPH UPLOAD */}
+
           <label htmlFor="photo">
             Wildlife Photograph (Optional)
           </label>
@@ -318,6 +439,7 @@ const [ideaUrl, setIdeaUrl] = useState("");
             id="photo"
             type="file"
             accept="image/jpeg,image/png,image/webp"
+            disabled={submitting || Boolean(video)}
             onChange={(event) => {
               const selectedPhoto =
                 event.target.files?.[0] ?? null;
@@ -342,6 +464,63 @@ const [ideaUrl, setIdeaUrl] = useState("");
             </p>
           )}
 
+          {/* VIDEO UPLOAD */}
+
+          <label htmlFor="video">
+            Wildlife Video (Optional)
+          </label>
+
+          <p>
+            Upload an MP4 or WebM video up to 50 MB.
+            Choose either a photograph or a video.
+          </p>
+
+          {!VIDEO_SUBMISSIONS_ENABLED && (
+            <p>
+              Video submissions are coming soon.
+              Photographs can still be submitted.
+            </p>
+          )}
+
+          <input
+            id="video"
+            type="file"
+            accept="video/mp4,video/webm"
+            disabled={
+              !VIDEO_SUBMISSIONS_ENABLED ||
+              submitting ||
+              Boolean(photo)
+            }
+            onChange={(event) => {
+              const selectedVideo =
+                event.target.files?.[0] ?? null;
+
+              setVideo(selectedVideo);
+              setErrorMessage("");
+
+              if (
+                selectedVideo &&
+                (selectedVideo.size === 0 ||
+                  selectedVideo.size > MAX_VIDEO_SIZE ||
+                  !ALLOWED_VIDEO_TYPES.includes(
+                    selectedVideo.type
+                  ))
+              ) {
+                setErrorMessage(
+                  "Please select an MP4 or WebM video under 50 MB."
+                );
+              }
+            }}
+          />
+
+          {video && (
+            <p>
+              Selected video: {video.name}
+            </p>
+          )}
+
+          {/* ERROR MESSAGE */}
+
           {errorMessage && (
             <p
               role="alert"
@@ -353,6 +532,8 @@ const [ideaUrl, setIdeaUrl] = useState("");
               {errorMessage}
             </p>
           )}
+
+          {/* SUCCESS MESSAGE */}
 
           {successMessage && (
             <p
@@ -378,11 +559,9 @@ const [ideaUrl, setIdeaUrl] = useState("");
         </form>
       </div>
 
-      {/* ======================================================
+      {/* ================================================
           SHARE A RECOMMENDATION IDEA
-          Visitors can suggest biodiversity activities.
-          LEGO Club admins review ideas before publication.
-      ====================================================== */}
+      ================================================= */}
 
       <div
         className="info-card"
@@ -391,9 +570,9 @@ const [ideaUrl, setIdeaUrl] = useState("");
         <h2>Share a Recommendation Idea</h2>
 
         <p>
-          Have an idea for an activity, project, or way to
-          help Vermont&apos;s biodiversity? Share it with
-          the LEGO Club!
+          Have an idea for an activity, project, or way
+          to help Vermont&apos;s biodiversity? Share it
+          with the LEGO Club!
         </p>
 
         <p>
@@ -403,22 +582,23 @@ const [ideaUrl, setIdeaUrl] = useState("");
         </p>
 
         <form onSubmit={handleIdeaSubmit}>
+          {/* RECOMMENDATION TITLE */}
 
-{/* RECOMMENDATION TITLE */}
+          <label htmlFor="idea-title">
+            Recommendation Title
+          </label>
 
-<label htmlFor="idea-title">
-  Recommendation Title
-</label>
-
-<input
-  id="idea-title"
-  type="text"
-  value={ideaTitle}
-  onChange={(event) => setIdeaTitle(event.target.value)}
-  placeholder="e.g., Help Vermont's Pollinators"
-  maxLength={150}
-  required
-/>
+          <input
+            id="idea-title"
+            type="text"
+            value={ideaTitle}
+            onChange={(event) =>
+              setIdeaTitle(event.target.value)
+            }
+            placeholder="e.g., Help Vermont's Pollinators"
+            maxLength={150}
+            required
+          />
 
           {/* IDEA DESCRIPTION */}
 
@@ -438,61 +618,61 @@ const [ideaUrl, setIdeaUrl] = useState("");
             required
           />
 
-          
-{/* RECOMMENDATION MONTHS */}
+          {/* RECOMMENDATION MONTHS */}
 
-<fieldset
-  style={{
-    border: "none",
-    padding: 0,
-    marginTop: 24,
-    marginBottom: 24,
-  }}
->
-  <legend style={{ fontWeight: 600 }}>
-    Which months is this recommendation relevant?
-  </legend>
+          <fieldset
+            style={{
+              border: "none",
+              padding: 0,
+              marginTop: 24,
+              marginBottom: 24,
+            }}
+          >
+            <legend style={{ fontWeight: 600 }}>
+              Which months is this recommendation relevant?
+            </legend>
 
-  <p>
-    Select all that apply. Leave everything unchecked
-    if this recommendation is relevant year-round.
-  </p>
+            <p>
+              Select all that apply. Leave everything
+              unchecked if this recommendation is
+              relevant year-round.
+            </p>
 
-  
-<div className="month-checkbox-grid">
-  {MONTHS.map((month, index) => {
-    const monthNumber = index + 1;
+            <div className="month-checkbox-grid">
+              {MONTHS.map((month, index) => {
+                const monthNumber = index + 1;
 
-    return (
-      <label
-        key={month}
-        className="month-checkbox-option"
-      >
-        <input
-          type="checkbox"
-          checked={ideaMonths.includes(monthNumber)}
-          onChange={(event) => {
-            setIdeaMonths((previous) =>
-              event.target.checked
-                ? [...previous, monthNumber].sort(
-                    (a, b) => a - b
-                  )
-                : previous.filter(
-                    (value) => value !== monthNumber
-                  )
-            );
-          }}
-        />
+                return (
+                  <label
+                    key={month}
+                    className="month-checkbox-option"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={ideaMonths.includes(
+                        monthNumber
+                      )}
+                      onChange={(event) => {
+                        setIdeaMonths((previous) =>
+                          event.target.checked
+                            ? [
+                                ...previous,
+                                monthNumber,
+                              ].sort((a, b) => a - b)
+                            : previous.filter(
+                                (value) =>
+                                  value !== monthNumber
+                              )
+                        );
+                      }}
+                    />
 
-        <span>{month}</span>
-      </label>
-    );
-  })}
-</div>
-
-  
-</fieldset>
-
+                    <span>{month}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
 
           {/* INFORMATION URL */}
 
@@ -517,7 +697,7 @@ const [ideaUrl, setIdeaUrl] = useState("");
             explains your idea.
           </p>
 
-          {/* ERROR MESSAGE */}
+          {/* IDEA ERROR MESSAGE */}
 
           {ideaError && (
             <p
@@ -531,7 +711,7 @@ const [ideaUrl, setIdeaUrl] = useState("");
             </p>
           )}
 
-          {/* SUCCESS MESSAGE */}
+          {/* IDEA SUCCESS MESSAGE */}
 
           {ideaSuccess && (
             <p

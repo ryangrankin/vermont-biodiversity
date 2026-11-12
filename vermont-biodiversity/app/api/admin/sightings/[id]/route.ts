@@ -111,7 +111,7 @@ export async function PATCH(
     const { data: existing, error: lookupError } =
       await supabaseAdmin
         .from("wildlife_sightings")
-        .select("id, status, photo_path")
+        .select("id, status, photo_path, video_path, media_type")
         .eq("id", id)
         .maybeSingle();
 
@@ -150,19 +150,21 @@ export async function PATCH(
         );
       }
 
-      if (
-        status === "approved" &&
-        existing.photo_path &&
-        input.photoReviewed !== true
-      ) {
-        return NextResponse.json(
-          {
-            error:
-              "Please confirm that you reviewed the photograph before approving.",
-          },
-          { status: 403 }
-        );
-      }
+      
+if (
+  status === "approved" &&
+  (existing.photo_path || existing.video_path) &&
+  input.photoReviewed !== true
+) {
+  return NextResponse.json(
+    {
+      error:
+        "Please confirm that you reviewed the photo or video before approving.",
+    },
+    { status: 403 }
+  );
+}
+
 
       const { data: sighting, error } =
         await supabaseAdmin
@@ -325,7 +327,7 @@ export async function DELETE(
     const { data: existing, error: lookupError } =
       await supabaseAdmin
         .from("wildlife_sightings")
-        .select("id, status, photo_path")
+        .select("id, status, photo_path, video_path")
         .eq("id", id)
         .maybeSingle();
 
@@ -390,6 +392,23 @@ export async function DELETE(
         );
       }
     }
+
+
+// Remove the associated video after deleting the sighting.
+if (existing.video_path) {
+  const { error: videoStorageError } =
+    await supabaseAdmin.storage
+      .from("wildlife-videos")
+      .remove([existing.video_path]);
+
+  if (videoStorageError) {
+    console.error(
+      "Sighting deleted, but video cleanup failed:",
+      videoStorageError
+    );
+  }
+}
+
 
     return NextResponse.json({
       success: true,
