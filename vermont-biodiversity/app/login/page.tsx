@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { appInfo } from "@/data/studentContent";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -46,13 +47,15 @@ export default function LoginPage() {
         className="info-card"
         style={{ maxWidth: 450, margin: "60px auto" }}
       >
-        <h1>Welcome to Vermont Biodiversity!</h1>
+        {/* STUDENT-EDITABLE WELCOME CONTENT */}
 
-        <p>
-          Sign in to explore Vermont wildlife,
-          complete your biodiversity survey,
-          and share your discoveries.
-        </p>
+        <h1>{appInfo.name}</h1>
+
+        {appInfo.tagline && <h2>{appInfo.tagline}</h2>}
+
+        {appInfo.welcome && <p>{appInfo.welcome}</p>}
+
+        {/* LOGIN FORM */}
 
         <form onSubmit={handleLogin}>
           <label htmlFor="email">Email</label>
