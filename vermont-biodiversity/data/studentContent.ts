@@ -40,6 +40,29 @@ export const appInfo = {
 };
 
 
+ // ============================================================
+ // DASHBOARD CONTENT
+ // ============================================================
+ // STUDENTS: Edit the text inside the quotation marks.
+ // Your changes will appear on the Biodiversity Dashboard.
+ // Do not delete the quotation marks or commas.
+ // ============================================================
+
+export const dashboardContent = {
+  // Welcome message below "Your Biodiversity Dashboard"
+  welcome: "Every Vermonter can help!",
+
+  // Description inside the Animals card
+  animalsDescription: "",
+
+  // Description inside the Plants & Gardens card
+  plantsDescription: "",
+
+  // Description inside the Wildlife Cam card
+  wildlifeDescription: "",
+};
+
+
 // ==================================================
 // SECTION 2: SURVEY QUESTIONS
 // ==================================================
@@ -496,6 +519,192 @@ learnMoreLinks: [
   },
 ],
 },
+
+
+  // ============================================================
+  // RECOMMENDATIONS 8–17
+  // ============================================================
+  // STUDENTS:
+  // 1. Write a title and description.
+  // 2. Explain why the activity helps biodiversity.
+  // 3. Add the months when the activity is relevant.
+  // 4. Add your sources and optional Learn More links.
+  //
+  // Leave unused recommendations blank.
+  // Blank recommendations will not appear on the dashboard.
+  // Do not change the ID numbers.
+  // ============================================================
+
+  // RECOMMENDATION 8
+  {
+    id: 8,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 9
+  {
+    id: 9,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 10
+  {
+    id: 10,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 11
+  {
+    id: 11,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 12
+  {
+    id: 12,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 13
+  {
+    id: 13,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 14
+  {
+    id: 14,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 15
+  {
+    id: 15,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 16
+  {
+    id: 16,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
+  // RECOMMENDATION 17
+  {
+    id: 17,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [],
+  },
+
 
 
   
@@ -1232,6 +1441,36 @@ export const individualPlants = [
     // more wildlife-friendly?
     conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
   },
+
+
+
+
+  // ============================================================
+  // ADDITIONAL STUDENT RECOMMENDATIONS
+  // ============================================================
+  // STUDENTS: Fill in the blanks below.
+  // Leave unused recommendations blank.
+  // Blank recommendations will not appear on the dashboard.
+  // ============================================================
+
+  ...Array.from({ length: 10 }, (_, index) => ({
+    id: index + 8,
+    title: "",
+    description: "",
+    whyItMatters: "",
+    interests: [] as string[],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [] as number[],
+    source: "",
+    sources: [] as { name: string; url: string }[],
+    learnMoreLinks: [] as {
+      type: string;
+      id: string;
+      label: string;
+    }[],
+  })),
+
 
 ];
 

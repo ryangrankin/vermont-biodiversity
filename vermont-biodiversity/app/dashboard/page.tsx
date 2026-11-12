@@ -4,11 +4,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+
 import {
   recommendations,
   individualAnimals,
   individualPlants,
+  dashboardContent,
 } from "@/data/studentContent";
+
 
 type SurveyAnswers = Record<string, string | string[]>;
 
@@ -353,7 +356,9 @@ export default function DashboardPage() {
       <section className="dashboard-header">
         <h1>Your Biodiversity Dashboard</h1>
 
-        <p>[STUDENTS: WRITE DASHBOARD WELCOME MESSAGE]</p>
+        {dashboardContent.welcome && (
+           <p>{dashboardContent.welcome}</p>
+        )}
 
         <Link
           href="/survey"
@@ -554,7 +559,9 @@ export default function DashboardPage() {
         <div className="card-grid">
           <div className="info-card">
             <h3>Animals</h3>
-            <p>[STUDENTS: ANIMAL CONTENT]</p>
+            {dashboardContent.animalsDescription && (
+              <p>{dashboardContent.animalsDescription}</p>
+            )}
 
             <Link
               href="/animals"
@@ -566,7 +573,9 @@ export default function DashboardPage() {
 
           <div className="info-card">
             <h3>Plants & Gardens</h3>
-            <p>[STUDENTS: PLANT CONTENT]</p>
+            {dashboardContent.plantsDescription && (
+              <p>{dashboardContent.plantsDescription}</p>
+            )}
 
             <Link
               href="/plants"
@@ -578,7 +587,9 @@ export default function DashboardPage() {
 
           <div className="info-card">
             <h3>Wildlife Cam</h3>
-            <p>[STUDENTS: WILDLIFE CONTENT]</p>
+            {dashboardContent.wildlifeDescription && (
+              <p>{dashboardContent.wildlifeDescription}</p>
+            )}
 
             <Link
               href="/wildlife-cam"
