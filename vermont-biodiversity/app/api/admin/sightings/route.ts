@@ -59,15 +59,17 @@ export async function GET(request: NextRequest) {
     }
 
     // Retrieve pending wildlife sightings.
-    const { data: sightings, error: sightingsError } =
-      await supabaseAdmin
-        .from("wildlife_sightings")
-        .select(
-          "id, species, description, observed_at, location, photo_path, created_at"
-        )
-        .eq("status", "pending")
-        .order("created_at", { ascending: false });
-
+// Retrieve pending and approved wildlife sightings.
+// Only verified administrators can access this endpoint.
+const { data: sightings, error: sightingsError } =
+  await supabaseAdmin
+    .from("wildlife_sightings")
+    .select(
+      "id, species, description, observed_at, location, photo_path, created_at, status"
+    )
+    .in("status", ["pending", "approved"])
+    .order("created_at", { ascending: false });
+    
     if (sightingsError) {
       return NextResponse.json(
         { error: "Unable to load wildlife sightings." },

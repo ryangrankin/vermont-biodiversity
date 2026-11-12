@@ -14,6 +14,14 @@ type Sighting = {
   location: string;
   photo_path: string | null;
   created_at: string;
+  status: "pending" | "approved";
+};
+
+type SightingEdit = {
+  species: string;
+  description: string;
+  location: string;
+  observed_at: string;
 };
 
 type RecommendationIdea = {
@@ -40,7 +48,6 @@ type DashboardStatus =
   | "denied"
   | "error";
 
-// Keep these identical to the survey answer options.
 const INTEREST_OPTIONS = [
   "Hiking",
   "Mountian Biking",
@@ -63,15 +70,41 @@ const MONTH_NAMES = [
   "December",
 ];
 
+const cardStyle: React.CSSProperties = {
+  border: "1px solid #ccc",
+  borderRadius: 12,
+  padding: 20,
+};
+
+const fieldStyle: React.CSSProperties = {
+  display: "block",
+  width: "100%",
+  padding: 10,
+  marginTop: 8,
+  border: "1px solid #aaa",
+  borderRadius: 8,
+  boxSizing: "border-box",
+};
+
+const buttonStyle: React.CSSProperties = {
+  padding: "10px 18px",
+  color: "white",
+  border: "none",
+  borderRadius: 8,
+  cursor: "pointer",
+};
 
 function initialReview(idea: RecommendationIdea): IdeaReview {
-  const suggested = idea.suggested_month?.trim().toLowerCase();
+  const suggested = idea.suggested_month
+    ?.trim()
+    .toLowerCase();
 
   const monthIndex = MONTH_NAMES.findIndex(
     (name) =>
       Boolean(suggested) &&
       (name.toLowerCase() === suggested ||
-        name.slice(0, 3).toLowerCase() === suggested?.slice(0, 3))
+        name.slice(0, 3).toLowerCase() ===
+          suggested?.slice(0, 3))
   );
 
   return {
@@ -87,35 +120,18 @@ function initialReview(idea: RecommendationIdea): IdeaReview {
   };
 }
 
-
-const cardStyle: React.CSSProperties = {
-  border: "1px solid #ccc",
-  borderRadius: 12,
-  padding: 20,
-};
-
-const fieldStyle: React.CSSProperties = {
-  display: "block",
-  width: "100%",
-  padding: 10,
-  marginTop: 8,
-  border: "1px solid #aaa",
-  borderRadius: 8,
-};
-
-const buttonStyle: React.CSSProperties = {
-  padding: "10px 18px",
-  color: "white",
-  border: "none",
-  borderRadius: 8,
-  cursor: "pointer",
-};
+function formatDate(value: string) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleDateString();
+}
 
 export default function AdminPage() {
   const router = useRouter();
 
   // ============================================================
-  // ADMIN AUTHENTICATION
+  // AUTHENTICATION
   // ============================================================
 
   const [status, setStatus] =
@@ -128,21 +144,52 @@ export default function AdminPage() {
   // ============================================================
 
   const [sightings, setSightings] = useState<Sighting[]>([]);
-  const [loadingSightings, setLoadingSightings] = useState(true);
+  const [loadingSightings, setLoadingSightings] =
+    useState(true);
+
   const [processingId, setProcessingId] =
     useState<string | null>(null);
 
   const [reviewedPhotos, setReviewedPhotos] =
     useState<string[]>([]);
 
-  const [moderationError, setModerationError] = useState("");
+  const [moderationError, setModerationError] =
+    useState("");
+
+  const [sightingSuccess, setSightingSuccess] =
+    useState("");
+
+  const [sightingTab, setSightingTab] =
+    useState<"pending" | "approved">("pending");
+
+  const [editingSightingId, setEditingSightingId] =
+    useState<string | null>(null);
+
+  const [sightingEdits, setSightingEdits] =
+    useState<Record<string, SightingEdit>>({});
+
+  const pendingSightings = sightings.filter(
+    (sighting) => sighting.status === "pending"
+  );
+
+  const approvedSightings = sightings.filter(
+    (sighting) => sighting.status === "approved"
+  );
+
+  const visibleSightings =
+    sightingTab === "pending"
+      ? pendingSightings
+      : approvedSightings;
 
   // ============================================================
   // RECOMMENDATION IDEAS
   // ============================================================
 
-  const [ideas, setIdeas] = useState<RecommendationIdea[]>([]);
-  const [loadingIdeas, setLoadingIdeas] = useState(true);
+  const [ideas, setIdeas] =
+    useState<RecommendationIdea[]>([]);
+
+  const [loadingIdeas, setLoadingIdeas] =
+    useState(true);
 
   const [processingIdeaId, setProcessingIdeaId] =
     useState<string | null>(null);
@@ -157,7 +204,6 @@ export default function AdminPage() {
     changes: Partial<IdeaReview>
   ) {
     const idea = ideas.find((item) => item.id === id);
-
     if (!idea) return;
 
     setIdeaReviews((previous) => ({
@@ -167,6 +213,43 @@ export default function AdminPage() {
         ...changes,
       },
     }));
+  }
+
+  // ============================================================
+  // AUTHENTICATED REQUEST HELPER
+  // ============================================================
+
+  async function adminRequest(
+    url: string,
+    options: RequestInit = {}
+  ) {
+    const { data, error } =
+      await supabase.auth.getSession();
+
+    if (error || !data.session) {
+      router.replace("/admin/login");
+      throw new Error("Please sign in again.");
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      cache: "no-store",
+      headers: {
+        ...options.headers,
+        Authorization:
+          `Bearer ${data.session.access_token}`,
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || "The request failed."
+      );
+    }
+
+    return result;
   }
 
   // ============================================================
@@ -214,7 +297,8 @@ export default function AdminPage() {
           return;
         }
 
-        const verification = await verifyResponse.json();
+        const verification =
+          await verifyResponse.json();
 
         if (!verification.authorized) {
           if (!cancelled) setStatus("denied");
@@ -223,7 +307,6 @@ export default function AdminPage() {
 
         if (!cancelled) setStatus("authorized");
 
-        // Load both review queues independently.
         const [sightingsResult, ideasResult] =
           await Promise.allSettled([
             fetch("/api/admin/sightings", {
@@ -247,7 +330,8 @@ export default function AdminPage() {
 
             if (!response.ok) {
               throw new Error(
-                result.error || "Unable to load sightings."
+                result.error ||
+                  "Unable to load sightings."
               );
             }
 
@@ -264,7 +348,9 @@ export default function AdminPage() {
             }
           }
         } else if (!cancelled) {
-          setModerationError("Unable to load sightings.");
+          setModerationError(
+            "Unable to load sightings."
+          );
         }
 
         if (ideasResult.status === "fulfilled") {
@@ -285,7 +371,10 @@ export default function AdminPage() {
 
               setIdeas(loadedIdeas);
 
-              const initial: Record<string, IdeaReview> = {};
+              const initial: Record<
+                string,
+                IdeaReview
+              > = {};
 
               loadedIdeas.forEach((idea) => {
                 initial[idea.id] = initialReview(idea);
@@ -303,7 +392,9 @@ export default function AdminPage() {
             }
           }
         } else if (!cancelled) {
-          setIdeaError("Unable to load recommendation ideas.");
+          setIdeaError(
+            "Unable to load recommendation ideas."
+          );
         }
       } catch (error) {
         console.error("Admin dashboard error:", error);
@@ -352,24 +443,15 @@ export default function AdminPage() {
 
     setProcessingId(id);
     setModerationError("");
+    setSightingSuccess("");
 
     try {
-      const { data, error } =
-        await supabase.auth.getSession();
-
-      if (error || !data.session) {
-        router.replace("/admin/login");
-        return;
-      }
-
-      const response = await fetch(
+      const result = await adminRequest(
         `/api/admin/sightings/${encodeURIComponent(id)}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              `Bearer ${data.session.access_token}`,
           },
           body: JSON.stringify({
             status: newStatus,
@@ -378,26 +460,181 @@ export default function AdminPage() {
         }
       );
 
-      const result = await response.json();
+      if (newStatus === "approved") {
+        setSightings((previous) =>
+          previous.map((sighting) =>
+            sighting.id === id
+              ? {
+                  ...sighting,
+                  status: "approved",
+                }
+              : sighting
+          )
+        );
 
-      if (!response.ok) {
-        throw new Error(
-          result.error || "Unable to update sighting."
+        setSightingSuccess(
+          "Wildlife sighting approved successfully."
+        );
+      } else {
+        setSightings((previous) =>
+          previous.filter(
+            (sighting) => sighting.id !== id
+          )
+        );
+
+        setSightingSuccess(
+          "Wildlife sighting rejected."
         );
       }
 
-      setSightings((previous) =>
-        previous.filter((sighting) => sighting.id !== id)
-      );
-
       setReviewedPhotos((previous) =>
-        previous.filter((reviewedId) => reviewedId !== id)
+        previous.filter(
+          (reviewedId) => reviewedId !== id
+        )
       );
     } catch (error) {
       setModerationError(
         error instanceof Error
           ? error.message
-          : "Something went wrong."
+          : "Unable to update sighting."
+      );
+    } finally {
+      setProcessingId(null);
+    }
+  }
+
+  // ============================================================
+  // EDIT APPROVED WILDLIFE SIGHTINGS
+  // ============================================================
+
+  function startEditingSighting(sighting: Sighting) {
+    setEditingSightingId(sighting.id);
+    setModerationError("");
+    setSightingSuccess("");
+
+    setSightingEdits((previous) => ({
+      ...previous,
+      [sighting.id]: {
+        species: sighting.species,
+        description: sighting.description ?? "",
+        location: sighting.location,
+        observed_at: sighting.observed_at.slice(0, 10),
+      },
+    }));
+  }
+
+  function updateSightingEdit(
+    id: string,
+    changes: Partial<SightingEdit>
+  ) {
+    setSightingEdits((previous) => {
+      const current = previous[id];
+      if (!current) return previous;
+
+      return {
+        ...previous,
+        [id]: {
+          ...current,
+          ...changes,
+        },
+      };
+    });
+  }
+
+  async function saveSighting(id: string) {
+    const edits = sightingEdits[id];
+    if (!edits) return;
+
+    if (
+      !edits.species.trim() ||
+      !edits.location.trim() ||
+      !edits.observed_at
+    ) {
+      setModerationError(
+        "Please complete the species, location, and observation date."
+      );
+      return;
+    }
+
+    setProcessingId(id);
+    setModerationError("");
+    setSightingSuccess("");
+
+    try {
+      const result = await adminRequest(
+        `/api/admin/sightings/${encodeURIComponent(id)}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(edits),
+        }
+      );
+
+      setSightings((previous) =>
+        previous.map((sighting) =>
+          sighting.id === id
+            ? { ...sighting, ...result.sighting }
+            : sighting
+        )
+      );
+
+      setEditingSightingId(null);
+      setSightingSuccess(
+        "Wildlife sighting updated successfully."
+      );
+    } catch (error) {
+      setModerationError(
+        error instanceof Error
+          ? error.message
+          : "Unable to save changes."
+      );
+    } finally {
+      setProcessingId(null);
+    }
+  }
+
+  // ============================================================
+  // DELETE APPROVED WILDLIFE SIGHTINGS
+  // ============================================================
+
+  async function deleteSighting(id: string) {
+    if (
+      !window.confirm(
+        "Are you sure you want to permanently delete this wildlife sighting? This cannot be undone."
+      )
+    ) {
+      return;
+    }
+
+    setProcessingId(id);
+    setModerationError("");
+    setSightingSuccess("");
+
+    try {
+      await adminRequest(
+        `/api/admin/sightings/${encodeURIComponent(id)}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      setSightings((previous) =>
+        previous.filter(
+          (sighting) => sighting.id !== id
+        )
+      );
+
+      setEditingSightingId(null);
+      setSightingSuccess(
+        "Wildlife sighting deleted successfully."
+      );
+    } catch (error) {
+      setModerationError(
+        error instanceof Error
+          ? error.message
+          : "Unable to delete sighting."
       );
     } finally {
       setProcessingId(null);
@@ -413,13 +650,15 @@ export default function AdminPage() {
     newStatus: "approved" | "rejected"
   ) {
     const idea = ideas.find((item) => item.id === id);
-
     if (!idea) return;
 
     const review =
       ideaReviews[id] ?? initialReview(idea);
 
-    if (newStatus === "approved" && !review.title.trim()) {
+    if (
+      newStatus === "approved" &&
+      !review.title.trim()
+    ) {
       setIdeaError(
         "Please enter a title before approving the recommendation."
       );
@@ -441,14 +680,6 @@ export default function AdminPage() {
     setIdeaError("");
 
     try {
-      const { data, error } =
-        await supabase.auth.getSession();
-
-      if (error || !data.session) {
-        router.replace("/admin/login");
-        return;
-      }
-
       const body =
         newStatus === "approved"
           ? {
@@ -463,27 +694,16 @@ export default function AdminPage() {
               status: "rejected",
             };
 
-      const response = await fetch(
+      await adminRequest(
         `/api/admin/recommendation-ideas/${encodeURIComponent(id)}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              `Bearer ${data.session.access_token}`,
           },
           body: JSON.stringify(body),
         }
       );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result.error ||
-            "Unable to review recommendation idea."
-        );
-      }
 
       setIdeas((previous) =>
         previous.filter((item) => item.id !== id)
@@ -498,7 +718,7 @@ export default function AdminPage() {
       setIdeaError(
         error instanceof Error
           ? error.message
-          : "Something went wrong."
+          : "Unable to review recommendation idea."
       );
     } finally {
       setProcessingIdeaId(null);
@@ -554,19 +774,69 @@ export default function AdminPage() {
     >
       <header style={{ marginBottom: 32 }}>
         <h1>LEGO Club Administration</h1>
-
         <p>
-          Review wildlife sightings and recommendation ideas
-          submitted by visitors.
+          Review wildlife sightings and recommendation
+          ideas submitted by visitors.
         </p>
       </header>
 
       {/* ======================================================
-          WILDLIFE SIGHTINGS
+          WILDLIFE SIGHTINGS MANAGEMENT
       ====================================================== */}
 
       <section>
-        <h2>Pending Wildlife Sightings</h2>
+        <h2>Wildlife Sightings Management</h2>
+
+        <p>
+          Review new wildlife sightings and manage
+          previously approved submissions.
+        </p>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            marginTop: 20,
+            marginBottom: 24,
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setSightingTab("pending");
+              setEditingSightingId(null);
+              setModerationError("");
+            }}
+            style={{
+              ...buttonStyle,
+              backgroundColor:
+                sightingTab === "pending"
+                  ? "#276749"
+                  : "#666",
+            }}
+          >
+            Pending ({pendingSightings.length})
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setSightingTab("approved");
+              setEditingSightingId(null);
+              setModerationError("");
+            }}
+            style={{
+              ...buttonStyle,
+              backgroundColor:
+                sightingTab === "approved"
+                  ? "#276749"
+                  : "#666",
+            }}
+          >
+            Approved ({approvedSightings.length})
+          </button>
+        </div>
 
         {moderationError && (
           <p role="alert" style={{ color: "#b91c1c" }}>
@@ -574,10 +844,20 @@ export default function AdminPage() {
           </p>
         )}
 
+        {sightingSuccess && (
+          <p role="status" style={{ color: "#276749" }}>
+            {sightingSuccess}
+          </p>
+        )}
+
         {loadingSightings ? (
           <p>Loading sightings...</p>
-        ) : sightings.length === 0 ? (
-          <p>No pending wildlife sightings yet.</p>
+        ) : visibleSightings.length === 0 ? (
+          <p>
+            {sightingTab === "pending"
+              ? "No pending wildlife sightings yet."
+              : "No approved wildlife sightings yet."}
+          </p>
         ) : (
           <div
             style={{
@@ -586,119 +866,362 @@ export default function AdminPage() {
               marginTop: 20,
             }}
           >
-            {sightings.map((sighting) => (
-              <article key={sighting.id} style={cardStyle}>
-                <h3>{sighting.species}</h3>
+            {visibleSightings.map((sighting) => {
+              const isEditing =
+                editingSightingId === sighting.id;
 
-                <p>
-                  <strong>Location:</strong>{" "}
-                  {sighting.location}
-                </p>
+              const edits = sightingEdits[sighting.id];
 
-                <p>
-                  <strong>Observed:</strong>{" "}
-                  {new Date(
-                    sighting.observed_at
-                  ).toLocaleDateString()}
-                </p>
+              return (
+                <article
+                  key={sighting.id}
+                  style={cardStyle}
+                >
+                  <h3>{sighting.species}</h3>
 
-                {sighting.description && (
                   <p>
-                    <strong>Description:</strong>{" "}
-                    {sighting.description}
+                    <strong>Status:</strong>{" "}
+                    {sighting.status === "approved"
+                      ? "Approved"
+                      : "Pending review"}
                   </p>
-                )}
 
-                <p>
-                  <strong>Submitted:</strong>{" "}
-                  {new Date(
-                    sighting.created_at
-                  ).toLocaleDateString()}
-                </p>
+                  <p>
+                    <strong>Location:</strong>{" "}
+                    {sighting.location}
+                  </p>
 
-                {sighting.photo_path && (
-                  <div>
-                    <SightingPhoto sightingId={sighting.id} />
+                  <p>
+                    <strong>Observed:</strong>{" "}
+                    {formatDate(sighting.observed_at)}
+                  </p>
 
-                    <label
+                  {sighting.description && (
+                    <p>
+                      <strong>Description:</strong>{" "}
+                      {sighting.description}
+                    </p>
+                  )}
+
+                  <p>
+                    <strong>Submitted:</strong>{" "}
+                    {formatDate(sighting.created_at)}
+                  </p>
+
+                  {/* PHOTO DISPLAY */}
+
+                  {sighting.photo_path && (
+                    <div style={{ marginTop: 16 }}>
+                      {sighting.status === "pending" ? (
+                        <SightingPhoto
+                          sightingId={sighting.id}
+                        />
+                      ) : (
+                        <img
+                          src={`/api/gallery/${encodeURIComponent(
+                            sighting.id
+                          )}/photo`}
+                          alt={`Wildlife sighting: ${sighting.species}`}
+                          style={{
+                            maxWidth: "100%",
+                            maxHeight: 350,
+                            borderRadius: 10,
+                            objectFit: "contain",
+                          }}
+                        />
+                      )}
+
+                      {/* PHOTO REVIEW CONFIRMATION */}
+
+                      {sighting.status === "pending" && (
+                        <label
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                            marginTop: 16,
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={reviewedPhotos.includes(
+                              sighting.id
+                            )}
+                            onChange={(event) => {
+                              setReviewedPhotos((previous) =>
+                                event.target.checked
+                                  ? [
+                                      ...previous,
+                                      sighting.id,
+                                    ]
+                                  : previous.filter(
+                                      (id) =>
+                                        id !== sighting.id
+                                    )
+                              );
+                            }}
+                          />
+                          I have reviewed this wildlife
+                          photograph.
+                        </label>
+                      )}
+                    </div>
+                  )}
+
+                  {/* PENDING APPROVAL BUTTONS */}
+
+                  {sighting.status === "pending" && (
+                    <div
                       style={{
                         display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        marginTop: 16,
+                        gap: 12,
+                        marginTop: 20,
+                        flexWrap: "wrap",
                       }}
                     >
-                      <input
-                        type="checkbox"
-                        checked={reviewedPhotos.includes(
-                          sighting.id
-                        )}
-                        onChange={(event) => {
-                          setReviewedPhotos((previous) =>
-                            event.target.checked
-                              ? [...previous, sighting.id]
-                              : previous.filter(
-                                  (id) => id !== sighting.id
-                                )
-                          );
+                      <button
+                        type="button"
+                        disabled={
+                          processingId !== null ||
+                          (Boolean(sighting.photo_path) &&
+                            !reviewedPhotos.includes(
+                              sighting.id
+                            ))
+                        }
+                        onClick={() =>
+                          moderateSighting(
+                            sighting.id,
+                            "approved"
+                          )
+                        }
+                        style={{
+                          ...buttonStyle,
+                          backgroundColor: "#276749",
                         }}
-                      />
+                      >
+                        {processingId === sighting.id
+                          ? "Processing..."
+                          : "Approve"}
+                      </button>
 
-                      I have reviewed this wildlife photograph.
-                    </label>
-                  </div>
-                )}
+                      <button
+                        type="button"
+                        disabled={processingId !== null}
+                        onClick={() =>
+                          moderateSighting(
+                            sighting.id,
+                            "rejected"
+                          )
+                        }
+                        style={{
+                          ...buttonStyle,
+                          backgroundColor: "#9b2c2c",
+                        }}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 12,
-                    marginTop: 20,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <button
-                    type="button"
-                    disabled={
-                      processingId !== null ||
-                      (Boolean(sighting.photo_path) &&
-                        !reviewedPhotos.includes(sighting.id))
-                    }
-                    onClick={() =>
-                      moderateSighting(
-                        sighting.id,
-                        "approved"
-                      )
-                    }
-                    style={{
-                      ...buttonStyle,
-                      backgroundColor: "#276749",
-                    }}
-                  >
-                    {processingId === sighting.id
-                      ? "Processing..."
-                      : "Approve"}
-                  </button>
+                  {/* APPROVED SIGHTING MANAGEMENT */}
 
-                  <button
-                    type="button"
-                    disabled={processingId !== null}
-                    onClick={() =>
-                      moderateSighting(
-                        sighting.id,
-                        "rejected"
-                      )
-                    }
-                    style={{
-                      ...buttonStyle,
-                      backgroundColor: "#9b2c2c",
-                    }}
-                  >
-                    Reject
-                  </button>
-                </div>
-              </article>
-            ))}
+                  {sighting.status === "approved" && (
+                    <div style={{ marginTop: 24 }}>
+                      {!isEditing ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: 12,
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            disabled={processingId !== null}
+                            onClick={() =>
+                              startEditingSighting(sighting)
+                            }
+                            style={{
+                              ...buttonStyle,
+                              backgroundColor: "#276749",
+                            }}
+                          >
+                            Edit Sighting
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={processingId !== null}
+                            onClick={() =>
+                              deleteSighting(sighting.id)
+                            }
+                            style={{
+                              ...buttonStyle,
+                              backgroundColor: "#9b2c2c",
+                            }}
+                          >
+                            Delete Sighting
+                          </button>
+                        </div>
+                      ) : edits ? (
+                        <div
+                          style={{
+                            padding: 20,
+                            backgroundColor: "#f3f6f2",
+                            color: "#222",
+                            borderRadius: 10,
+                          }}
+                        >
+                          <h4>Edit Wildlife Sighting</h4>
+
+                          <label
+                            htmlFor={`species-${sighting.id}`}
+                          >
+                            Species
+                          </label>
+
+                          <input
+                            id={`species-${sighting.id}`}
+                            type="text"
+                            maxLength={2000}
+                            value={edits.species}
+                            onChange={(event) =>
+                              updateSightingEdit(
+                                sighting.id,
+                                {
+                                  species:
+                                    event.target.value,
+                                }
+                              )
+                            }
+                            style={fieldStyle}
+                          />
+
+                          <label
+                            htmlFor={`location-${sighting.id}`}
+                            style={{
+                              display: "block",
+                              marginTop: 18,
+                            }}
+                          >
+                            Location
+                          </label>
+
+                          <input
+                            id={`location-${sighting.id}`}
+                            type="text"
+                            maxLength={2000}
+                            value={edits.location}
+                            onChange={(event) =>
+                              updateSightingEdit(
+                                sighting.id,
+                                {
+                                  location:
+                                    event.target.value,
+                                }
+                              )
+                            }
+                            style={fieldStyle}
+                          />
+
+                          <label
+                            htmlFor={`observed-${sighting.id}`}
+                            style={{
+                              display: "block",
+                              marginTop: 18,
+                            }}
+                          >
+                            Date Observed
+                          </label>
+
+                          <input
+                            id={`observed-${sighting.id}`}
+                            type="date"
+                            value={edits.observed_at}
+                            onChange={(event) =>
+                              updateSightingEdit(
+                                sighting.id,
+                                {
+                                  observed_at:
+                                    event.target.value,
+                                }
+                              )
+                            }
+                            style={fieldStyle}
+                          />
+
+                          <label
+                            htmlFor={`description-${sighting.id}`}
+                            style={{
+                              display: "block",
+                              marginTop: 18,
+                            }}
+                          >
+                            Description
+                          </label>
+
+                          <textarea
+                            id={`description-${sighting.id}`}
+                            rows={5}
+                            maxLength={2000}
+                            value={edits.description}
+                            onChange={(event) =>
+                              updateSightingEdit(
+                                sighting.id,
+                                {
+                                  description:
+                                    event.target.value,
+                                }
+                              )
+                            }
+                            style={fieldStyle}
+                          />
+
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: 12,
+                              marginTop: 24,
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            <button
+                              type="button"
+                              disabled={processingId !== null}
+                              onClick={() =>
+                                saveSighting(sighting.id)
+                              }
+                              style={{
+                                ...buttonStyle,
+                                backgroundColor: "#276749",
+                              }}
+                            >
+                              {processingId === sighting.id
+                                ? "Saving..."
+                                : "Save Changes"}
+                            </button>
+
+                            <button
+                              type="button"
+                              disabled={processingId !== null}
+                              onClick={() =>
+                                setEditingSightingId(null)
+                              }
+                              style={{
+                                ...buttonStyle,
+                                backgroundColor: "#666",
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
@@ -711,10 +1234,11 @@ export default function AdminPage() {
         <h2>Pending Recommendation Ideas</h2>
 
         <p>
-          Review submitted ideas and assign categories before
-          approving them. Approved recommendations will be
-          eligible for the personalized dashboard once the
-          public recommendation integration is complete.
+          Review submitted ideas and assign categories
+          before approving them. Approved recommendations
+          will be eligible for the personalized dashboard
+          once the public recommendation integration is
+          complete.
         </p>
 
         {ideaError && (
@@ -737,10 +1261,14 @@ export default function AdminPage() {
           >
             {ideas.map((idea) => {
               const review =
-                ideaReviews[idea.id] ?? initialReview(idea);
+                ideaReviews[idea.id] ??
+                initialReview(idea);
 
               return (
-                <article key={idea.id} style={cardStyle}>
+                <article
+                  key={idea.id}
+                  style={cardStyle}
+                >
                   <h3>Recommendation Idea</h3>
 
                   <p style={{ whiteSpace: "pre-wrap" }}>
@@ -749,7 +1277,8 @@ export default function AdminPage() {
 
                   <p>
                     <strong>Suggested Month:</strong>{" "}
-                    {idea.suggested_month || "Any month"}
+                    {idea.suggested_month ||
+                      "Any month"}
                   </p>
 
                   {idea.information_url && (
@@ -767,14 +1296,10 @@ export default function AdminPage() {
 
                   <p>
                     <strong>Submitted:</strong>{" "}
-                    {new Date(
-                      idea.created_at
-                    ).toLocaleDateString()}
+                    {formatDate(idea.created_at)}
                   </p>
 
-                  {/* ------------------------------------------
-                      ADMIN CATEGORIZATION
-                  ------------------------------------------ */}
+                  {/* ADMIN CATEGORIZATION */}
 
                   <div
                     style={{
@@ -785,11 +1310,14 @@ export default function AdminPage() {
                       color: "#222",
                     }}
                   >
-                    <h4>Prepare Recommendation for Publishing</h4>
+                    <h4>
+                      Prepare Recommendation for Publishing
+                    </h4>
 
                     <p>
-                      Choose who should receive this recommendation
-                      and when it should appear.
+                      Choose who should receive this
+                      recommendation and when it should
+                      appear.
                     </p>
 
                     {/* TITLE */}
@@ -824,47 +1352,58 @@ export default function AdminPage() {
                         padding: 0,
                       }}
                     >
-                      <legend style={{ fontWeight: 600 }}>
+                      <legend
+                        style={{ fontWeight: 600 }}
+                      >
                         Relevant Interests
                       </legend>
 
                       <p>
-                        Select all that apply. Leave everything
-                        unchecked if this idea is relevant to
-                        everyone.
+                        Select all that apply. Leave
+                        everything unchecked if this idea
+                        is relevant to everyone.
                       </p>
 
-                      {INTEREST_OPTIONS.map((interest) => (
-                        <label
-                          key={interest}
-                          style={{
-                            display: "flex",
-                            gap: 10,
-                            alignItems: "center",
-                            marginBottom: 10,
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={review.interests.includes(
-                              interest
-                            )}
-                            onChange={(event) => {
-                              const updated = event.target.checked
-                                ? [...review.interests, interest]
-                                : review.interests.filter(
-                                    (item) => item !== interest
-                                  );
-
-                              updateIdeaReview(idea.id, {
-                                interests: updated,
-                              });
+                      {INTEREST_OPTIONS.map(
+                        (interest) => (
+                          <label
+                            key={interest}
+                            style={{
+                              display: "flex",
+                              gap: 10,
+                              alignItems: "center",
+                              marginBottom: 10,
                             }}
-                          />
+                          >
+                            <input
+                              type="checkbox"
+                              checked={review.interests.includes(
+                                interest
+                              )}
+                              onChange={(event) => {
+                                const updated =
+                                  event.target.checked
+                                    ? [
+                                        ...review.interests,
+                                        interest,
+                                      ]
+                                    : review.interests.filter(
+                                        (item) =>
+                                          item !== interest
+                                      );
 
-                          {interest}
-                        </label>
-                      ))}
+                                updateIdeaReview(
+                                  idea.id,
+                                  {
+                                    interests: updated,
+                                  }
+                                );
+                              }}
+                            />
+                            {interest}
+                          </label>
+                        )
+                      )}
                     </fieldset>
 
                     {/* MONTHS */}
@@ -876,14 +1415,17 @@ export default function AdminPage() {
                         padding: 0,
                       }}
                     >
-                      <legend style={{ fontWeight: 600 }}>
+                      <legend
+                        style={{ fontWeight: 600 }}
+                      >
                         Applicable Months
                       </legend>
 
                       <p>
-                        Select all months when this recommendation
-                        is relevant. Leave all unchecked for
-                        year-round recommendations.
+                        Select all months when this
+                        recommendation is relevant. Leave
+                        all unchecked for year-round
+                        recommendations.
                       </p>
 
                       <div
@@ -894,47 +1436,55 @@ export default function AdminPage() {
                           gap: 10,
                         }}
                       >
-                        {MONTH_NAMES.map((month, index) => {
-                          const monthNumber = index + 1;
+                        {MONTH_NAMES.map(
+                          (month, index) => {
+                            const monthNumber =
+                              index + 1;
 
-                          return (
-                            <label
-                              key={month}
-                              style={{
-                                display: "flex",
-                                gap: 8,
-                                alignItems: "center",
-                              }}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={review.months.includes(
-                                  monthNumber
-                                )}
-                                onChange={(event) => {
-                                  const updated =
-                                    event.target.checked
-                                      ? [
-                                          ...review.months,
-                                          monthNumber,
-                                        ]
-                                      : review.months.filter(
-                                          (value) =>
-                                            value !== monthNumber
-                                        );
-
-                                  updateIdeaReview(idea.id, {
-                                    months: updated.sort(
-                                      (a, b) => a - b
-                                    ),
-                                  });
+                            return (
+                              <label
+                                key={month}
+                                style={{
+                                  display: "flex",
+                                  gap: 8,
+                                  alignItems: "center",
                                 }}
-                              />
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={review.months.includes(
+                                    monthNumber
+                                  )}
+                                  onChange={(event) => {
+                                    const updated =
+                                      event.target.checked
+                                        ? [
+                                            ...review.months,
+                                            monthNumber,
+                                          ]
+                                        : review.months.filter(
+                                            (value) =>
+                                              value !==
+                                              monthNumber
+                                          );
 
-                              {month}
-                            </label>
-                          );
-                        })}
+                                    updateIdeaReview(
+                                      idea.id,
+                                      {
+                                        months:
+                                          updated.sort(
+                                            (a, b) =>
+                                              a - b
+                                          ),
+                                      }
+                                    );
+                                  }}
+                                />
+                                {month}
+                              </label>
+                            );
+                          }
+                        )}
                       </div>
                     </fieldset>
 
@@ -947,7 +1497,9 @@ export default function AdminPage() {
                         padding: 0,
                       }}
                     >
-                      <legend style={{ fontWeight: 600 }}>
+                      <legend
+                        style={{ fontWeight: 600 }}
+                      >
                         Space Requirements
                       </legend>
 
@@ -961,14 +1513,19 @@ export default function AdminPage() {
                       >
                         <input
                           type="checkbox"
-                          checked={review.requires_lawn}
+                          checked={
+                            review.requires_lawn
+                          }
                           onChange={(event) =>
-                            updateIdeaReview(idea.id, {
-                              requires_lawn: event.target.checked,
-                            })
+                            updateIdeaReview(
+                              idea.id,
+                              {
+                                requires_lawn:
+                                  event.target.checked,
+                              }
+                            )
                           }
                         />
-
                         Requires a lawn
                       </label>
 
@@ -982,22 +1539,25 @@ export default function AdminPage() {
                       >
                         <input
                           type="checkbox"
-                          checked={review.requires_garden}
+                          checked={
+                            review.requires_garden
+                          }
                           onChange={(event) =>
-                            updateIdeaReview(idea.id, {
-                              requires_garden: event.target.checked,
-                            })
+                            updateIdeaReview(
+                              idea.id,
+                              {
+                                requires_garden:
+                                  event.target.checked,
+                              }
+                            )
                           }
                         />
-
                         Requires a garden
                       </label>
                     </fieldset>
                   </div>
 
-                  {/* ------------------------------------------
-                      APPROVAL BUTTONS
-                  ------------------------------------------ */}
+                  {/* APPROVAL BUTTONS */}
 
                   <div
                     style={{
@@ -1014,7 +1574,10 @@ export default function AdminPage() {
                         !review.title.trim()
                       }
                       onClick={() =>
-                        moderateIdea(idea.id, "approved")
+                        moderateIdea(
+                          idea.id,
+                          "approved"
+                        )
                       }
                       style={{
                         ...buttonStyle,
@@ -1028,9 +1591,14 @@ export default function AdminPage() {
 
                     <button
                       type="button"
-                      disabled={processingIdeaId !== null}
+                      disabled={
+                        processingIdeaId !== null
+                      }
                       onClick={() =>
-                        moderateIdea(idea.id, "rejected")
+                        moderateIdea(
+                          idea.id,
+                          "rejected"
+                        )
                       }
                       style={{
                         ...buttonStyle,
