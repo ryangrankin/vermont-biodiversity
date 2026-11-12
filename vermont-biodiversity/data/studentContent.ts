@@ -31,7 +31,7 @@ export const appInfo = {
   name: "VTBiodiversity",
 
   // STUDENTS: Write a short slogan for your app.
-  tagline: "replace this text with your apps slogan",
+  tagline: "Every Vermonter can help!",
 
   // STUDENTS: Write a welcome message explaining
   // what your app does and why it matters.
@@ -139,6 +139,7 @@ export const surveyQuestions = [
       "Mountian Biking",
       "Boating",
       "Birdwatching",
+      "Volunteering",
     ],
   },
 
@@ -361,7 +362,7 @@ export const recommendations = [
     title: "Are you ready for a Big Night out? Go meet the amphibians and save some lives. ",
 
     // STUDENTS: Explain what the user should do.
-    description: "Amphibians migrate when it is above 40 degrees, dark and raining and between March and May. Become a volunteer amphibian crossing reporter and stop traffic to help anphibians cross.",
+    description: "Amphibians migrate when it is above 40 degrees, dark and raining and between March and May. Become a volunteer amphibian crossing reporter and help anphibians cross the road.",
 
     // STUDENTS: Explain why this helps biodiversity.
     whyItMatters: "This helps amphibians cross roads safely when they migrate",
@@ -794,12 +795,12 @@ export const individualAnimals = [
       url: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/birds/american-goldfinch",
     },
     {
-      name: "",
-      url: "",
+      name: "Native Field Thistle",
+      url: "https://plants.sc.egov.usda.gov/DocumentLibrary/factsheet/pdf/fs_cidi.pdf",
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/7406/9164872669_ce57df16c6_b.jpg",
   },
   {
     id: "animal-6",
