@@ -59,6 +59,25 @@ export default async function AnimalCategoryPage({
       key={animal.id}
       id={animal.id}
     >
+    
+
+{animal.image && (
+  <img
+    src={animal.image}
+    alt={`Photograph of ${animal.name}`}
+    loading="lazy"
+    style={{
+      height: "220px",
+      objectFit: "cover",
+      borderRadius: "10px",
+      marginBottom: "12px",
+    }}
+  />
+)}
+
+<h3>{animal.name}</h3>
+
+
       <h3>{animal.name || "Animal Name Coming Soon"}</h3>
 
       <h4>Description</h4>

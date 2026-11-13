@@ -994,20 +994,22 @@ export const individualAnimals = [
 
   source: "",
 
-  sources: [
-    {
-      name: "Audubon Ten Fun Facts About the American Goldfinch",
-      url: "https://www.audubon.org/magazine/10-fun-facts-about-american-goldfinch",
-    },
-    {
-      name: "Fish & Wildlife American Goldfinch",
-      url: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/birds/american-goldfinch",
-    },
-    {
-      name: "Native Field Thistle",
-      url: "https://plants.sc.egov.usda.gov/DocumentLibrary/factsheet/pdf/fs_cidi.pdf",
-    },
-  ],
+  
+sources: [
+  {
+    name: "Audubon Ten Fun Facts About the American Goldfinch",
+    url: "https://www.audubon.org/magazine/10-fun-facts-about-american-goldfinch",
+  },
+  {
+    name: "Fish & Wildlife American Goldfinch",
+    url: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/birds/american-goldfinch",
+  },
+  {
+    name: "Native Field Thistle",
+    url: "https://plants.sc.egov.usda.gov/DocumentLibrary/factsheet/pdf/fs_cidi.pdf",
+  },
+],
+
 
     image: "https://live.staticflickr.com/7406/9164872669_ce57df16c6_b.jpg",
   },
