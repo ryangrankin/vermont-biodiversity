@@ -75,9 +75,6 @@ export default async function AnimalCategoryPage({
   />
 )}
 
-<h3>{animal.name}</h3>
-
-
       <h3>{animal.name || "Animal Name Coming Soon"}</h3>
 
       <h4>Description</h4>
