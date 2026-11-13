@@ -3,16 +3,53 @@ import { NextRequest, NextResponse, connection } from "next/server";
 import { createHash, randomUUID } from "node:crypto";
 import sharp from "sharp";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { validateWildlifeVideo } from "@/lib/validateWildlifeVideo";
 
-// Keep wildlife photo submissions working.
-// Video submissions remain disabled until final security checks.
+// ============================================================
+// FEATURE FLAGS
+// ============================================================
+
+// Keep photo and text-only submissions working.
 const SUBMISSIONS_ENABLED = true;
-const VIDEO_SUBMISSIONS_ENABLED = true;
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+// Enable only after end-to-end video testing is complete.
+const VIDEO_SUBMISSIONS_ENABLED = false;
+
+// ============================================================
+// FILE LIMITS
+// ============================================================
+
+const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 const MAX_REQUEST_SIZE = 6 * 1024 * 1024;
 
-function getClientIp(request: NextRequest) {
+const ALLOWED_PHOTO_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
+
+const VIDEO_UPLOAD_ID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const VIDEO_PATH_PATTERN =
+  /^pending\/[0-9a-f-]{36}\.(mp4|webm)$/;
+
+// ============================================================
+// RESPONSE HELPER
+// ============================================================
+
+function errorResponse(message: string, status: number) {
+  return NextResponse.json(
+    { error: message },
+    { status }
+  );
+}
+
+// ============================================================
+// CLIENT IDENTIFICATION
+// ============================================================
+
+function getClientIp(request: NextRequest): string {
   const forwardedFor =
     process.env.NODE_ENV === "development"
       ? "127.0.0.1"
@@ -34,7 +71,7 @@ function getClientIp(request: NextRequest) {
 function getHashedIdentifier(
   request: NextRequest,
   purpose: "sighting" | "video"
-) {
+): string {
   const secret = process.env.SIGHTING_RATE_LIMIT_SECRET;
 
   if (!secret) {
@@ -57,7 +94,9 @@ function getHashedIdentifier(
 // RATE LIMITING
 // ============================================================
 
-async function checkRateLimit(request: NextRequest) {
+async function checkRateLimit(
+  request: NextRequest
+): Promise<boolean> {
   const identifier = getHashedIdentifier(
     request,
     "sighting"
@@ -88,14 +127,25 @@ async function checkRateLimit(request: NextRequest) {
 // SAFELY READ FORM DATA
 // ============================================================
 
-async function readLimitedFormData(request: NextRequest) {
+// The video itself is uploaded directly to private Supabase
+// Storage. This endpoint receives only its upload ID.
+//
+// Photo uploads still pass through this endpoint and remain
+// subject to the existing 6 MB request limit.
+
+async function readLimitedFormData(
+  request: NextRequest
+): Promise<FormData> {
   const contentLength = request.headers.get(
     "content-length"
   );
 
   if (
     contentLength !== null &&
-    Number(contentLength) > MAX_REQUEST_SIZE
+    (
+      !Number.isFinite(Number(contentLength)) ||
+      Number(contentLength) > MAX_REQUEST_SIZE
+    )
   ) {
     throw new Error("TOO_LARGE");
   }
@@ -145,18 +195,21 @@ async function readLimitedFormData(request: NextRequest) {
 }
 
 // ============================================================
-// VERIFY VIDEO UPLOAD
+// VERIFY VIDEO UPLOAD RESERVATION
 // ============================================================
+
+// Confirm that the upload belongs to this requester,
+// remains pending, and has not expired.
+//
+// The final database RPC repeats critical checks atomically.
 
 async function verifyVideoUpload(
   uploadId: string,
-  request: NextRequest
-) {
-  const identifier = getHashedIdentifier(
-    request,
-    "video"
-  );
-
+  identifier: string
+): Promise<{
+  videoPath: string;
+  videoType: "video/mp4" | "video/webm";
+} | null> {
   const { data: valid, error: verificationError } =
     await supabaseAdmin.rpc(
       "verify_sighting_video_upload",
@@ -182,21 +235,101 @@ async function verifyVideoUpload(
   const { data: upload, error: lookupError } =
     await supabaseAdmin
       .from("sighting_video_uploads")
-      .select("video_path, status, expires_at")
+      .select("video_path, content_type, expires_at")
       .eq("id", uploadId)
       .eq("upload_identifier", identifier)
       .eq("status", "pending")
-      .single();
+      .maybeSingle();
 
-  if (lookupError || !upload) {
+  if (lookupError) {
+    console.error(
+      "Video reservation lookup error:",
+      lookupError
+    );
+
+    throw new Error("Unable to retrieve video reservation.");
+  }
+
+  if (!upload) {
     return null;
   }
 
-  if (new Date(upload.expires_at).getTime() <= Date.now()) {
+  const expiration = new Date(
+    upload.expires_at
+  ).getTime();
+
+  if (
+    !Number.isFinite(expiration) ||
+    expiration <= Date.now()
+  ) {
     return null;
   }
 
-  return upload.video_path as string;
+  if (
+    typeof upload.video_path !== "string" ||
+    !VIDEO_PATH_PATTERN.test(upload.video_path)
+  ) {
+    return null;
+  }
+
+  if (
+    upload.content_type !== "video/mp4" &&
+    upload.content_type !== "video/webm"
+  ) {
+    return null;
+  }
+
+  const expectedExtension =
+    upload.content_type === "video/mp4"
+      ? ".mp4"
+      : ".webm";
+
+  if (!upload.video_path.endsWith(expectedExtension)) {
+    return null;
+  }
+
+  return {
+    videoPath: upload.video_path,
+    videoType: upload.content_type,
+  };
+}
+
+// ============================================================
+// VALIDATE OBSERVATION DATE
+// ============================================================
+
+function parseObservationDate(
+  value: string
+): Date | null {
+  // Require the same YYYY-MM-DD format used by the form.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return null;
+  }
+
+  const observedAt = new Date(`${value}T00:00:00.000Z`);
+
+  if (!Number.isFinite(observedAt.getTime())) {
+    return null;
+  }
+
+  // Reject invalid calendar dates that JavaScript normalizes.
+  if (
+    observedAt.toISOString().slice(0, 10) !== value
+  ) {
+    return null;
+  }
+
+  // Compare calendar dates rather than UTC midnight against
+  // the current instant, avoiding same-day timezone issues.
+  const todayUtc = new Date()
+    .toISOString()
+    .slice(0, 10);
+
+  if (value > todayUtc) {
+    return null;
+  }
+
+  return observedAt;
 }
 
 // ============================================================
@@ -206,16 +339,21 @@ async function verifyVideoUpload(
 export async function POST(request: NextRequest) {
   await connection();
 
+  // ----------------------------------------------------------
+  // CHECK FEATURE AVAILABILITY
+  // ----------------------------------------------------------
+
   if (!SUBMISSIONS_ENABLED) {
-    return NextResponse.json(
-      {
-        error: "Wildlife submissions are not enabled yet.",
-      },
-      { status: 503 }
+    return errorResponse(
+      "Wildlife submissions are not enabled yet.",
+      503
     );
   }
 
-  // Apply the existing sighting rate limit.
+  // ----------------------------------------------------------
+  // APPLY RATE LIMIT
+  // ----------------------------------------------------------
+
   let allowed: boolean;
 
   try {
@@ -223,23 +361,22 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Sighting rate-limit error:", error);
 
-    return NextResponse.json(
-      {
-        error: "Submissions are temporarily unavailable.",
-      },
-      { status: 503 }
+    return errorResponse(
+      "Submissions are temporarily unavailable.",
+      503
     );
   }
 
   if (!allowed) {
-    return NextResponse.json(
-      {
-        error:
-          "Too many submissions. Please try again later.",
-      },
-      { status: 429 }
+    return errorResponse(
+      "Too many submissions. Please try again later.",
+      429
     );
   }
+
+  // ----------------------------------------------------------
+  // READ FORM DATA
+  // ----------------------------------------------------------
 
   let formData: FormData;
 
@@ -250,20 +387,21 @@ export async function POST(request: NextRequest) {
       error instanceof Error &&
       error.message === "TOO_LARGE"
     ) {
-      return NextResponse.json(
-        {
-          error:
-            "Submission is too large. Maximum size is 6 MB.",
-        },
-        { status: 413 }
+      return errorResponse(
+        "Submission is too large. Maximum size is 6 MB.",
+        413
       );
     }
 
-    return NextResponse.json(
-      { error: "Invalid submission data." },
-      { status: 400 }
+    return errorResponse(
+      "Invalid submission data.",
+      400
     );
   }
+
+  // ----------------------------------------------------------
+  // EXTRACT FIELDS
+  // ----------------------------------------------------------
 
   const species = formData.get("species");
   const description = formData.get("description");
@@ -272,7 +410,10 @@ export async function POST(request: NextRequest) {
   const photo = formData.get("photo");
   const videoUploadId = formData.get("videoUploadId");
 
-  // Validate all sighting fields.
+  // ----------------------------------------------------------
+  // VALIDATE SIGHTING DETAILS
+  // ----------------------------------------------------------
+
   if (
     typeof species !== "string" ||
     !species.trim() ||
@@ -284,36 +425,29 @@ export async function POST(request: NextRequest) {
     typeof description !== "string" ||
     description.length > 1000
   ) {
-    return NextResponse.json(
-      {
-        error: "Please check your sighting details.",
-      },
-      { status: 400 }
+    return errorResponse(
+      "Please check your sighting details.",
+      400
     );
   }
 
-  const observedAt = new Date(date);
+  const observedAt = parseObservationDate(date);
 
-  if (
-    !Number.isFinite(observedAt.getTime()) ||
-    observedAt.getTime() > Date.now()
-  ) {
-    return NextResponse.json(
-      {
-        error: "Please enter a valid observation date.",
-      },
-      { status: 400 }
+  if (!observedAt) {
+    return errorResponse(
+      "Please enter a valid observation date.",
+      400
     );
   }
 
-  // Reject simultaneous photo and video submissions.
+  // ----------------------------------------------------------
+  // VALIDATE MEDIA SELECTION
+  // ----------------------------------------------------------
+
   if (photo !== null && videoUploadId !== null) {
-    return NextResponse.json(
-      {
-        error:
-          "Please choose either a photograph or a video.",
-      },
-      { status: 400 }
+    return errorResponse(
+      "Please choose either a photograph or a video.",
+      400
     );
   }
 
@@ -321,59 +455,141 @@ export async function POST(request: NextRequest) {
     videoUploadId !== null &&
     (
       typeof videoUploadId !== "string" ||
-      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-        videoUploadId
-      )
+      !VIDEO_UPLOAD_ID_PATTERN.test(videoUploadId)
     )
   ) {
-    return NextResponse.json(
-      { error: "Invalid video upload reference." },
-      { status: 400 }
+    return errorResponse(
+      "Invalid video upload reference.",
+      400
     );
   }
 
-  if (videoUploadId !== null && !VIDEO_SUBMISSIONS_ENABLED) {
-    return NextResponse.json(
-      {
-        error: "Video submissions are not available yet.",
-      },
-      { status: 503 }
+  if (
+    videoUploadId !== null &&
+    !VIDEO_SUBMISSIONS_ENABLED
+  ) {
+    return errorResponse(
+      "Video submissions are not available yet.",
+      503
     );
   }
 
-  let photoPath: string | null = null;
-  let videoPath: string | null = null;
-
   // ==========================================================
-  // PROCESS PHOTOGRAPH
+  // PROCESS VIDEO SIGHTING
   // ==========================================================
 
-  if (photo !== null) {
-    if (
-      !(photo instanceof File) ||
-      ![
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-      ].includes(photo.type) ||
-      photo.size === 0 ||
-      photo.size > MAX_FILE_SIZE
-    ) {
+  if (typeof videoUploadId === "string") {
+    try {
+      const identifier = getHashedIdentifier(
+        request,
+        "video"
+      );
+
+      // Check ownership, reservation status, expiration,
+      // expected MIME type, and storage path.
+      const upload = await verifyVideoUpload(
+        videoUploadId,
+        identifier
+      );
+
+      if (!upload) {
+        return errorResponse(
+          "Video upload is invalid or has expired.",
+          400
+        );
+      }
+
+      // Inspect the private file's header before accepting it.
+      const validVideo = await validateWildlifeVideo(
+        upload.videoPath,
+        upload.videoType
+      );
+
+      if (!validVideo) {
+        return errorResponse(
+          "The uploaded video could not be validated. Please try another MP4 or WebM file.",
+          400
+        );
+      }
+
+      // The database function must perform final checks
+      // and insert the pending sighting in one transaction.
+      const { data: sightingId, error: videoError } =
+        await supabaseAdmin.rpc(
+          "complete_sighting_video_upload",
+          {
+            p_upload_id: videoUploadId,
+            p_identifier: identifier,
+            p_species: species.trim(),
+            p_description: description.trim(),
+            p_observed_at: observedAt.toISOString(),
+            p_location: location.trim(),
+          }
+        );
+
+      if (videoError || !sightingId) {
+        console.error(
+          "Atomic video submission error:",
+          videoError
+        );
+
+        return errorResponse(
+          "Unable to finalize video submission. Please check your video and try again.",
+          400
+        );
+      }
+
       return NextResponse.json(
         {
-          error:
-            "Please upload a JPG, PNG, or WebP image under 5 MB.",
+          success: true,
+          message:
+            "Your video sighting was submitted for review.",
         },
-        { status: 400 }
+        { status: 201 }
+      );
+    } catch (error) {
+      console.error("Video submission error:", error);
+
+      return errorResponse(
+        "Unable to submit video sighting.",
+        500
       );
     }
+  }
+
+  // ==========================================================
+  // PROCESS PHOTO OR TEXT-ONLY SIGHTING
+  // ==========================================================
+
+  let photoPath: string | null = null;
+
+  if (photo !== null) {
+    // --------------------------------------------------------
+    // VALIDATE PHOTOGRAPH
+    // --------------------------------------------------------
+
+    if (
+      !(photo instanceof File) ||
+      !ALLOWED_PHOTO_TYPES.includes(photo.type) ||
+      photo.size === 0 ||
+      photo.size > MAX_PHOTO_SIZE
+    ) {
+      return errorResponse(
+        "Please upload a JPG, PNG, or WebP image under 5 MB.",
+        400
+      );
+    }
+
+    // --------------------------------------------------------
+    // PROCESS AND UPLOAD PHOTOGRAPH
+    // --------------------------------------------------------
 
     try {
       const imageBuffer = Buffer.from(
         await photo.arrayBuffer()
       );
 
-      // Re-encode to WebP to remove EXIF/GPS metadata.
+      // Re-encode to WebP without preserving EXIF/GPS metadata.
       const processedImage = await sharp(imageBuffer, {
         limitInputPixels: 25_000_000,
       })
@@ -403,11 +619,9 @@ export async function POST(request: NextRequest) {
           uploadError
         );
 
-        return NextResponse.json(
-          {
-            error: "Unable to upload photograph.",
-          },
-          { status: 500 }
+        return errorResponse(
+          "Unable to upload photograph.",
+          500
         );
       }
     } catch (error) {
@@ -416,75 +630,9 @@ export async function POST(request: NextRequest) {
         error
       );
 
-      return NextResponse.json(
-        {
-          error:
-            "The photograph could not be processed.",
-        },
-        { status: 400 }
-      );
-    }
-  }
-
-
-  // ==========================================================
-  // SAVE VIDEO SIGHTING ATOMICALLY
-  // ==========================================================
-
-  if (typeof videoUploadId === "string") {
-    try {
-      const identifier = getHashedIdentifier(
-        request,
-        "video"
-      );
-
-      const { data: sightingId, error: videoError } =
-        await supabaseAdmin.rpc(
-          "complete_sighting_video_upload",
-          {
-            p_upload_id: videoUploadId,
-            p_identifier: identifier,
-            p_species: species.trim(),
-            p_description: description.trim(),
-            p_observed_at: observedAt.toISOString(),
-            p_location: location.trim(),
-          }
-        );
-
-      if (videoError || !sightingId) {
-        console.error(
-          "Atomic video submission error:",
-          videoError
-        );
-
-        return NextResponse.json(
-          {
-            error:
-              "Unable to finalize video submission. Please check your video and try again.",
-          },
-          { status: 400 }
-        );
-      }
-
-      return NextResponse.json(
-        {
-          success: true,
-          message:
-            "Your video sighting was submitted for review.",
-        },
-        { status: 201 }
-      );
-    } catch (error) {
-      console.error(
-        "Video submission error:",
-        error
-      );
-
-      return NextResponse.json(
-        {
-          error: "Unable to submit video sighting.",
-        },
-        { status: 500 }
+      return errorResponse(
+        "The photograph could not be processed.",
+        400
       );
     }
   }
@@ -509,19 +657,29 @@ export async function POST(request: NextRequest) {
     });
 
   if (insertError) {
-    console.error("Sighting insert error:", insertError);
+    console.error(
+      "Sighting insert error:",
+      insertError
+    );
 
+    // Remove the photo if the database insert failed.
     if (photoPath) {
-      await supabaseAdmin.storage
-        .from("wildlife-photos")
-        .remove([photoPath]);
+      const { error: cleanupError } =
+        await supabaseAdmin.storage
+          .from("wildlife-photos")
+          .remove([photoPath]);
+
+      if (cleanupError) {
+        console.error(
+          "Photo cleanup error:",
+          cleanupError
+        );
+      }
     }
 
-    return NextResponse.json(
-      {
-        error: "Unable to save wildlife sighting.",
-      },
-      { status: 500 }
+    return errorResponse(
+      "Unable to save wildlife sighting.",
+      500
     );
   }
 

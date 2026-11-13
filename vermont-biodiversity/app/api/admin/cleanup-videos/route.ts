@@ -3,8 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 
 type ExpiredUpload = {
   upload_id: string;
@@ -101,45 +99,96 @@ export async function POST(request: NextRequest) {
       const { data: current, error: lookupError } =
         await supabaseAdmin
           .from("sighting_video_uploads")
-          .select("status, sighting_id, video_path")
+          .select("status, sighting_id, video_path, expires_at, cleaned_at")
           .eq("id", upload.upload_id)
           .single();
 
-      if (
-        lookupError ||
-        !current ||
-        current.status !== "expired" ||
-        current.sighting_id !== null ||
-        current.video_path !== upload.video_path
-      ) {
-        failed++;
-        continue;
-      }
+      
+if (
+  lookupError ||
+  !current ||
+  current.status !== "expired" ||
+  current.sighting_id !== null ||
+  current.cleaned_at !== null ||
+  current.video_path !== upload.video_path ||
+  !current.expires_at ||
+  new Date(current.expires_at).getTime() >
+    Date.now() - 3 * 60 * 60 * 1000
+) {
+  failed++;
+  continue;
+}
+
 
       const { error: deleteError } =
         await supabaseAdmin.storage
           .from("wildlife-videos")
           .remove([upload.video_path]);
 
-      if (deleteError) {
-        console.error(
-          "Video cleanup deletion failed:",
-          deleteError
-        );
-        failed++;
-        continue;
-      }
+      
+if (deleteError) {
+  console.error(
+    "Video cleanup deletion failed:",
+    deleteError
+  );
+  failed++;
+  continue;
+}
 
-      cleaned++;
+// Record that this expired upload was cleaned successfully.
+
+const { data: updated, error: updateError } =
+  await supabaseAdmin
+    .from("sighting_video_uploads")
+    .update({
+      cleaned_at: new Date().toISOString(),
+    })
+    .eq("id", upload.upload_id)
+    .eq("status", "expired")
+    .is("sighting_id", null)
+    .is("cleaned_at", null)
+    .select("id");
+
+if (updateError || !updated || updated.length !== 1) {
+  console.error(
+    "Unable to confirm video cleanup:",
+    updateError
+  );
+
+  failed++;
+  continue;
+}
+
+if (updateError) {
+  console.error(
+    "Unable to record video cleanup:",
+    updateError
+  );
+  failed++;
+  continue;
+}
+
+cleaned++;
     }
 
-    return NextResponse.json({
-      success: true,
-      newlyClaimed: claimed.length,
-      retriesFound: retries.length,
-      cleaned,
-      failed,
-    });
+
+   
+return NextResponse.json(
+  {
+    success: failed === 0,
+    newlyClaimed: claimed.length,
+    retriesFound: retries.length,
+    cleaned,
+    failed,
+  },
+  {
+    status: failed > 0 ? 500 : 200,
+    headers: {
+      "Cache-Control": "no-store",
+    },
+  }
+);
+
   } catch (error) {
     console.error("Video cleanup error:", error);
 

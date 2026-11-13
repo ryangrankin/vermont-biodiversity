@@ -10,7 +10,7 @@ const MAX_VIDEO_SIZE = 50 * 1024 * 1024;
 const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm"];
 
 // Enable after the sightings API supports videoUploadId.
-const VIDEO_SUBMISSIONS_ENABLED = true;
+const VIDEO_SUBMISSIONS_ENABLED = false;
 
 const MONTHS = [
   "January",

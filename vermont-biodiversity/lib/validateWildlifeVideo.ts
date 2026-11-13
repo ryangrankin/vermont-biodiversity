@@ -33,12 +33,15 @@ export async function validateWildlifeVideo(
     }
 
     // Request only the first 4 KB of the file.
-    const response = await fetch(data.signedUrl, {
-      headers: {
-        Range: "bytes=0-4095",
-      },
-      cache: "no-store",
-    });
+    
+const response = await fetch(data.signedUrl, {
+  headers: {
+    Range: "bytes=0-4095",
+  },
+  cache: "no-store",
+  signal: AbortSignal.timeout(10000),
+});
+
 
     // Require partial-content support to avoid downloading
     // an entire large video.
