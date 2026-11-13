@@ -49,11 +49,6 @@ export default async function AnimalCategoryPage({
       <p>{categoryInfo.description}</p>
 
       <section className="section">
-        <h2>How People Can Help</h2>
-        <p>{categoryInfo.conservationTip}</p>
-      </section>
-
-      <section className="section">
         <h2>Explore {categoryInfo.title}</h2>
 
         

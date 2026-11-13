@@ -65,12 +65,6 @@ const backgroundClass = backgroundClasses[category] ?? "";
         <p>{plantCategory.description}</p>
       </div>
 
-      {/* CONSERVATION TIPS */}
-      <div className="info-card">
-        <h2>Conservation Tips</h2>
-        <p>{plantCategory.conservationTip}</p>
-      </div>
-
       {/* EXPLORE PLANTS */}
       <section style={{ marginTop: "40px" }}>
         <h2>Explore Plants</h2>
