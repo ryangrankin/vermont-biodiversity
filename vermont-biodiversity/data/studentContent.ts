@@ -786,9 +786,9 @@ export const individualAnimals = [
     id: "beaver",
     category: "mammals",
     name: "Beaver",
-    description: "",
-    importance: "",
-    conservationTip: "",
+    description: "Beavers live in Vermont streams, marches, small lakes and ponds. They eat only plants including aquatic plants and bark of several types of trees. They build dams and their lodge by gathering sticks. They have a cool tail that is big and flat, brown fur and big front teeth. They are busiest cutting down trees in the fall to prepare their home and stash of tree branches for food for the winter. ",
+    importance: "Beavers are important keystone species because their dams make habitats for moose, otter, mink, waterfowl, songbirds, amphibians, insects and fish.",
+    conservationTip: "Coexist: Is a beaver building a dam on your land that you don’t want? Instead of breaking it apart, Ask the Vermont Fish and Wildlife Department for help. They have several solutions to choose from including building a beaver baffle which allows the beaver to keep their dam and while controlling the amount of water the dam holds. ",
     
   // STUDENTS: Add the names and website links for your sources.
   // "name" is what visitors click on.
