@@ -117,40 +117,8 @@ export default async function AnimalCategoryPage({
                 <p>{animal.importance}</p>
 
                 
+
 <h4>How People Can Help</h4>
-
-{animal.conservationTip && (
-  <p>{animal.conservationTip}</p>
-)}
-
-{animalRecommendations.length > 0 ? (
-  <div>
-    {animalRecommendations.map((recommendation) => (
-      <div
-        key={recommendation.id}
-        style={{ marginBottom: "16px" }}
-      >
-        <h4>{recommendation.title}</h4>
-        <p>{recommendation.description}</p>
-
-        {recommendation.whyItMatters && (
-          <p>
-            <strong>Why It Matters:</strong>{" "}
-            {recommendation.whyItMatters}
-          </p>
-        )}
-      </div>
-    ))}
-  </div>
-) : (
-  !animal.conservationTip && (
-    <p>
-      Recommendations coming soon!
-    </p>
-  )
-)}
-
-
                 {animalRecommendations.length > 0 && (
                   <div style={{ marginTop: "20px" }}>
                     <Link
