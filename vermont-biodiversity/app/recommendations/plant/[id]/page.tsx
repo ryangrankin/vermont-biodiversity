@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -43,7 +43,7 @@ function getLinkedRecommendations(plantId: string) {
   });
 }
 
-export default function PlantRecommendationsPage() {
+function PlantRecommendationsContent() {
   const params = useParams();
   const plantId = String(params.id ?? "");
 
@@ -284,5 +284,13 @@ export default function PlantRecommendationsPage() {
           )}
       </section>
     </main>
+  );
+}
+
+export default function PlantRecommendationsPage() {
+  return (
+    <Suspense fallback={<p>Loading recommendations...</p>}>
+      <PlantRecommendationsContent />
+    </Suspense>
   );
 }

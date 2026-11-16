@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -43,7 +43,7 @@ function getLinkedRecommendations(animalId: string) {
   });
 }
 
-export default function AnimalRecommendationsPage() {
+function AnimalRecommendationsContent() {
   const params = useParams();
   const animalId = decodeURIComponent(
     String(params.id ?? "")
@@ -287,5 +287,13 @@ export default function AnimalRecommendationsPage() {
           )}
       </section>
     </main>
+  );
+}
+
+export default function AnimalRecommendationsPage() {
+  return (
+    <Suspense fallback={<p>Loading recommendations...</p>}>
+      <AnimalRecommendationsContent />
+    </Suspense>
   );
 }
