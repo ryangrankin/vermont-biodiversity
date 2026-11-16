@@ -544,12 +544,18 @@ learnMoreLinks: [
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
-    months: [] as number[],
+    months: [1, 2, 3, 4, 5, 6, 7, 8, 9] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+      {
+    type: "animal",
+    id: "american-beaver",
+    label: "Learn more about beavers",
+    },
+    ],
   },
 
   // RECOMMENDATION 9
@@ -783,7 +789,7 @@ export const individualAnimals = [
   // ==========================================================
 
   {
-    id: "beaver",
+    id: "american-beaver",
     category: "mammals",
     name: "Beaver",
     description: "Beavers live in Vermont streams, marches, small lakes and ponds. They eat only plants including aquatic plants and bark of several types of trees. They build dams and their lodge by gathering sticks. They have a cool tail that is big and flat, brown fur and big front teeth. They are busiest cutting down trees in the fall to prepare their home and stash of tree branches for food for the winter. ",
