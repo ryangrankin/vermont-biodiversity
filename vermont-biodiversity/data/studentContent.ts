@@ -327,7 +327,7 @@ export const recommendations = [
 
   learnMore: {
     type: "animal",
-    id: "little-brown-bat",
+    id: "amphibians",
     label: "Learn more about ...",
   },
   
@@ -372,7 +372,7 @@ export const recommendations = [
 
   learnMore: {
     type: "animal",
-    id: "little-brown-bat",
+    id: "amphibians",
     label: "Learn more about ...",
   },
   },
@@ -417,7 +417,7 @@ export const recommendations = [
 
   learnMore: {
     type: "animal",
-    id: "little-brown-bat",
+    id: "amphibians",
     label: "Learn more about ...",
   },
   },
@@ -462,7 +462,7 @@ export const recommendations = [
 
   learnMore: {
     type: "animal",
-    id: "american goldfinch",
+    id: "american-goldfinch",
     label: "Learn more about the American Goldfinch",
   },
   },
@@ -980,7 +980,7 @@ export const individualAnimals = [
     image: "",
   },
   {
-    id: "american goldfinch",
+    id: "american-goldfinch",
     category: "birds",
     name: "American Goldfinch",
     description: "The American Goldfinch lives in Vermont year-round. In the spring and summer, males are bright yellow with black on their head and wings and the females are yellowish green. In the winter, they turn brown. They are almost entirely vegetarian. Their favorite seed is from thistle plants. They use grass, bark, milkweed, thistle, cattail down and spider webs to weave their nests. They nest in July and August when there are a lot of thistles seeds. One of their calls is po-ta-to-chip ",

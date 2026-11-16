@@ -6,7 +6,8 @@ import { notFound } from "next/navigation";
 import {
   plantCategories,
   individualPlants,
-} from "../../../data/studentContent";
+  recommendations,
+} from "@/data/studentContent";
 
 const categoryPaths = [
   "pollinators",
@@ -19,6 +20,35 @@ const categoryPaths = [
 type PageProps = {
   params: Promise<{ category: string }>;
 };
+
+type RecommendationLink = {
+  type: string;
+  id: string;
+  label: string;
+};
+
+function getPlantRecommendations(plantId: string) {
+  return recommendations.filter((recommendation) => {
+    const linkedRecommendation = recommendation as
+      typeof recommendation & {
+        learnMore?: RecommendationLink;
+        learnMoreLinks?: RecommendationLink[];
+      };
+
+    const links = [
+      ...(linkedRecommendation.learnMore
+        ? [linkedRecommendation.learnMore]
+        : []),
+      ...(linkedRecommendation.learnMoreLinks ?? []),
+    ];
+
+    return links.some(
+      (link) =>
+        link.type === "plant" &&
+        link.id === plantId
+    );
+  });
+}
 
 export default async function PlantCategoryPage({
   params,
@@ -37,24 +67,28 @@ export default async function PlantCategoryPage({
   const plantCategory = plantCategories[categoryIndex];
 
   // Find plants belonging to this category.
-  const categoryPlants = individualPlants.filter(
-    (plant) =>
-      plant.category === category &&
-      plant.name.trim() !== ""
-  );
+ const categoryPlants = individualPlants.filter(
+  (plant): plant is typeof plant & { id: string } =>
+    plant.category === category &&
+    plant.name.trim() !== "" &&
+    typeof plant.id === "string" &&
+    plant.id.trim() !== ""
+);
 
-  // Only the Trees category gets the forest background.
+  // Preserve the existing category backgrounds.
   const backgroundClasses: Record<string, string> = {
-  trees: "trees-background",
-  pollinators: "pollinators-background",
-  helpful: "helpful-background",
-};
+    trees: "trees-background",
+    pollinators: "pollinators-background",
+    helpful: "helpful-background",
+  };
 
-const backgroundClass = backgroundClasses[category] ?? "";
+  const backgroundClass =
+    backgroundClasses[category] ?? "";
+
   return (
     <main className={`container ${backgroundClass}`}>
       <Link href="/plants" className="back-link">
-        ← Back to Plants & Gardens
+        ← Back to Plants &amp; Gardens
       </Link>
 
       <h1>{plantCategory.title}</h1>
@@ -78,36 +112,59 @@ const backgroundClass = backgroundClasses[category] ?? "";
           </div>
         ) : (
           <div className="info-grid">
-            {categoryPlants.map((plant) => (
-              <div className="info-card" key={plant.id}>
-                <h3>{plant.name}</h3>
+            {categoryPlants.map((plant) => {
+              const plantRecommendations =
+                getPlantRecommendations(plant.id);
 
-                {plant.description && (
-                  <p>{plant.description}</p>
-                )}
+              return (
+                <div
+                  className="info-card"
+                  key={plant.id}
+                  id={plant.id}
+                >
+                  <h3>{plant.name}</h3>
 
-                {plant.importance && (
-                  <p>
-                    <strong>Why It Matters:</strong>{" "}
-                    {plant.importance}
-                  </p>
-                )}
+                  {plant.description && (
+                    <p>{plant.description}</p>
+                  )}
 
-                {plant.conservationTip && (
-                  <p>
-                    <strong>Conservation Tip:</strong>{" "}
-                    {plant.conservationTip}
-                  </p>
-                )}
+                  {plant.importance && (
+                    <p>
+                      <strong>Why It Matters:</strong>{" "}
+                      {plant.importance}
+                    </p>
+                  )}
 
-                {plant.source && (
-                  <p>
-                    <strong>Source:</strong>{" "}
-                    {plant.source}
-                  </p>
-                )}
-              </div>
-            ))}
+                  {plant.conservationTip && (
+                    <p>
+                      <strong>Conservation Tip:</strong>{" "}
+                      {plant.conservationTip}
+                    </p>
+                  )}
+
+                  {plantRecommendations.length > 0 && (
+                    <div style={{ marginTop: "20px" }}>
+                      <Link
+                        href={`/recommendations/plant/${encodeURIComponent(
+                          plant.id
+                        )}`}
+                        className="secondary-button"
+                      >
+                        See All {plant.name} Recommendations{" "}
+                        ({plantRecommendations.length})
+                      </Link>
+                    </div>
+                  )}
+
+                  {plant.source && (
+                    <p>
+                      <strong>Source:</strong>{" "}
+                      {plant.source}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </section>

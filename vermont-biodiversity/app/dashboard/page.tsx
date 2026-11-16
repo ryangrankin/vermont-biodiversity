@@ -3,15 +3,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-
+import { supabase } from "@/lib/supabase";
 import {
   recommendations,
   individualAnimals,
   individualPlants,
   dashboardContent,
 } from "@/data/studentContent";
-
 
 type SurveyAnswers = Record<string, string | string[]>;
 
@@ -50,6 +48,14 @@ type DisplayRecommendation = {
   sources: NamedSource[];
 };
 
+type ProgressRow = {
+  id: string;
+  recommendation_id: string;
+  status: "completed" | "removed";
+  activity_year: number;
+  completed_at: string | null;
+};
+
 const VALID_INTERESTS = [
   "Hiking",
   "Mountian Biking",
@@ -62,7 +68,6 @@ function matchesSurvey(
   answers: SurveyAnswers,
   currentMonth: number
 ) {
-  // An empty month list means year-round.
   if (
     tip.months.length > 0 &&
     !tip.months.includes(currentMonth)
@@ -78,7 +83,6 @@ function matchesSurvey(
     return false;
   }
 
-  // Ignore unfinished student interest placeholders.
   const interests = tip.interests.filter((interest) =>
     VALID_INTERESTS.includes(interest)
   );
@@ -104,37 +108,43 @@ function matchesSurvey(
 }
 
 export default function DashboardPage() {
-  // ============================================================
-  // SURVEY ANSWERS AND COMPLETED ACTIVITIES
-  // ============================================================
+  const [answers, setAnswers] =
+    useState<SurveyAnswers>({});
 
-  const [answers, setAnswers] = useState<SurveyAnswers>({});
-  const [completed, setCompleted] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [userId, setUserId] =
+    useState<string | null>(null);
 
-  // ============================================================
-  // COMMUNITY RECOMMENDATIONS
-  // ============================================================
+  const [progress, setProgress] =
+    useState<ProgressRow[]>([]);
 
-  const [communityRecommendations, setCommunityRecommendations] =
-    useState<CommunityRecommendation[]>([]);
+  const [progressLoading, setProgressLoading] =
+    useState(true);
 
-  const [loadingCommunity, setLoadingCommunity] = useState(true);
-  const [communityError, setCommunityError] = useState("");
+  const [progressError, setProgressError] =
+    useState("");
+
+  const [savingId, setSavingId] =
+    useState<string | null>(null);
+
+  const [
+    communityRecommendations,
+    setCommunityRecommendations,
+  ] = useState<CommunityRecommendation[]>([]);
+
+  const [loadingCommunity, setLoadingCommunity] =
+    useState(true);
+
+  const [communityError, setCommunityError] =
+    useState("");
 
   const [currentMonth, setCurrentMonth] = useState(0);
+  const [currentYear, setCurrentYear] = useState(0);
 
-  // ============================================================
-  // LOAD LOCAL DATA
-  // ============================================================
-
+  // Load survey answers and current date.
   useEffect(() => {
     const savedAnswers = localStorage.getItem(
       "biodiversitySurvey"
-    );
-
-    const savedCompleted = localStorage.getItem(
-      "completedActivities"
     );
 
     if (savedAnswers) {
@@ -153,38 +163,70 @@ export default function DashboardPage() {
       }
     }
 
-    if (savedCompleted) {
-      try {
-        const parsed: unknown = JSON.parse(savedCompleted);
+    const now = new Date();
 
-        if (Array.isArray(parsed)) {
-          setCompleted(
-            parsed
-              .filter(
-                (id): id is string | number =>
-                  typeof id === "string" ||
-                  typeof id === "number"
-              )
-              .map((id) =>
-                typeof id === "number"
-                  ? `student-${id}`
-                  : id
-              )
-          );
-        }
-      } catch {
-        setCompleted([]);
-      }
-    }
-
-    setCurrentMonth(new Date().getMonth() + 1);
+    setCurrentMonth(now.getMonth() + 1);
+    setCurrentYear(now.getFullYear());
     setLoaded(true);
   }, []);
 
-  // ============================================================
-  // FETCH APPROVED COMMUNITY RECOMMENDATIONS
-  // ============================================================
+  // Load progress for the signed-in user.
+  useEffect(() => {
+    let cancelled = false;
 
+    async function loadProgress() {
+      setProgressLoading(true);
+      setProgressError("");
+
+      const { data: authData, error: authError } =
+        await supabase.auth.getUser();
+
+      if (cancelled) return;
+
+      if (authError || !authData.user) {
+        setUserId(null);
+        setProgress([]);
+        setProgressError(
+          "Sign in to save and view your recommendation progress."
+        );
+        setProgressLoading(false);
+        return;
+      }
+
+      setUserId(authData.user.id);
+
+      const { data, error } = await supabase
+        .from("recommendation_progress")
+        .select(
+          "id,recommendation_id,status,activity_year,completed_at"
+        )
+        .eq("user_id", authData.user.id)
+        .order("completed_at", {
+          ascending: false,
+          nullsFirst: false,
+        });
+
+      if (cancelled) return;
+
+      if (error) {
+        setProgressError(
+          `Unable to load your progress: ${error.message}`
+        );
+      } else {
+        setProgress((data ?? []) as ProgressRow[]);
+      }
+
+      setProgressLoading(false);
+    }
+
+    void loadProgress();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Load admin-approved recommendations.
   useEffect(() => {
     let cancelled = false;
 
@@ -224,34 +266,14 @@ export default function DashboardPage() {
       }
     }
 
-    loadCommunityRecommendations();
+    void loadCommunityRecommendations();
 
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // ============================================================
-  // MARK ACTIVITIES AS COMPLETED
-  // ============================================================
-
-  function toggleCompleted(id: string) {
-    const updated = completed.includes(id)
-      ? completed.filter((item) => item !== id)
-      : [...completed, id];
-
-    setCompleted(updated);
-
-    localStorage.setItem(
-      "completedActivities",
-      JSON.stringify(updated)
-    );
-  }
-
-  // ============================================================
-  // CONVERT STUDENT RECOMMENDATIONS
-  // ============================================================
-
+  // Convert built-in recommendations.
   const studentRecommendations: DisplayRecommendation[] =
     recommendations
       .filter(
@@ -260,18 +282,18 @@ export default function DashboardPage() {
           tip.description.trim() !== ""
       )
       .map((tip) => {
-        const tipWithLinks = tip as typeof tip & {
+        const withLinks = tip as typeof tip & {
           learnMore?: LearnMoreItem;
           learnMoreLinks?: LearnMoreItem[];
           sources?: NamedSource[];
         };
 
         const links =
-          Array.isArray(tipWithLinks.learnMoreLinks) &&
-          tipWithLinks.learnMoreLinks.length > 0
-            ? tipWithLinks.learnMoreLinks
-            : tipWithLinks.learnMore
-              ? [tipWithLinks.learnMore]
+          Array.isArray(withLinks.learnMoreLinks) &&
+          withLinks.learnMoreLinks.length > 0
+            ? withLinks.learnMoreLinks
+            : withLinks.learnMore
+              ? [withLinks.learnMore]
               : [];
 
         return {
@@ -284,14 +306,11 @@ export default function DashboardPage() {
           requiresLawn: tip.requiresLawn ?? false,
           requiresGarden: tip.requiresGarden ?? false,
           learnMoreLinks: links,
-          sources: tipWithLinks.sources ?? [],
+          sources: withLinks.sources ?? [],
         };
       });
 
-  // ============================================================
-  // CONVERT APPROVED COMMUNITY RECOMMENDATIONS
-  // ============================================================
-
+  // Convert approved community recommendations.
   const approvedRecommendations: DisplayRecommendation[] =
     communityRecommendations
       .filter(
@@ -320,22 +339,98 @@ export default function DashboardPage() {
             : [],
       }));
 
-  // ============================================================
-  // COMBINE AND FILTER RECOMMENDATIONS
-  // ============================================================
-
   const allRecommendations = [
     ...studentRecommendations,
     ...approvedRecommendations,
   ];
 
-  const matchedRecommendations = allRecommendations.filter(
-    (tip) => matchesSurvey(tip, answers, currentMonth)
+  // Hide completed or removed recommendations
+  // for the current calendar year only.
+  const hiddenIds = new Set(
+    progress
+      .filter(
+        (item) => item.activity_year === currentYear
+      )
+      .map((item) => item.recommendation_id)
   );
 
-  // ============================================================
-  // LOADING SCREEN
-  // ============================================================
+  const matchedRecommendations =
+    allRecommendations.filter(
+      (tip) =>
+        matchesSurvey(tip, answers, currentMonth) &&
+        !hiddenIds.has(tip.id)
+    );
+
+  // Keep completion history across all years.
+  const completedHistory = progress
+    .filter(
+      (item) =>
+        item.status === "completed" &&
+        item.completed_at
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.completed_at!).getTime() -
+        new Date(a.completed_at!).getTime()
+    );
+
+  // Save completed or removed status to Supabase.
+  async function saveProgress(
+    id: string,
+    status: "completed" | "removed"
+  ) {
+    if (!userId || progressLoading || savingId) {
+      return;
+    }
+
+    setSavingId(id);
+    setProgressError("");
+
+    const completedAt =
+      status === "completed"
+        ? new Date().toISOString()
+        : null;
+
+    const { data, error } = await supabase
+      .from("recommendation_progress")
+      .upsert(
+        {
+          user_id: userId,
+          recommendation_id: id,
+          status,
+          activity_year: currentYear,
+          completed_at: completedAt,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict:
+            "user_id,recommendation_id,activity_year",
+        }
+      )
+      .select(
+        "id,recommendation_id,status,activity_year,completed_at"
+      )
+      .single();
+
+    if (error) {
+      setProgressError(
+        `Unable to save your progress: ${error.message}`
+      );
+    } else {
+      setProgress((previous) => [
+        ...previous.filter(
+          (item) =>
+            !(
+              item.recommendation_id === id &&
+              item.activity_year === currentYear
+            )
+        ),
+        data as ProgressRow,
+      ]);
+    }
+
+    setSavingId(null);
+  }
 
   if (!loaded) {
     return (
@@ -345,19 +440,13 @@ export default function DashboardPage() {
     );
   }
 
-  // ============================================================
-  // DASHBOARD PAGE
-  // ============================================================
-
   return (
     <main className="container dashboard-background">
-      {/* DASHBOARD HEADER */}
-
       <section className="dashboard-header">
         <h1>Your Biodiversity Dashboard</h1>
 
         {dashboardContent.welcome && (
-           <p>{dashboardContent.welcome}</p>
+          <p>{dashboardContent.welcome}</p>
         )}
 
         <Link
@@ -367,8 +456,6 @@ export default function DashboardPage() {
           Edit My Survey Answers
         </Link>
       </section>
-
-      {/* PERSONALIZED RECOMMENDATIONS */}
 
       <section className="section">
         <h2>Your Recommendations</h2>
@@ -380,30 +467,45 @@ export default function DashboardPage() {
         {communityError && (
           <p role="alert">
             Community recommendations could not be loaded.
-            Student recommendations are still available.
+            Other recommendations are still available.
           </p>
         )}
 
-        {matchedRecommendations.length === 0 ? (
+        {progressLoading && (
+          <p>Loading your progress...</p>
+        )}
+
+        {progressError && (
+          <p role="alert">
+            {progressError}{" "}
+            {!userId && (
+              <Link href="/login">Sign in</Link>
+            )}
+          </p>
+        )}
+
+        {!progressLoading &&
+        matchedRecommendations.length === 0 ? (
           <div className="empty-state">
-            <h3>No Recommendations Available Right Now</h3>
+            <h3>
+              No Recommendations Available Right Now
+            </h3>
 
             <p>
-              [STUDENTS: YOUR BIODIVERSITY RECOMMENDATIONS
-              WILL APPEAR HERE]
+              [STUDENTS: YOUR BIODIVERSITY
+              RECOMMENDATIONS WILL APPEAR HERE]
             </p>
 
             <p>
-              Try editing your survey answers or checking
-              again during another month.
+              Try editing your survey answers or
+              checking again during another month.
             </p>
           </div>
-        ) : (
+        ) : !progressLoading ? (
           <div className="card-grid">
             {matchedRecommendations.map((tip) => {
-              // Resolve links to student animal and plant pages.
-              const resolvedLinks = tip.learnMoreLinks.flatMap(
-                (item) => {
+              const resolvedLinks =
+                tip.learnMoreLinks.flatMap((item) => {
                   if (
                     !item.id?.trim() ||
                     !item.label?.trim()
@@ -412,14 +514,18 @@ export default function DashboardPage() {
                   }
 
                   if (item.type === "animal") {
-                    const animal = individualAnimals.find(
-                      (entry) => entry.id === item.id
-                    );
+                    const animal =
+                      individualAnimals.find(
+                        (entry) =>
+                          entry.id === item.id
+                      );
 
                     return animal
                       ? [
                           {
-                            href: `/animals/${animal.category}#${animal.id}`,
+                            href:
+                              `/animals/${animal.category}` +
+                              `#${animal.id}`,
                             label: item.label,
                           },
                         ]
@@ -427,14 +533,18 @@ export default function DashboardPage() {
                   }
 
                   if (item.type === "plant") {
-                    const plant = individualPlants.find(
-                      (entry) => entry.id === item.id
-                    );
+                    const plant =
+                      individualPlants.find(
+                        (entry) =>
+                          entry.id === item.id
+                      );
 
                     return plant
                       ? [
                           {
-                            href: `/plants/${plant.category}#${plant.id}`,
+                            href:
+                              `/plants/${plant.category}` +
+                              `#${plant.id}`,
                             label: item.label,
                           },
                         ]
@@ -442,32 +552,25 @@ export default function DashboardPage() {
                   }
 
                   return [];
-                }
-              );
+                });
 
-              // Display only valid clickable sources.
-              const validSources = tip.sources.filter(
-                (source) =>
-                  source.name?.trim() &&
-                  /^https?:\/\//i.test(
-                    source.url?.trim() ?? ""
-                  )
-              );
+              const validSources =
+                tip.sources.filter(
+                  (source) =>
+                    source.name?.trim() &&
+                    /^https?:\/\//i.test(
+                      source.url?.trim() ?? ""
+                    )
+                );
 
               return (
                 <article
                   className="info-card"
                   key={tip.id}
                 >
-                  {/* RECOMMENDATION TITLE */}
-
                   <h3>{tip.title}</h3>
 
-                  {/* DESCRIPTION */}
-
                   <p>{tip.description}</p>
-
-                  {/* WHY IT MATTERS */}
 
                   {tip.whyItMatters && (
                     <>
@@ -475,8 +578,6 @@ export default function DashboardPage() {
                       <p>{tip.whyItMatters}</p>
                     </>
                   )}
-
-                  {/* RESEARCH SOURCES */}
 
                   {validSources.length > 0 && (
                     <div className="recommendation-sources">
@@ -486,7 +587,9 @@ export default function DashboardPage() {
                         {validSources.map(
                           (source, index) => (
                             <li
-                              key={`${source.url}-${index}`}
+                              key={
+                                `${source.url}-${index}`
+                              }
                             >
                               <a
                                 href={source.url}
@@ -502,43 +605,57 @@ export default function DashboardPage() {
                     </div>
                   )}
 
-                  {/* ANIMAL AND PLANT LINKS */}
-
                   {resolvedLinks.length > 0 && (
                     <div className="recommendation-learn-more">
-                      {resolvedLinks.map((item, index) => (
-                        <Link
-                          key={`${item.href}-${index}`}
-                          href={item.href}
-                          className="learn-more-link"
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
+                      {resolvedLinks.map(
+                        (item, index) => (
+                          <Link
+                            key={
+                              `${item.href}-${index}`
+                            }
+                            href={item.href}
+                            className="learn-more-link"
+                          >
+                            {item.label}
+                          </Link>
+                        )
+                      )}
                     </div>
                   )}
 
-                  {/* COMPLETION BUTTON */}
-
-                  <button
-                    type="button"
-                    className="secondary-button"
-                    onClick={() =>
-                      toggleCompleted(tip.id)
-                    }
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 10,
+                      marginTop: 16,
+                    }}
                   >
-                    {completed.includes(tip.id)
-                      ? "✓ Completed"
-                      : "Mark as Completed"}
-                  </button>
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      disabled={
+                        !userId ||
+                        savingId !== null
+                      }
+                      onClick={() =>
+                        void saveProgress(
+                          tip.id,
+                          "completed"
+                        )
+                      }
+                    >
+                      {savingId === tip.id
+                        ? "Saving..."
+                        : "Mark as Completed"}
+                    </button>
+                  </div>
                 </article>
               );
             })}
           </div>
-        )}
+        ) : null}
       </section>
-
-      {/* COMPLETED ACTIVITIES */}
 
       <section className="section">
         <h2>Your Progress</h2>
@@ -546,12 +663,50 @@ export default function DashboardPage() {
         <div className="info-card">
           <p>
             Activities Completed:{" "}
-            <strong>{completed.length}</strong>
+            <strong>
+              {completedHistory.length}
+            </strong>
           </p>
+
+          {completedHistory.length > 0 ? (
+            <ul>
+              {completedHistory.map((item) => {
+                const recommendation =
+                  allRecommendations.find(
+                    (tip) =>
+                      tip.id ===
+                      item.recommendation_id
+                  );
+
+                return (
+                  <li
+                    key={item.id}
+                    style={{ marginBottom: 12 }}
+                  >
+                    <strong>
+                      {recommendation?.title ??
+                        "Recommendation no longer available"}
+                    </strong>
+                    {" — "}
+                    {new Date(
+                      item.completed_at!
+                    ).toLocaleDateString(
+                      undefined,
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p>No completed activities yet.</p>
+          )}
         </div>
       </section>
-
-      {/* EXPLORE MORE */}
 
       <section className="section">
         <h2>Explore More</h2>
@@ -559,8 +714,11 @@ export default function DashboardPage() {
         <div className="card-grid">
           <div className="info-card">
             <h3>Animals</h3>
+
             {dashboardContent.animalsDescription && (
-              <p>{dashboardContent.animalsDescription}</p>
+              <p>
+                {dashboardContent.animalsDescription}
+              </p>
             )}
 
             <Link
@@ -572,30 +730,36 @@ export default function DashboardPage() {
           </div>
 
           <div className="info-card">
-            <h3>Plants & Gardens</h3>
+            <h3>Plants &amp; Gardens</h3>
+
             {dashboardContent.plantsDescription && (
-              <p>{dashboardContent.plantsDescription}</p>
+              <p>
+                {dashboardContent.plantsDescription}
+              </p>
             )}
 
             <Link
               href="/plants"
               className="secondary-button"
             >
-              Explore Plants & Gardens →
+              Explore Plants &amp; Gardens →
             </Link>
           </div>
 
           <div className="info-card">
             <h3>Wildlife Cam</h3>
+
             {dashboardContent.wildlifeDescription && (
-              <p>{dashboardContent.wildlifeDescription}</p>
+              <p>
+                {dashboardContent.wildlifeDescription}
+              </p>
             )}
 
             <Link
               href="/wildlife-cam"
               className="secondary-button"
             >
-              Explore Wildlife Photos & Videos →
+              Explore Wildlife Photos &amp; Videos →
             </Link>
           </div>
 
@@ -603,8 +767,9 @@ export default function DashboardPage() {
             <h3>Wildlife Sightings Gallery</h3>
 
             <p>
-              Explore wildlife sightings shared by the
-              community and approved by the LEGO Club!
+              Explore wildlife sightings shared by
+              the community and approved by the
+              LEGO Club!
             </p>
 
             <Link
@@ -616,12 +781,15 @@ export default function DashboardPage() {
           </div>
 
           <div className="info-card">
-            <h3>Share a Wildlife Sighting or Recommendation</h3>
+            <h3>
+              Share a Wildlife Sighting or Recommendation
+            </h3>
 
             <p>
               Spotted an animal or plant in Vermont?
               Have a useful tip for other Vermonters?
-              Share your tip or upload a wildlife photograph!
+              Share your tip or upload a wildlife
+              photograph!
             </p>
 
             <Link
