@@ -1334,3 +1334,160 @@ main.container.animals-background {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+
+/* Dashboard - Your Progress */
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.progress-header h2 {
+  margin-bottom: 4px;
+}
+
+.progress-header p {
+  margin: 0;
+  opacity: 0.7;
+}
+
+.progress-counter {
+  background: #e8f3e8;
+  border-radius: 12px;
+  padding: 12px 20px;
+  text-align: center;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.progress-counter strong {
+  display: block;
+  font-size: 26px;
+  color: #285c3a;
+}
+
+.progress-counter span {
+  font-size: 12px;
+  color: #285c3a;
+}
+
+.progress-list {
+  display: grid;
+  gap: 12px;
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f7f9f6;
+  border: 1px solid #e3e9e0;
+}
+
+.progress-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.progress-icon-completed {
+  background: #e1f0e3;
+  color: #28633c;
+}
+
+.progress-icon-ignored {
+  background: #ececec;
+  color: #666;
+}
+
+.progress-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.progress-details strong {
+  font-size: 15px;
+}
+
+.progress-status-completed,
+.progress-status-ignored {
+  font-size: 13px;
+}
+
+.progress-status-completed {
+  color: #28633c;
+}
+
+.progress-status-ignored {
+  color: #666;
+}
+
+.progress-action-button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd7ca;
+  background: #fff;
+  color: #34543b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.progress-action-button:hover:not(:disabled) {
+  background: #e8f3e8;
+  border-color: #8faf94;
+}
+
+.progress-action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.progress-empty {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+  .progress-header {
+    align-items: flex-start;
+  }
+
+  .progress-counter {
+    padding: 10px 12px;
+    min-width: 75px;
+  }
+
+  .progress-item {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .progress-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .progress-action-button {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+}

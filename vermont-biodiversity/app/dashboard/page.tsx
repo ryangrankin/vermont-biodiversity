@@ -432,6 +432,75 @@ export default function DashboardPage() {
     setSavingId(null);
   }
 
+
+async function restoreRecommendation(id: string) {
+  if (!userId || progressLoading || savingId) return;
+
+  setSavingId(id);
+  setProgressError("");
+
+  const { error } = await supabase
+    .from("recommendation_progress")
+    .delete()
+    .eq("user_id", userId)
+    .eq("recommendation_id", id)
+    .eq("activity_year", currentYear)
+    .eq("status", "removed");
+
+  if (error) {
+    setProgressError(
+      `Unable to restore recommendation: ${error.message}`
+    );
+  } else {
+    setProgress((previous) =>
+      previous.filter(
+        (item) =>
+          !(
+            item.recommendation_id === id &&
+            item.activity_year === currentYear &&
+            item.status === "removed"
+          )
+      )
+    );
+  }
+
+  setSavingId(null);
+}
+
+
+async function undoProgress(id: string) {
+  if (!userId || progressLoading || savingId) return;
+
+  setSavingId(id);
+  setProgressError("");
+
+  const { error } = await supabase
+    .from("recommendation_progress")
+    .delete()
+    .eq("user_id", userId)
+    .eq("recommendation_id", id)
+    .eq("activity_year", currentYear);
+
+  if (error) {
+    setProgressError(
+      `Unable to undo progress: ${error.message}`
+    );
+  } else {
+    setProgress((previous) =>
+      previous.filter(
+        (item) =>
+          !(
+            item.recommendation_id === id &&
+            item.activity_year === currentYear
+          )
+      )
+    );
+  }
+
+  setSavingId(null);
+}
+
+
   if (!loaded) {
     return (
       <main className="container dashboard-background">
@@ -649,6 +718,29 @@ export default function DashboardPage() {
                         ? "Saving..."
                         : "Mark as Completed"}
                     </button>
+
+<button
+  type="button"
+  disabled={!userId || savingId !== null}
+  onClick={() => void saveProgress(tip.id, "removed")}
+  style={{
+    padding: "7px 12px",
+    fontSize: "0.8rem",
+    backgroundColor: "transparent",
+    color: "#555",
+    border: "1px solid #aaa",
+    borderRadius: "8px",
+    cursor:
+      !userId || savingId !== null
+        ? "not-allowed"
+        : "pointer",
+    opacity:
+      !userId || savingId !== null ? 0.5 : 1,
+  }}
+>
+  {savingId === tip.id ? "Saving..." : "Ignore"}
+</button>
+
                   </div>
                 </article>
               );
@@ -657,56 +749,165 @@ export default function DashboardPage() {
         ) : null}
       </section>
 
-      <section className="section">
-        <h2>Your Progress</h2>
 
-        <div className="info-card">
-          <p>
-            Activities Completed:{" "}
-            <strong>
-              {completedHistory.length}
-            </strong>
-          </p>
 
-          {completedHistory.length > 0 ? (
-            <ul>
-              {completedHistory.map((item) => {
-                const recommendation =
-                  allRecommendations.find(
-                    (tip) =>
-                      tip.id ===
-                      item.recommendation_id
-                  );
+<section className="section">
+  <div className="progress-header">
+    <div>
+      <h2>Your Progress</h2>
+      <p>Keep track of your biodiversity activities.</p>
+    </div>
 
-                return (
-                  <li
-                    key={item.id}
-                    style={{ marginBottom: 12 }}
+    <div className="progress-counter">
+      <strong>{completedHistory.length}</strong>
+      <span>Completed</span>
+    </div>
+  </div>
+
+  <div className="info-card">
+    {progress.length > 0 ? (
+      <div className="progress-list">
+        {[...progress]
+          .sort((a, b) => {
+            const dateA = a.completed_at
+              ? new Date(a.completed_at).getTime()
+              : 0;
+            const dateB = b.completed_at
+              ? new Date(b.completed_at).getTime()
+              : 0;
+            return dateB - dateA;
+          })
+          .map((item) => {
+            const recommendation = allRecommendations.find(
+              (tip) => tip.id === item.recommendation_id
+            );
+
+            const isCompleted = item.status === "completed";
+
+            return (
+              <div className="progress-item" key={item.id}>
+                <div
+                  className={`progress-icon ${
+                    isCompleted
+                      ? "progress-icon-completed"
+                      : "progress-icon-ignored"
+                  }`}
+                  aria-hidden="true"
+                >
+                  {isCompleted ? "✓" : "–"}
+                </div>
+
+                <div className="progress-details">
+                  <strong>
+                    {recommendation?.title ??
+                      "Recommendation no longer available"}
+                  </strong>
+
+                  <span
+                    className={
+                      isCompleted
+                        ? "progress-status-completed"
+                        : "progress-status-ignored"
+                    }
                   >
-                    <strong>
-                      {recommendation?.title ??
-                        "Recommendation no longer available"}
-                    </strong>
-                    {" — "}
-                    {new Date(
-                      item.completed_at!
-                    ).toLocaleDateString(
-                      undefined,
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p>No completed activities yet.</p>
-          )}
-        </div>
-      </section>
+                    {isCompleted && item.completed_at
+                      ? `Completed ${new Date(
+                          item.completed_at
+                        ).toLocaleDateString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}`
+                      : "Ignored"}
+                  </span>
+                </div>
+
+                {item.activity_year === currentYear && (
+                  <button
+                    type="button"
+                    className="progress-action-button"
+                    disabled={!userId || savingId !== null}
+                    onClick={() =>
+                      void undoProgress(item.recommendation_id)
+                    }
+                  >
+                    {savingId === item.recommendation_id
+                      ? "Restoring..."
+                      : isCompleted
+                        ? "Undo"
+                        : "Restore"}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+      </div>
+    ) : (
+      <p className="progress-empty">
+        No activity yet. Complete or ignore a recommendation
+        to see it here!
+      </p>
+    )}
+  </div>
+</section>
+
+
+
+
+<section className="section">
+  <h2>Ignored Recommendations</h2>
+
+  {progress.filter(
+    (item) =>
+      item.status === "removed" &&
+      item.activity_year === currentYear
+  ).length === 0 ? (
+    <p>No ignored recommendations.</p>
+  ) : (
+    <div className="card-grid">
+      {progress
+        .filter(
+          (item) =>
+            item.status === "removed" &&
+            item.activity_year === currentYear
+        )
+        .map((item) => {
+          const recommendation = allRecommendations.find(
+            (tip) => tip.id === item.recommendation_id
+          );
+
+          return (
+            <article className="info-card" key={item.id}>
+              <h3>
+                {recommendation?.title ??
+                  "Recommendation no longer available"}
+              </h3>
+
+              {recommendation && (
+                <p>{recommendation.description}</p>
+              )}
+
+              <button
+                type="button"
+                className="secondary-button"
+                disabled={!userId || savingId !== null}
+                onClick={() =>
+                  void restoreRecommendation(
+                    item.recommendation_id
+                  )
+                }
+              >
+                {savingId === item.recommendation_id
+                  ? "Restoring..."
+                  : "Restore Recommendation"}
+              </button>
+            </article>
+          );
+        })}
+    </div>
+  )}
+</section>
+
 
       <section className="section">
         <h2>Explore More</h2>
