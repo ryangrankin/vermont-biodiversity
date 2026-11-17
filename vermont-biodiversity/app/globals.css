@@ -1071,7 +1071,7 @@ main.container.survey-background {
       rgba(0, 0, 0, 0.15),
       rgba(0, 0, 0, 0.25)
     ),
-    url("/images/hiking-trail.jpg") !important;
+    url("/images/backgrounds/survey-forest.jpg") !important;
 
   background-color: transparent !important;
   background-size: cover !important;
@@ -1489,5 +1489,137 @@ main.container.animals-background {
   .progress-action-button {
     padding: 7px 10px;
     font-size: 12px;
+  }
+}
+
+
+/* Animal category backgrounds */
+
+.animal-category-background {
+  position: relative;
+  isolation: isolate;
+}
+
+.animal-category-background::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.25),
+      rgba(0, 0, 0, 0.25)
+    ),
+    var(--animal-background);
+}
+
+.animal-bg-mammals {
+  --animal-background: url("/images/backgrounds/mammals-beaver.jpg");
+}
+
+.animal-bg-insects {
+  --animal-background: url("/images/backgrounds/insects-bee.jpg");
+}
+
+.animal-bg-amphibians {
+  --animal-background: url("/images/backgrounds/amphibians-salamander.jpg");
+}
+
+.animal-bg-fish {
+  --animal-background: url("/images/backgrounds/fish-sturgeon.jpg");
+}
+
+.animal-bg-reptiles {
+  --animal-background: url("/images/backgrounds/reptiles-snake.jpg");
+}
+
+.animal-bg-birds {
+  --animal-background: url("/images/backgrounds/birds-hawk.jpg");
+}
+
+
+/* ==========================================
+   ANIMAL CATEGORY PAGE STYLING
+   ========================================== */
+
+/* Main headings over background photos */
+.animal-category-background > h1,
+.animal-category-background > h2,
+.animal-category-background > p,
+.animal-category-background > .back-link,
+.animal-category-background > .section > h2 {
+  color: #ffffff !important;
+  text-shadow:
+    -1px -1px 2px #173c26,
+     1px -1px 2px #173c26,
+    -1px  1px 2px #173c26,
+     1px  1px 2px #173c26,
+     0 3px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Semi-transparent animal information cards */
+.animal-category-background .info-card {
+  background: rgba(255, 255, 255, 0.68) !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* Animal names */
+.animal-category-background .info-card h3 {
+  color: #123b25 !important;
+  font-weight: 800;
+  text-shadow:
+    -1px -1px 0 rgba(255, 255, 255, 0.85),
+     1px -1px 0 rgba(255, 255, 255, 0.85),
+    -1px  1px 0 rgba(255, 255, 255, 0.85),
+     1px  1px 0 rgba(255, 255, 255, 0.85);
+}
+
+/* Section headings inside animal cards */
+.animal-category-background .info-card h4 {
+  color: #18452b !important;
+  font-weight: 800;
+}
+
+/* Animal descriptions and information */
+.animal-category-background .info-card p,
+.animal-category-background .info-card li {
+  color: #183b29 !important;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+/* Information source links */
+.animal-category-background .info-card a:not(.secondary-button) {
+  color: #174c33;
+  font-weight: 600;
+}
+
+/* Recommendation buttons */
+.animal-category-background .secondary-button {
+  background: #285c3a;
+  color: white !important;
+  border: 1px solid #285c3a;
+}
+
+.animal-category-background .secondary-button:hover {
+  background: #19452a;
+  border-color: #19452a;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .animal-category-background .info-card {
+    background: rgba(255, 255, 255, 0.78) !important;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
   }
 }

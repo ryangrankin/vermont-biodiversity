@@ -69,7 +69,8 @@ export default async function AnimalCategoryPage({
   );
 
   return (
-    <main className="container">
+    
+<main className={`container animal-category-background animal-bg-${category}`}>
       <Link href="/animals" className="back-link">
         ← Back to Animals
       </Link>
