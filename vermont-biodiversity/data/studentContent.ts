@@ -561,8 +561,8 @@ learnMoreLinks: [
   // RECOMMENDATION 9
   {
     id: 9,
-    title: "",
-    description: "",
+    title: "Report Sightings of the Eastern Ribbonsnake",
+    description: "Eastern Ribbonsnake, are rare in Vermont and experts are concerned about their population numbers. If you see one, take a picture of it and report it to the Vermont Herp Atlas.",
     whyItMatters: "",
     interests: [],
     requiresLawn: false,
@@ -572,58 +572,82 @@ learnMoreLinks: [
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+      {
+    type: "animal",
+    id: "eastern ribbonsnake",
+    label: "Learn more about the Eastern Ribbonsnake",
+    },
+    ],
   },
 
   // RECOMMENDATION 10
   {
     id: 10,
-    title: "",
-    description: "",
+    title: "Let It Grow",
+    description: "Let goldenrod grow in your fields, meadows and long roads. You can purchase native goldenrod plants at native plant nurseries. ",
     whyItMatters: "",
     interests: [],
-    requiresLawn: false,
+    requiresLawn: true,
     requiresGarden: false,
-    months: [] as number[],
+    months: [5, 6, 7, 8, 9,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [     
+    {
+    type: "plant",
+    id: "goldenrod",
+    label: "Learn more about the Eastern Ribbonsnake",
+    },
+    ],
   },
 
   // RECOMMENDATION 11
   {
     id: 11,
-    title: "",
-    description: "",
+    title: "Low mow for milkweed",
+    description: "Only mow the amount of lawn you really need. Mow the rest once or twice a year and plant milkweed where you aren’t mowing frequently. Choose seeds from in or close to Vermont to protect native genetics and plant them in the fall. ",
     whyItMatters: "",
     interests: [],
-    requiresLawn: false,
+    requiresLawn: true,
     requiresGarden: false,
-    months: [] as number[],
+    months: [5, 6, 7, 8, 9, 10,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+    {
+    type: "plant",
+    id: "milkweed",
+    label: "Learn more about Milkweed",
+    },
+    ],
   },
 
   // RECOMMENDATION 12
   {
     id: 12,
-    title: "",
-    description: "",
+    title: "The do-nothing approach to milkweed ",
+    description: "If you find milkweed in your garden, leave it there. Know that it is helping the insects and birds.",
     whyItMatters: "",
     interests: [],
     requiresLawn: false,
-    requiresGarden: false,
-    months: [] as number[],
+    requiresGarden: true,
+    months: [6, 7, 8,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+    {
+    type: "plant",
+    id: "milkweed",
+    label: "Learn more about Milkweed",
+    },
+    ],
   },
 
   // RECOMMENDATION 13
@@ -922,11 +946,11 @@ export const individualAnimals = [
     image: "",
   },
   {
-    id: "animal-3",
+    id: "eastern ribbonsnake",
     category: "reptiles",
-    name: "",
-    description: "",
-    importance: "",
+    name: "Eastern Ribbon Snake",
+    description: "Eastern Ribbonsnakes can be found near wetlands in undeveloped areas and they like sunny sites for basking in. They eat frogs and salamanders and their eggs, and small fish. They look a lot like the Common Gartersnake but can be identified by their head markings: vertical white bar just in front of the eye and black line behind it, and a dark reddish brown head.",
+    importance: "There are few of these snakes left in Vermont.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -938,8 +962,8 @@ export const individualAnimals = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "Fish & Wildlife Eatern Ribbonsnake",
+      url: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/reptiles/eastern-ribbonsnake",
     },
     {
       name: "",
@@ -1247,11 +1271,11 @@ entries or uploading photographs.
 
 export const individualPlants = [
   {
-    id: "plant-1",
-    category: "pollinators",
-    name: "",
-    description: "",
-    importance: "",
+    id: "goldenrod",
+    category: "helpful",
+    name: "Goldenrod",
+    description: "Goldenrod is one of the most recognizable plants in Vermont. There are about a dozen native species in Vermont. It blooms in late summer and early fall. It was put in “liberty teas” when the colonists refused British tea after the Boston Tea Party.",
+    importance: "Goldenrod is one of the most recognizable plants in Vermont. There are about a dozen native species in Vermont. It blooms in late summer and early fall. It was put in “liberty teas” when the colonists refused British tea after the Boston Tea Party.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -1263,12 +1287,12 @@ export const individualPlants = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "UVM Goldenrod Artical",
+      url: "https://www.rutlandherald.com/features/weekend_magazine/uvm-extension-glorious-goldenrod/article_2a7ae527-efa4-4ca1-a2c5-eedb55f8b70b.html",
     },
     {
-      name: "",
-      url: "",
+      name: "UVM Goldenrod: A Useful Flower",
+      url: "https://www.uvm.edu/extension/news/goldenrod-useful-wildflower",
     },
     {
       name: "",
@@ -1279,11 +1303,11 @@ export const individualPlants = [
     image: "",
   },
   {
-    id: "plant-2",
+    id: "milkweed",
     category: "helpful",
-    name: "",
-    description: "",
-    importance: "",
+    name: "Milkweed",
+    description: "Milkweed is native to Vermont. It can grow in many different places from gardens to the side of the road. It is important because it provides nectar for many pollinators.",
+    importance: "It is the primary food source for monarch butterflies and only food source for monarch caterpillars. If there are more milkweed plants, there will be more monarch butterflies and other pollinators around.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -1295,16 +1319,16 @@ export const individualPlants = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "Milweed Is Not A Weed At All",
+      url: "https://www.timesargus.com/features/weekend_magazine/uvm-extension-milkweed-is-not-a-weed-at-all/article_921adb88-41c8-58ca-8550-2c7cf6ffa107.html",
     },
     {
-      name: "",
-      url: "",
+      name: "UVM Marvelous Milk Weed",
+      url: "https://www.uvm.edu/extension/news/marvelous-milkweed",
     },
     {
-      name: "",
-      url: "",
+      name: "Milk Weed And Polinator Plants",
+      url: "https://www.uvm.edu/extension/nwcrops/milkweed-and-pollinator-plants",
     },
   ],
 
