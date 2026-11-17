@@ -1055,7 +1055,7 @@ sources: [
 
 
 // ============================================================
-// SECTION 5: PLANTS & GARDENS
+// SECTION 5: Garden Plants
 // ============================================================
 //
 // STUDENTS: This section is for your Plants & Gardens page!
@@ -1073,13 +1073,13 @@ sources: [
 export const plantCategories = [
 
   // ==========================================================
-  // CATEGORY 1: POLLINATOR GARDEN PLANTS
+  // CATEGORY 1: Garden PLants
   // ==========================================================
 
   {
     // STUDENTS: This is the name of your category.
     // You can change it if you want!
-    title: "Pollinator Garden Plants",
+    title: "Garden Plants",
 
     // QUESTION 1:
     // What should visitors know about this category?
@@ -1093,12 +1093,12 @@ export const plantCategories = [
   },
 
   // ==========================================================
-  // CATEGORY 2: HELPFUL PLANTS
+  // CATEGORY 2: Native Plants
   // ==========================================================
 
   {
     // STUDENTS: You can rename this category.
-    title: "Helpful Plants",
+    title: "Native Plants",
 
     // QUESTION 1:
     // What should visitors know about this category?
@@ -1129,27 +1129,6 @@ export const plantCategories = [
     // WRITE YOUR ANSWER BELOW:
     conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
   },
-
-  // ==========================================================
-  // CATEGORY 4: WILDLIFE PLANTS
-  // ==========================================================
-
-  {
-    // STUDENTS: You can rename this category.
-    title: "Wildlife Plants",
-
-    // QUESTION 1:
-    // What should visitors know about this category?
-    // WRITE YOUR ANSWER BELOW:
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
-
-    // QUESTION 2:
-    // What can people do to help biodiversity?
-    // WRITE YOUR ANSWER BELOW:
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
-  },
-
-];
 
 
 // ==================================================
