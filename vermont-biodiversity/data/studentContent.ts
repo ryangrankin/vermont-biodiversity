@@ -978,11 +978,11 @@ export const individualAnimals = [
     image: "",
   },
   {
-    id: "animal-4",
+    id: "spotted salamander",
     category: "amphibians",
-    name: "",
-    description: "",
-    importance: "",
+    name: "Spotted Salamander",
+    description: "These salamanders live underground and only come out in the spring. Amphibians’ breath through their skin.",
+    importance: ": They are good indicators of a healthy vernal pool. A vernal pool is a shallow, seasonal wetland that dries completely each year. They are created by rainfall or snow melt. Amphibians breed in them because there are no fish predators.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -994,12 +994,12 @@ export const individualAnimals = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "Spotted Salamander From VT Eco Studies",
+      url: "https://vtecostudies.org/species/spotted-salamander",
     },
     {
-      name: "",
-      url: "",
+      name: "Amphibian Crossing",
+      url: "https://northbranchnaturecenter.org/science-stewardship/amphibian-conservation",
     },
     {
       name: "",
