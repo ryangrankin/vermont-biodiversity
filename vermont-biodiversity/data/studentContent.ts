@@ -200,7 +200,7 @@ export const recommendations = [
     id: 1,
 
     // STUDENTS: Give your recommendation a title.
-    title: "What to do with if you find a bat",
+    title: "What to do if you find a bat",
 
     // STUDENTS: Explain what the user should do.
     description: "If you find a bat, don’t put it outside in the winter because it will freeze to death. Instead, contact the Vermont Bat Center. When bats are hibernating, they breathe slowly and their heart rate drops to one or two beats per minute. If you find one while it is asleep, it seems dead and takes 20 minutes to wake up. ",
