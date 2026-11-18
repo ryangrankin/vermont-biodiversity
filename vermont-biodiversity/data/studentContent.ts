@@ -1227,7 +1227,7 @@ export const individualPlants = [
     category: "helpful",
     name: "Goldenrod",
     description: "Goldenrod is one of the most recognizable plants in Vermont. There are about a dozen native species in Vermont. It blooms in late summer and early fall. It was put in “liberty teas” when the colonists refused British tea after the Boston Tea Party.",
-    importance: "Goldenrod is one of the most recognizable plants in Vermont. There are about a dozen native species in Vermont. It blooms in late summer and early fall. It was put in “liberty teas” when the colonists refused British tea after the Boston Tea Party.",
+    importance: "It is considered a keystone plant because of the many insects and birds that benefit from it. It is home to many beneficial insects including bees and butterflies. It is an important food source for pollinators. Goldfinches and cardinals eat its seeds in the fall.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
