@@ -9,6 +9,7 @@ import {
   individualAnimals,
   individualPlants,
   dashboardContent,
+  HOBBIES,
 } from "@/data/studentContent";
 
 type SurveyAnswers = Record<string, string | string[]>;
@@ -56,18 +57,17 @@ type ProgressRow = {
   completed_at: string | null;
 };
 
-const VALID_INTERESTS = [
-  "Hiking",
-  "Mountian Biking",
-  "Boating",
-  "Birdwatching",
-];
+
+
+const VALID_INTERESTS: string[] = Object.values(HOBBIES);
+
 
 function matchesSurvey(
   tip: DisplayRecommendation,
   answers: SurveyAnswers,
   currentMonth: number
 ) {
+  // Only show recommendations for the relevant months.
   if (
     tip.months.length > 0 &&
     !tip.months.includes(currentMonth)
@@ -75,37 +75,35 @@ function matchesSurvey(
     return false;
   }
 
-  if (tip.requiresLawn && answers.lawn === "No") {
-    return false;
-  }
+  // Get the hobbies selected in the survey.
+  const selectedInterests = Array.isArray(answers.interests)
+    ? answers.interests
+    : typeof answers.interests === "string"
+      ? [answers.interests]
+      : [];
 
-  if (tip.requiresGarden && answers.garden === "No") {
-    return false;
-  }
-
-  const interests = tip.interests.filter((interest) =>
-    VALID_INTERESTS.includes(interest)
+  // Only use interests from the new survey.
+  const validSelectedInterests = selectedInterests.filter(
+    (interest) => VALID_INTERESTS.includes(interest)
   );
 
-  if (interests.length > 0) {
-    const selected = Array.isArray(answers.interests)
-      ? answers.interests
-      : typeof answers.interests === "string"
-        ? [answers.interests]
-        : [];
+  // Get the hobbies assigned to this recommendation.
+  const recommendationInterests = tip.interests.filter(
+    (interest) => VALID_INTERESTS.includes(interest)
+  );
 
-    if (
-      selected.length > 0 &&
-      !interests.some((interest) =>
-        selected.includes(interest)
-      )
-    ) {
-      return false;
-    }
+  // Recommendations without assigned hobbies remain visible
+  // while the LEGO Club finishes assigning them.
+  if (recommendationInterests.length === 0) {
+    return true;
   }
 
-  return true;
+  // Recommendations with assigned hobbies require a match.
+  return recommendationInterests.some((interest) =>
+    validSelectedInterests.includes(interest)
+  );
 }
+
 
 export default function DashboardPage() {
   const [answers, setAnswers] =

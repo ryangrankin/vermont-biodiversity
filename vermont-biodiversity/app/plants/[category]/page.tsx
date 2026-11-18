@@ -9,13 +9,13 @@ import {
   recommendations,
 } from "@/data/studentContent";
 
+
 const categoryPaths = [
   "pollinators",
   "helpful",
   "trees",
-  "wildlife",
-  "rewilding",
 ];
+
 
 type PageProps = {
   params: Promise<{ category: string }>;

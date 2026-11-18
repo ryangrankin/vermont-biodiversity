@@ -40,6 +40,16 @@ export const appInfo = {
 };
 
 
+export const HOBBIES = {
+  exploring: "Exploring nature on foot (hiking, walking, skiing, snowshoeing)",
+  gardening: "Gardening",
+  outdoorCare: "Caring for my outdoor space (lawn, fields, woods and streams)",
+  birdwatching: "Bird watching and feeding birds",
+  volunteering: "Volunteering",
+} as const;
+
+
+
  // ============================================================
  // DASHBOARD CONTENT
  // ============================================================
@@ -91,82 +101,22 @@ export const surveyContent = {
   introduction: "Answer these questions so we can find the right recomandations for you!",
 };
 
+
+
 export const surveyQuestions = [
-
-    
-  // QUESTION 1: LOCATION
-  {
-    
-    id: "location",
-
-    // STUDENTS: How should we ask about location?
-    question: "replace this text with your answer about location",
-
-    // STUDENTS: What location choices should users have?
-    options: [
-      "replace this text with choice 1",
-      "replace this text with choice 2",
-      "replace this text with choice 3",
-    ],
-  },
-
-  // QUESTION 2: LAWN
-  {
-    id: "lawn",
-
-    // STUDENTS: Write your question about lawns.
-    question: "Do you have a Lawn?",
-
-    options: [
-      "Yes", // STUDENTS: First answer choice
-      "No", // STUDENTS: Second answer choice
-    ],
-  },
-
-  // QUESTION 3: GARDEN
-  {
-    id: "garden",
-
-    // STUDENTS: Write your question about gardens.
-    question: "Do you have a garden?",
-
-    options: [
-      "Yes",
-      "No",
-    ],
-  },
-
-  // QUESTION 4: PETS
-  {
-    id: "pets",
-
-    // STUDENTS: Write your question about pets.
-    question: "Do you have a pet?",
-
-    options: [
-      "Yes",
-      "No",
-    ],
-  },
-
-  // QUESTION 5: OUTDOOR INTERESTS
   {
     id: "interests",
-
-    // STUDENTS: Ask users what activities they enjoy.
     question: "What outdoor hobbies do you have?",
-
-    // STUDENTS: Add activities people can choose.
     options: [
-      "Hiking",
-      "Mountian Biking",
-      "Boating",
-      "Birdwatching",
-      "Volunteering",
+      HOBBIES.exploring,
+      HOBBIES.gardening,
+      HOBBIES.outdoorCare,
+      HOBBIES.birdwatching,
+      HOBBIES.volunteering,
     ],
   },
-
 ];
+
 
 
 // ==================================================
@@ -1153,6 +1103,8 @@ export const plantCategories = [
     // WRITE YOUR ANSWER BELOW:
     conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
   },
+
+];
 
 
 // ==================================================

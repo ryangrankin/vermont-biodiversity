@@ -2,13 +2,13 @@
 import Link from "next/link";
 import { plantCategories } from "../../data/studentContent";
 
+
 const categoryPaths = [
   "pollinators",
   "helpful",
   "trees",
-  "wildlife",
-  "rewilding",
 ];
+
 
 export default function PlantsPage() {
   return (
