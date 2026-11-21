@@ -709,33 +709,33 @@ learnMoreLinks: [
 export const animalCategories = [
   {
     title: "Mammals",
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    description: "",
+    conservationTip: "",
   },
   {
     title: "Fish",
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    description: "",
+    conservationTip: "",
   },
   {
     title: "Reptiles",
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    description: "",
+    conservationTip: "",
   },
   {
     title: "Amphibians",
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    description: "",
+    conservationTip: "",
   },
   {
     title: "Birds",
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    description: "",
+    conservationTip: "",
   },
   {
     title: "Insects",
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    description: "",
+    conservationTip: "",
   },
 ];
 
@@ -1042,12 +1042,12 @@ export const plantCategories = [
     // QUESTION 1:
     // What should visitors know about this category?
     // WRITE YOUR ANSWER BELOW:
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    description: "",
 
     // QUESTION 2:
     // What can people do to help biodiversity?
     // WRITE YOUR ANSWER BELOW:
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    conservationTip: "",
   },
 
   // ==========================================================
@@ -1061,12 +1061,12 @@ export const plantCategories = [
     // QUESTION 1:
     // What should visitors know about this category?
     // WRITE YOUR ANSWER BELOW:
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    description: "",
 
     // QUESTION 2:
     // What can people do to help biodiversity?
     // WRITE YOUR ANSWER BELOW:
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    conservationTip: "",
   },
 
   // ==========================================================
@@ -1080,12 +1080,12 @@ export const plantCategories = [
     // QUESTION 1:
     // What should visitors know about this category?
     // WRITE YOUR ANSWER BELOW:
-    description: "REPLACE THIS TEXT WITH YOUR DESCRIPTION",
+    description: "",
 
     // QUESTION 2:
     // What can people do to help biodiversity?
     // WRITE YOUR ANSWER BELOW:
-    conservationTip: "REPLACE THIS TEXT WITH YOUR TIP",
+    conservationTip: "",
   },
 
 ];
