@@ -223,7 +223,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [4, 9] as number[],
+    months: [4, 9, 11, 12] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/mammals/little-brown-bat https://vtdigger.org/2026/10/20/vermont-experts-say-bats-need-our-help-how-do-we-get-over-our-fear-of-them/https://www.sevendaysvt.com/arts-culture/work-barry-and-maureen-genzlinger-rescue-bats-10444077/",
@@ -269,7 +269,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [1, 2, 3, 4] as number[],
+    months: [1, 2, 3, 4, 11, 12,] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
@@ -314,7 +314,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [3, 4, 5, 10] as number[],
+    months: [3, 4, 5, 10, 11, 12,] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
@@ -358,7 +358,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [3, 4, 5, 11] as number[],
+    months: [3, 4, 5, 11, 12] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
@@ -403,7 +403,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [7, 8] as number[],
+    months: [7, 8, 11, 12,] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
@@ -448,7 +448,7 @@ export const recommendations = [
 
     // STUDENTS: Which months should this tip appear?
     // January = 1, February = 2 ... December = 12
-    months: [10] as number[],
+    months: [10, 11, 12] as number[],
 
     // STUDENTS: Where did you find this information?
     source: "replace this text with your source url",
@@ -494,7 +494,7 @@ learnMoreLinks: [
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
-    months: [1, 2, 3, 4, 5, 6, 7, 8, 9] as number[],
+    months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
@@ -517,7 +517,7 @@ learnMoreLinks: [
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
-    months: [] as number[],
+    months: [11, 12,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
@@ -540,7 +540,7 @@ learnMoreLinks: [
     interests: [],
     requiresLawn: true,
     requiresGarden: false,
-    months: [5, 6, 7, 8, 9,] as number[],
+    months: [5, 6, 7, 8, 9, 11, 12,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
@@ -563,7 +563,7 @@ learnMoreLinks: [
     interests: [],
     requiresLawn: true,
     requiresGarden: false,
-    months: [5, 6, 7, 8, 9, 10,] as number[],
+    months: [5, 6, 7, 8, 9, 10, 11, 12,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
@@ -586,7 +586,7 @@ learnMoreLinks: [
     interests: [],
     requiresLawn: false,
     requiresGarden: true,
-    months: [6, 7, 8,] as number[],
+    months: [6, 7, 8, 11, 12,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
@@ -786,10 +786,6 @@ export const individualAnimals = [
       name: "Managing Human Beaver Conflicts",
       url: "https://www.vtfishandwildlife.com/beavers",
     },
-    {
-      name: "",
-      url: "",
-    },
   ],
 
     image: "",
@@ -915,14 +911,6 @@ export const individualAnimals = [
       name: "Fish & Wildlife Eatern Ribbonsnake",
       url: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/reptiles/eastern-ribbonsnake",
     },
-    {
-      name: "",
-      url: "",
-    },
-    {
-      name: "",
-      url: "",
-    },
   ],
 
     image: "",
@@ -932,7 +920,7 @@ export const individualAnimals = [
     category: "amphibians",
     name: "Spotted Salamander",
     description: "These salamanders live underground and only come out in the spring. Amphibians’ breath through their skin.",
-    importance: ": They are good indicators of a healthy vernal pool. A vernal pool is a shallow, seasonal wetland that dries completely each year. They are created by rainfall or snow melt. Amphibians breed in them because there are no fish predators.",
+    importance: "They are good indicators of a healthy vernal pool. A vernal pool is a shallow, seasonal wetland that dries completely each year. They are created by rainfall or snow melt. Amphibians breed in them because there are no fish predators.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -950,10 +938,6 @@ export const individualAnimals = [
     {
       name: "Amphibian Crossing",
       url: "https://northbranchnaturecenter.org/science-stewardship/amphibian-conservation",
-    },
-    {
-      name: "",
-      url: "",
     },
   ],
 
@@ -1254,6 +1238,11 @@ export const individualPlants = [
 
     image: "",
   },
+          
+//==============================================================
+// Milkweed
+//==============================================================
+          
   {
     id: "milkweed",
     category: "helpful",
