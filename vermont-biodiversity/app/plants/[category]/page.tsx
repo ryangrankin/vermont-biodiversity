@@ -21,6 +21,37 @@ type PageProps = {
   params: Promise<{ category: string }>;
 };
 
+
+function renderTextWithLinks(text: string) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g);
+
+  return parts.map((part, index) => {
+    if (/^https?:\/\//.test(part)) {
+      const url = part.replace(/[.,;!?]+$/, "");
+
+      return (
+        <span key={index}>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#1769aa",
+              textDecoration: "underline",
+            }}
+          >
+            {url}
+          </a>
+          {part.slice(url.length)}
+        </span>
+      );
+    }
+
+    return <span key={index}>{part}</span>;
+  });
+}
+
+
 type RecommendationLink = {
   type: string;
   id: string;
@@ -124,9 +155,11 @@ export default async function PlantCategoryPage({
                 >
                   <h3>{plant.name}</h3>
 
-                  {plant.description && (
-                    <p>{plant.description}</p>
-                  )}
+                  
+                {plant.description && (
+                  <p>{renderTextWithLinks(plant.description)}</p>
+                )}
+
 
                   {plant.importance && (
                     <p>
@@ -156,12 +189,34 @@ export default async function PlantCategoryPage({
                     </div>
                   )}
 
-                  {plant.source && (
-                    <p>
-                      <strong>Source:</strong>{" "}
-                      {plant.source}
-                    </p>
-                  )}
+                  
+{plant.sources?.some(
+  (source) => source.name.trim() && source.url.trim()
+) && (
+  <div className="recommendation-sources">
+    <h4>Sources</h4>
+    <ul>
+      {plant.sources
+        .filter(
+          (source) =>
+            source.name.trim() &&
+            /^https?:\/\//i.test(source.url.trim())
+        )
+        .map((source, index) => (
+          <li key={`${source.url}-${index}`}>
+            <a
+              href={source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {source.name}
+            </a>
+          </li>
+        ))}
+    </ul>
+  </div>
+)}
+
                 </div>
               );
             })}

@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash, randomUUID } from "node:crypto";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 const MAX_VIDEO_SIZE = 50 * 1024 * 1024;
 
@@ -12,8 +13,18 @@ const ALLOWED_VIDEO_TYPES = [
 
 export async function POST(request: NextRequest) {
   try {
-    const secret = process.env.SIGHTING_RATE_LIMIT_SECRET;
+    // Only authorized administrators can upload videos.
+    const authorized = await requireAdmin(request);
 
+    if (!authorized) {
+      return NextResponse.json(
+        { error: "Administrator access required." },
+        { status: 403 }
+      );
+    }
+
+    const secret = process.env.SIGHTING_RATE_LIMIT_SECRET;
+    
     if (!secret) {
       throw new Error("Rate-limit secret is not configured.");
     }

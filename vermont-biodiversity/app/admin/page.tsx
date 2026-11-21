@@ -794,6 +794,19 @@ body: JSON.stringify({
       <section>
         <h2>Wildlife Sightings Management</h2>
 
+        <div style={{ marginTop: 16, marginBottom: 24 }}>
+  <button
+    type="button"
+    onClick={() => router.push("/admin/sightings/new")}
+    style={{
+      ...buttonStyle,
+      backgroundColor: "#276749",
+    }}
+  >
+    + Upload Wildlife Sighting
+  </button>
+</div>
+
         <p>
           Review new wildlife sightings and manage
           previously approved submissions.

@@ -978,26 +978,6 @@ async function undoProgress(id: string) {
               View Wildlife Gallery →
             </Link>
           </div>
-
-          <div className="info-card">
-            <h3>
-              Share a Wildlife Sighting or Recommendation
-            </h3>
-
-            <p>
-              Spotted an animal or plant in Vermont?
-              Have a useful tip for other Vermonters?
-              Share your tip or upload a wildlife
-              photograph!
-            </p>
-
-            <Link
-              href="/sightings"
-              className="secondary-button"
-            >
-              Submit a Sighting →
-            </Link>
-          </div>
         </div>
       </section>
     </main>

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse, connection } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
+
 export async function GET(request: NextRequest) {
   await connection();
 
