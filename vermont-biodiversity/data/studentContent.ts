@@ -489,8 +489,8 @@ learnMoreLinks: [
   {
     id: 8,
     title: "Coexist",
-    description: "Is a beaver building a dam on your land that you don’t want? Instead of breaking it apart, Ask the Vermont Fish and Wildlife Department for help. They have several solutions to choose from including building a beaver baffle which allows the beaver to keep their dam and while controlling the amount of water the dam holds.",
-    whyItMatters: "",
+    description: "Is a Beaver building a dam on your land that you don’t want? Instead of breaking it apart, ask the Vermont Fish and Wildlife Department for help. They have several solutions to choose from including building a beaver baffle which allows the beaver to keep their dam and while controlling the amount of water the dam holds.",
+    whyItMatters: "Leaving dams lets beavers continue to make habitats for other animals and plants.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
@@ -503,7 +503,7 @@ learnMoreLinks: [
       {
     type: "animal",
     id: "american-beaver",
-    label: "Learn more about beavers",
+    label: "Learn more about Beavers",
     },
     ],
   },
