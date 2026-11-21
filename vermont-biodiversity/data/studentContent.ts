@@ -156,7 +156,7 @@ export const recommendations = [
     description: "If you find a bat, don’t put it outside in the winter because it will freeze to death. Instead, contact the Vermont Bat Center. When bats are hibernating, they breathe slowly and their heart rate drops to one or two beats per minute. If you find one while it is asleep, it seems dead and takes 20 minutes to wake up. ",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "So you don't kill bats unknowingly",
+    whyItMatters: "So you don't kill bats unknowingly.",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -291,10 +291,10 @@ export const recommendations = [
     title: "Keep your eyes open for amphibians and report what you see!",
 
     // STUDENTS: Explain what the user should do.
-    description: "Amphibians migrate when it is above 40 degrees, dark and raining and between March and May. Help conservationists by reporting sightings.",
+    description: "Amphibians migrate when it is above 40 degrees, dark and raining and between March and May. Help conservationists by reporting sightings to iNaturalist Vermont.",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "This helps them understand the species and their range. Report sightings here: iNaturalist Vermont · iNaturalist",
+    whyItMatters: "This helps experts understand the species and their range.",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -322,8 +322,8 @@ export const recommendations = [
 
   learnMore: {
     type: "animal",
-    id: "amphibians",
-    label: "Learn more about ...",
+    id: "spotted salamander",
+    label: "Learn more about Spotted Salamanders",
   },
   },
 
@@ -338,7 +338,7 @@ export const recommendations = [
     description: "Amphibians migrate when it is above 40 degrees, dark and raining and between March and May. Become a volunteer amphibian crossing reporter and help anphibians cross the road.",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "This helps amphibians cross roads safely when they migrate",
+    whyItMatters: "This helps amphibians cross roads safely when they migrate.",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -367,8 +367,8 @@ export const recommendations = [
 
   learnMore: {
     type: "animal",
-    id: "amphibians",
-    label: "Learn more about ...",
+    id: "spotted salamander",
+    label: "Learn more about Spotted Salamanders",
   },
   },
 
@@ -413,7 +413,7 @@ export const recommendations = [
   learnMore: {
     type: "animal",
     id: "american-goldfinch",
-    label: "Learn more about the American Goldfinch",
+    label: "Learn more about American Goldfinchs",
   },
   },
 
@@ -460,7 +460,7 @@ learnMoreLinks: [
   {
     type: "animal",
     id: "american-goldfinch",
-    label: "Learn more about the American Goldfinch",
+    label: "Learn more about American Goldfinchs",
   },
   {
     type: "plant",
@@ -513,7 +513,7 @@ learnMoreLinks: [
     id: 9,
     title: "Report Sightings of the Eastern Ribbonsnake",
     description: "Eastern Ribbonsnake, are rare in Vermont and experts are concerned about their population numbers. If you see one, take a picture of it and report it to the Vermont Herp Atlas.",
-    whyItMatters: "",
+    whyItMatters: "This helps experts know how many Eastern Ribbonsnakes are left in Vermont.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
@@ -549,7 +549,7 @@ learnMoreLinks: [
     {
     type: "plant",
     id: "goldenrod",
-    label: "Learn more about the Eastern Ribbonsnake",
+    label: "Learn more about Eastern Ribbonsnakes",
     },
     ],
   },
