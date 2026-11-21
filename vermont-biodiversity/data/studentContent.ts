@@ -512,7 +512,7 @@ learnMoreLinks: [
   {
     id: 9,
     title: "Report Sightings of the Eastern Ribbonsnake",
-    description: "Eastern Ribbonsnake, are rare in Vermont and experts are concerned about their population numbers. If you see one, take a picture of it and report it to the Vermont Herp Atlas.",
+    description: "Eastern Ribbonsnake are rare in Vermont and experts are concerned about their population numbers. If you see one, take a picture of it and report it to the Vermont Herp Atlas.",
     whyItMatters: "This helps experts know how many Eastern Ribbonsnakes are left in Vermont.",
     interests: [],
     requiresLawn: false,
