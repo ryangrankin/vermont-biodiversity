@@ -626,35 +626,47 @@ learnMoreLinks: [
   // RECOMMENDATION 14
   {
     id: 14,
-    title: "",
-    description: "",
-    whyItMatters: "",
+    title: "Plant it!",
+    description: "Restore the chestnut in Vermont by planting a tree. Contact the American Chestnut Foundation to learn how to get a tree to plant.",
+    whyItMatters: "This helps increase the number of chestnut trees left in Vermont. You may get lucky and help the tree develop resistance to the blight.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
-    months: [] as number[],
+    months: [3, 4, 11, 12,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+    {
+    type: "plant",
+    id: "american chestnut",
+    label: "Learn more about American Chestnuts",
+    }, 
+    ],
   },
 
   // RECOMMENDATION 15
   {
     id: 15,
-    title: "",
-    description: "",
-    whyItMatters: "",
+    title: "Report it!",
+    description: "If you have a chestnut tree on your land, send a sample of it to the American Chestnut Foundation. They will use it to understand where the remaining trees are in Vermont, and your tree might help them by providing seeds.",
+    whyItMatters: "This helps experts understand where the remaining trees are in Vermont. Your tree might be the right tree to help the experts grow more chestnut trees and find a strain that is resistant to the blight.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
-    months: [] as number[],
+    months: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+    {
+    type: "plant",
+    id: "american chestnut",
+    label: "Learn more about American Chestnuts",
+    }, 
+    ],
   },
 
   // RECOMMENDATION 16
@@ -1278,11 +1290,11 @@ export const individualPlants = [
     image: "",
   },
   {
-    id: "milkweed",
+    id: "american chestnut",
     category: "trees",
-    name: "",
-    description: "",
-    importance: "",
+    name: "American Chestnut",
+    description: "A healthy American Chestnut tree provides many nuts each year that are an important food source for wildlife. There used to be 4 billion chestnut trees in the eastern United States. The chestnut tree blight has been killing chestnut trees. Now there are not many of these trees left in Vermont.",
+    importance: "The nuts from this tree are a nutritious food for wildlife. For example, squirrels, bears, turkey and deer really like the nuts and a healthy tree makes a lot each year. People like the nuts too.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
