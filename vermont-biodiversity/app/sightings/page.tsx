@@ -1,6 +1,5 @@
-
-import { redirect } from "next/navigation";
+import WildlifeSightingForm from "@/app/components/WildlifeSightingForm";
 
 export default function SightingsPage() {
-  redirect("/gallery");
+  return <WildlifeSightingForm />;
 }

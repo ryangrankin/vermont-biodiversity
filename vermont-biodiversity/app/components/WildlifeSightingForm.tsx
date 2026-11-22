@@ -89,11 +89,7 @@ export default function WildlifeSightingForm() {
     }
 
     
-const { data: { session } } = await supabase.auth.getSession();
 
-if (!session) {
-  throw new Error("You must be logged in as an administrator.");
-}
 
 const authorizationResponse = await fetch(
   "/api/sightings/video-upload",
@@ -101,7 +97,6 @@ const authorizationResponse = await fetch(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${session.access_token}`,
     },
     body: JSON.stringify({
       fileSize: file.size,
@@ -217,17 +212,8 @@ const authorizationResponse = await fetch(
         formData.append("videoUploadId", uploadId);
       }
 
-      const { data: { session } } = await supabase.auth.getSession();
-
-if (!session) {
-  throw new Error("You must be logged in as an administrator.");
-}
-
-const response = await fetch("/api/sightings", {
+     const response = await fetch("/api/sightings", {
   method: "POST",
-  headers: {
-    Authorization: `Bearer ${session.access_token}`,
-  },
   body: formData,
 });
 

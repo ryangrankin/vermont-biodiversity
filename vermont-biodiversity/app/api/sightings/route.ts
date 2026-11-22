@@ -4,7 +4,7 @@ import { createHash, randomUUID } from "node:crypto";
 import sharp from "sharp";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { validateWildlifeVideo } from "@/lib/validateWildlifeVideo";
-import { requireAdmin } from "@/lib/requireAdmin";
+
 
 // ============================================================
 // FEATURE FLAGS
@@ -339,23 +339,6 @@ function parseObservationDate(
 
 export async function POST(request: NextRequest) {
   await connection();
-    try {
-    const authorized = await requireAdmin(request);
-
-    if (!authorized) {
-      return NextResponse.json(
-        { error: "Administrator access required." },
-        { status: 403 }
-      );
-    }
-  } catch (error) {
-    console.error("Admin authorization error:", error);
-
-    return NextResponse.json(
-      { error: "Unable to verify administrator access." },
-      { status: 503 }
-    );
-  }
 
   // ----------------------------------------------------------
   // CHECK FEATURE AVAILABILITY

@@ -946,23 +946,6 @@ async function undoProgress(id: string) {
           </div>
 
           <div className="info-card">
-            <h3>Wildlife Cam</h3>
-
-            {dashboardContent.wildlifeDescription && (
-              <p>
-                {dashboardContent.wildlifeDescription}
-              </p>
-            )}
-
-            <Link
-              href="/wildlife-cam"
-              className="secondary-button"
-            >
-              Explore Wildlife Photos &amp; Videos →
-            </Link>
-          </div>
-
-          <div className="info-card">
             <h3>Wildlife Sightings Gallery</h3>
 
             <p>
@@ -978,6 +961,24 @@ async function undoProgress(id: string) {
               View Wildlife Gallery →
             </Link>
           </div>
+
+<div className="info-card">
+  <h3>Share a Wildlife Sighting</h3>
+
+  <p>
+    Spotted an animal or plant in Vermont?
+    Share your wildlife photos or videos
+    with the LEGO Club!
+  </p>
+
+  <Link
+    href="/sightings"
+    className="secondary-button"
+  >
+    Submit a Wildlife Sighting →
+  </Link>
+</div>
+
         </div>
       </section>
     </main>
