@@ -1293,7 +1293,7 @@ export const individualPlants = [
     id: "american chestnut",
     category: "trees",
     name: "American Chestnut",
-    description: "A healthy American Chestnut tree provides many nuts each year that are an important food source for wildlife. There used to be 4 billion chestnut trees in the eastern United States. The chestnut tree blight has been killing chestnut trees. Now there are not many of these trees left in Vermont.",
+    description: "A healthy American Chestnut tree provides many nuts each year that are an important food source for wildlife. There used to be 4 billion chestnut trees in the Eastern United States. The chestnut tree blight has been killing chestnut trees. Now there are not many of these trees left in Vermont.",
     importance: "The nuts from this tree are a nutritious food for wildlife. For example, squirrels, bears, turkey and deer really like the nuts and a healthy tree makes a lot each year. People like the nuts too.",
     conservationTip: "",
     
