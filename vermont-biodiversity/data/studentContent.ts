@@ -603,18 +603,24 @@ learnMoreLinks: [
   // RECOMMENDATION 13
   {
     id: 13,
-    title: "",
-    description: "",
-    whyItMatters: "",
+    title: "Feed The Birds, Not The Bears",
+    description: "Only put your bird feeder out in December and bring it in by April first. This is when the bears are sleeping and won’t be tempted by bird seed. Bears really like bird seed because it has a lot of calories that they need.",
+    whyItMatters: "If bears get used to eating your bird seed, they will get more comfortable with being near your house and eventually might even try to get food from inside your house.  If the bear loses their shyness, they may need to be killed.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
-    months: [] as number[],
+    months: [11, 12, 1, 2, 3, 4, 5, 6, 7, 8,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+    {
+    type: "animal",
+    id: "black bear",
+    label: "Learn more about Black Bears",
+    },
+    ],
   },
 
   // RECOMMENDATION 14
@@ -799,8 +805,8 @@ export const individualAnimals = [
     id: "black-bear",
     category: "mammals",
     name: "Black Bear",
-    description: "",
-    importance: "",
+    description: "Black bears are the only bears in Vermont. They climb trees for food and to escape danger. They sleep in their den in the winter, but it is not true hibernation as many believe because they can be quickly woken and their body temperature stays close to normal. They are shy and like to be away from people but are attracted by bird seed and trash cans.",
+    importance: "Black bears are a keystone species that are important for biodiversity and ecosystem health. For example, they support biodiversity by spreading many seeds overs large distances.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -812,16 +818,12 @@ export const individualAnimals = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "Vermont Fish & Wildlife Black Bear",
+      url: "https://www.vtfishandwildlife.com/learn-more/vermont-critters/mammals/black-bear",
     },
     {
-      name: "",
-      url: "",
-    },
-    {
-      name: "",
-      url: "",
+      name: "Why Are Black Bears A Keystone Species",
+      url: "https://iere.org/why-are-black-bears-keystone-species/#google_vignette",
     },
   ],
 
