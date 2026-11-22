@@ -814,7 +814,7 @@ export const individualAnimals = [
   // ==========================================================
 
   {
-    id: "black-bear",
+    id: "black bear",
     category: "mammals",
     name: "Black Bear",
     description: "Black bears are the only bears in Vermont. They climb trees for food and to escape danger. They sleep in their den in the winter, but it is not true hibernation as many believe because they can be quickly woken and their body temperature stays close to normal. They are shy and like to be away from people but are attracted by bird seed and trash cans.",
