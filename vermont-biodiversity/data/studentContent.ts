@@ -704,35 +704,47 @@ learnMoreLinks: [
   // RECOMMENDATION 16
   {
     id: 16,
-    title: "",
-    description: "",
-    whyItMatters: "",
+    title: "Bee more wild!",
+    description: "Leave part of your lawn un-mowed. Leave weedy patches around for the bees and other insects and pollinators. Wait to brush hog fields until October. Many bees are ground nesters so leave patches of dirt undisturbed.",
+    whyItMatters: "These patches provide food and homes for beneficial insects.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
-    months: [] as number[],
+    months: [11, 12, 5, 6, 7, 8, 9, 10,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+    {
+    type: "animal",
+    id: "bumblebee",
+    label: "Learn more about Bumblebees",
+    }, 
+    ],
   },
 
   // RECOMMENDATION 17
   {
     id: 17,
-    title: "",
-    description: "",
-    whyItMatters: "",
+    title: "Say no to chemicals",
+    description: "Don’t use pesticides and definitely don’t use neonicotinoids.",
+    whyItMatters: "When you use these, you kill bees. The bee populations are declining in Vermont and the world and experts are worried they might disappear.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
-    months: [] as number[],
+    months: [11, 12, 5, 6, 7, 8, 9,] as number[],
     source: "",
     sources: [
       { name: "", url: "" },
     ],
-    learnMoreLinks: [],
+    learnMoreLinks: [
+    {
+    type: "animal",
+    id: "bumblebee",
+    label: "Learn more about Bumblebees",
+    }, 
+    ],
   },
 
 
@@ -1024,11 +1036,11 @@ sources: [
     image: "https://live.staticflickr.com/7406/9164872669_ce57df16c6_b.jpg",
   },
   {
-    id: "animal-6",
+    id: "bumblebee",
     category: "insects",
-    name: "",
-    description: "",
-    importance: "",
+    name: "Bumblebee",
+    description: "We think of bumblebees as furry, black and yellow with stingers, however there are over 250 types of bumblebees and there are about 17 types that have been documented recently in Vermont. They all look a little different and behave a little differently. Most bees nest in bare, loose soil and cavities. Many over winter in leaf piles and rotten logs. There populations are declining in Vermont and elsewhere due to disease, habitat lose and use of pesticides.",
+    importance: "Bumblebees pollinate flowers and trees to keep them alive. Humans would not be able to live without bees.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -1040,16 +1052,20 @@ sources: [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "VT Digger Bumblebee",
+      url: "https://vtdigger.org/2021/06/23/survey-will-create-an-atlas-of-vermonts-hundreds-of-wild-bee-species/",
     },
     {
-      name: "",
-      url: "",
+      name: "VT Atlas of Life Bees",
+      url: "https://current.stateofbees.vtatlasoflife.org/",
     },
     {
-      name: "",
-      url: "",
+      name: "For Pollinators' Sakes, Don’t Spring into Garden Cleanup Too Soon!",
+      url: "https://xerces.org/blog/dont-spring-into-garden-cleanup-too-soon",
+    },
+    {
+      name: "Vermont Wild Bee Survey",
+      url: "https://vtecostudies.org/what-we-do/projects/wild-bees",
     },
   ],
 
