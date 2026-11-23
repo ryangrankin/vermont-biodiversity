@@ -434,7 +434,7 @@ export const recommendations = [
     // Use the same words as the survey answer choices.
     interests: [
       "gardening",
-      "outdoorcare",
+      "outdoorCare",
       "interest3",
     ],
 
@@ -493,7 +493,7 @@ learnMoreLinks: [
     whyItMatters: "Leaving dams lets beavers continue to make habitats for other animals and plants.",
     interests: [
       "interest1",
-      "outdoorcare",
+      "outdoorCare",
       "interest3",
     ],
     requiresLawn: false,
@@ -547,7 +547,7 @@ learnMoreLinks: [
     whyItMatters: "",
     interests: [
       "interest1",
-      "outdoorcare",
+      "outdoorCare",
       "interest3",
     ],
     requiresLawn: true,
@@ -574,7 +574,7 @@ learnMoreLinks: [
     whyItMatters: "",
     interests: [
       "interest1",
-      "outdoorcare",
+      "outdoorCare",
       "interest3",
     ],
     requiresLawn: true,
@@ -628,7 +628,7 @@ learnMoreLinks: [
     whyItMatters: "If bears get used to eating your bird seed, they will get more comfortable with being near your house and eventually might even try to get food from inside your house.  If the bear loses their shyness, they may need to be killed.",
     interests: [
       "birdwatching",
-      "outdoorcare",
+      "outdoorCare",
       "interest3",
     ],
     requiresLawn: false,
@@ -655,7 +655,7 @@ learnMoreLinks: [
     whyItMatters: "This helps increase the number of chestnut trees left in Vermont. You may get lucky and help the tree develop resistance to the blight.",
     interests: [
       "gardening",
-      "outdoorcare",
+      "outdoorCare",
       "interest3",
     ],
     requiresLawn: false,
@@ -682,7 +682,7 @@ learnMoreLinks: [
     whyItMatters: "This helps experts understand where the remaining trees are in Vermont. Your tree might be the right tree to help the experts grow more chestnut trees and find a strain that is resistant to the blight.",
     interests: [
       "interest1",
-      "outdoorcare",
+      "outdoorCare",
       "interest3",
     ],
     requiresLawn: false,
