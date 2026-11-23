@@ -747,6 +747,28 @@ learnMoreLinks: [
     ],
   },
 
+  // RECOMMENDATION 18
+  {
+    id: 18,
+    title: "Let it bee",
+    description: "In the fall, leave leaves for bees to overwinter in. Only rake them up in late April when the daytime temp is above 50 degrees for several days to allow the bees to come out safely. ",
+    whyItMatters: "If you disturb bees while they are overwintering, you may kill them.",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [11, 12, 3, 4,] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [
+    {
+    type: "animal",
+    id: "bumblebee",
+    label: "Learn more about Bumblebees",
+    }, 
+    ],
+  },
 
 
   
