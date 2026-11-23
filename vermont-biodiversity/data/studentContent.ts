@@ -299,7 +299,7 @@ export const recommendations = [
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
     interests: [
-      "interest1",
+      "exploring",
       "interest2",
       "interest3",
     ],
@@ -343,7 +343,7 @@ export const recommendations = [
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
     interests: [
-      "interest1",
+      "volunteering",
       "interest2",
       "interest3",
     ],
@@ -388,7 +388,7 @@ export const recommendations = [
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
     interests: [
-      "interest1",
+      "birdwatching",
       "interest2",
       "interest3",
     ],
@@ -422,7 +422,7 @@ export const recommendations = [
     id: 7,
 
     // STUDENTS: Give your recommendation a title.
-    title: "What to plant to help American Goldfinches ",
+    title: "What to plant to help American goldfinches ",
 
     // STUDENTS: Explain what the user should do.
     description: "You can plant native thistle and/or milkweed in your yard. They will eat the seeds of these plants in July and August. Also, they also use these plants to make their nests along with other materials. ",
@@ -433,8 +433,8 @@ export const recommendations = [
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
     interests: [
-      "interest1",
-      "interest2",
+      "gardening",
+      "outdoorcare",
       "interest3",
     ],
 
@@ -489,9 +489,13 @@ learnMoreLinks: [
   {
     id: 8,
     title: "Coexist",
-    description: "Is a Beaver building a dam on your land that you don’t want? Instead of breaking it apart, ask the Vermont Fish and Wildlife Department for help. They have several solutions to choose from including building a beaver baffle which allows the beaver to keep their dam and while controlling the amount of water the dam holds.",
+    description: "Is a beaver building a dam on your land that you don’t want? Instead of breaking it apart, ask the Vermont Fish and Wildlife Department for help. They have several solutions to choose from including building a beaver baffle which allows the beaver to keep their dam and while controlling the amount of water the dam holds.",
     whyItMatters: "Leaving dams lets beavers continue to make habitats for other animals and plants.",
-    interests: [],
+    interests: [
+      "interest1",
+      "outdoorcare",
+      "interest3",
+    ],
     requiresLawn: false,
     requiresGarden: false,
     months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12,] as number[],
@@ -511,10 +515,14 @@ learnMoreLinks: [
   // RECOMMENDATION 9
   {
     id: 9,
-    title: "Report Sightings of the Eastern Ribbonsnake",
-    description: "Eastern Ribbonsnake are rare in Vermont and experts are concerned about their population numbers. If you see one, take a picture of it and report it to the Vermont Herp Atlas.",
-    whyItMatters: "This helps experts know how many Eastern Ribbonsnakes are left in Vermont.",
-    interests: [],
+    title: "Report Sightings of the eastern ribbonsnake",
+    description: "Eastern ribbonsnake are rare in Vermont and experts are concerned about their population numbers. If you see one, take a picture of it and report it to the Vermont Herp Atlas.",
+    whyItMatters: "This helps experts know how many eastern ribbonsnakes are left in Vermont.",
+    interests: [
+      "exploring",
+      "interest2",
+      "interest3",
+    ],
     requiresLawn: false,
     requiresGarden: false,
     months: [11, 12,] as number[],
@@ -537,7 +545,11 @@ learnMoreLinks: [
     title: "Let It Grow",
     description: "Let goldenrod grow in your fields, meadows and long roads. You can purchase native goldenrod plants at native plant nurseries. ",
     whyItMatters: "",
-    interests: [],
+    interests: [
+      "interest1",
+      "outdoorcare",
+      "interest3",
+    ],
     requiresLawn: true,
     requiresGarden: false,
     months: [5, 6, 7, 8, 9, 11, 12,] as number[],
@@ -560,7 +572,11 @@ learnMoreLinks: [
     title: "Low mow for milkweed",
     description: "Only mow the amount of lawn you really need. Mow the rest once or twice a year and plant milkweed where you aren’t mowing frequently. Choose seeds from in or close to Vermont to protect native genetics and plant them in the fall. ",
     whyItMatters: "",
-    interests: [],
+    interests: [
+      "interest1",
+      "outdoorcare",
+      "interest3",
+    ],
     requiresLawn: true,
     requiresGarden: false,
     months: [5, 6, 7, 8, 9, 10, 11, 12,] as number[],
@@ -581,9 +597,13 @@ learnMoreLinks: [
   {
     id: 12,
     title: "The do-nothing approach to milkweed ",
-    description: "If you find milkweed in your garden, leave it there. Know that it is helping the insects and birds.",
-    whyItMatters: "",
-    interests: [],
+    description: "If you find milkweed in your garden, leave it there.",
+    whyItMatters: "It is helping the insects and birds.",
+    interests: [
+      "interest1",
+      "gardening",
+      "interest3",
+    ],
     requiresLawn: false,
     requiresGarden: true,
     months: [6, 7, 8, 11, 12,] as number[],
@@ -606,7 +626,11 @@ learnMoreLinks: [
     title: "Feed The Birds, Not The Bears",
     description: "Only put your bird feeder out in December and bring it in by April first. This is when the bears are sleeping and won’t be tempted by bird seed. Bears really like bird seed because it has a lot of calories that they need.",
     whyItMatters: "If bears get used to eating your bird seed, they will get more comfortable with being near your house and eventually might even try to get food from inside your house.  If the bear loses their shyness, they may need to be killed.",
-    interests: [],
+    interests: [
+      "birdwatching",
+      "outdoorcare",
+      "interest3",
+    ],
     requiresLawn: false,
     requiresGarden: false,
     months: [11, 12, 1, 2, 3, 4, 5, 6, 7, 8,] as number[],
@@ -629,7 +653,11 @@ learnMoreLinks: [
     title: "Plant it!",
     description: "Restore the chestnut in Vermont by planting a tree. Contact the American Chestnut Foundation to learn how to get a tree to plant.",
     whyItMatters: "This helps increase the number of chestnut trees left in Vermont. You may get lucky and help the tree develop resistance to the blight.",
-    interests: [],
+    interests: [
+      "gardening",
+      "outdoorcare",
+      "interest3",
+    ],
     requiresLawn: false,
     requiresGarden: false,
     months: [3, 4, 11, 12,] as number[],
@@ -652,7 +680,11 @@ learnMoreLinks: [
     title: "Report it!",
     description: "If you have a chestnut tree on your land, send a sample of it to the American Chestnut Foundation. They will use it to understand where the remaining trees are in Vermont, and your tree might help them by providing seeds.",
     whyItMatters: "This helps experts understand where the remaining trees are in Vermont. Your tree might be the right tree to help the experts grow more chestnut trees and find a strain that is resistant to the blight.",
-    interests: [],
+    interests: [
+      "interest1",
+      "outdoorcare",
+      "interest3",
+    ],
     requiresLawn: false,
     requiresGarden: false,
     months: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12,] as number[],
