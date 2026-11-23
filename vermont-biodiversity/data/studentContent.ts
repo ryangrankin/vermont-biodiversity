@@ -197,7 +197,7 @@ export const recommendations = [
     id: 2,
 
     // STUDENTS: Give your recommendation a title.
-    title: "When to say NO to Bats",
+    title: "When to say NO to bats",
 
     // STUDENTS: Explain what the user should do.
     description: "In the fall and spring when they don’t have vulnerable young, block holes in attics and other spaces so they don’t roost in your home",
@@ -377,13 +377,13 @@ export const recommendations = [
     id: 6,
 
     // STUDENTS: Give your recommendation a title.
-    title: "Attract American Goldfinches to your yard ",
+    title: "Attract American goldfinches to your yard ",
 
     // STUDENTS: Explain what the user should do.
-    description: "It is easy to attract American Goldfinches to your bird feeder with the right seeds: thistle, sunflower or nyjer. Put the seeds in an upright tube feeder that allows them to feed upright and upside down like they are used to when feeding from a plant. ",
+    description: "It is easy to attract American goldfinches to your bird feeder with the right seeds: thistle, sunflower or nyjer. Put the seeds in an upright tube feeder that allows them to feed upright and upside down like they are used to when feeding from a plant. ",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "This helps the American Goldfinch get food for winter and gives you glimpses of the state bird for multiple states!",
+    whyItMatters: "This helps the American goldfinch get food for winter and gives you glimpses of the state bird for multiple states!",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -413,7 +413,7 @@ export const recommendations = [
   learnMore: {
     type: "animal",
     id: "american-goldfinch",
-    label: "Learn more about American Goldfinchs",
+    label: "Learn more about American Goldfinches",
   },
   },
 
@@ -428,7 +428,7 @@ export const recommendations = [
     description: "You can plant native thistle and/or milkweed in your yard. They will eat the seeds of these plants in July and August. Also, they also use these plants to make their nests along with other materials. ",
 
     // STUDENTS: Explain why this helps biodiversity.
-    whyItMatters: "This helps the American Goldfinch get food and materials to build nests!",
+    whyItMatters: "This helps the American goldfinch get food and materials to build nests!",
 
     // STUDENTS: Which survey interests match this tip?
     // Use the same words as the survey answer choices.
@@ -460,7 +460,7 @@ learnMoreLinks: [
   {
     type: "animal",
     id: "american-goldfinch",
-    label: "Learn more about American Goldfinchs",
+    label: "Learn more about American Goldfinches",
   },
   {
     type: "plant",
@@ -561,7 +561,7 @@ learnMoreLinks: [
     {
     type: "plant",
     id: "goldenrod",
-    label: "Learn more about Eastern Ribbonsnakes",
+    label: "Learn more about Goldenrod",
     },
     ],
   },
