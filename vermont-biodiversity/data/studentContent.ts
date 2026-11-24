@@ -905,7 +905,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/5266/5662243565_a599d4bc1e_b.jpg",
   },
 
   {
@@ -937,7 +937,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/5150/5600306085_1ab63ab84c_b.jpg",
   },
   {
     id: "animal-2",
@@ -993,7 +993,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/815/27658955848_b3311814d3_b.jpg",
   },
   {
     id: "spotted salamander",
@@ -1021,7 +1021,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/1938/44133419344_6f2f38946f_b.jpg",
   },
   {
     id: "american-goldfinch",
@@ -1091,7 +1091,7 @@ sources: [
     },
   ],
 
-    image: "https://live.staticflickr.com/5337/7207048590_6a65ccd952_b.jpg",
+    image: "https://live.staticflickr.com/3731/9409187070_e447b76f50_b.jpg",
   },
 ];
 
