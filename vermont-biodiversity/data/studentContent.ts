@@ -872,7 +872,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/3760/11436039824_148f572570_b.jpg",
   },
 
   // ==========================================================
