@@ -515,7 +515,7 @@ learnMoreLinks: [
   // RECOMMENDATION 9
   {
     id: 9,
-    title: "Report Sightings of the eastern ribbonsnake",
+    title: "Report sightings of the eastern ribbonsnake",
     description: "Eastern ribbonsnake are rare in Vermont and experts are concerned about their population numbers. If you see one, take a picture of it and report it to the Vermont Herp Atlas.",
     whyItMatters: "This helps experts know how many eastern ribbonsnakes are left in Vermont.",
     interests: [
@@ -542,7 +542,7 @@ learnMoreLinks: [
   // RECOMMENDATION 10
   {
     id: 10,
-    title: "Let It Grow",
+    title: "Let it grow",
     description: "Let goldenrod grow in your fields, meadows and long roads. You can purchase native goldenrod plants at native plant nurseries. ",
     whyItMatters: "",
     interests: [
@@ -623,7 +623,7 @@ learnMoreLinks: [
   // RECOMMENDATION 13
   {
     id: 13,
-    title: "Feed The Birds, Not The Bears",
+    title: "Feed the birds, not the bears",
     description: "Only put your bird feeder out in December and bring it in by April first. This is when the bears are sleeping and won’t be tempted by bird seed. Bears really like bird seed because it has a lot of calories that they need.",
     whyItMatters: "If bears get used to eating your bird seed, they will get more comfortable with being near your house and eventually might even try to get food from inside your house.  If the bear loses their shyness, they may need to be killed.",
     interests: [
@@ -996,7 +996,7 @@ export const individualAnimals = [
   {
     id: "eastern ribbonsnake",
     category: "reptiles",
-    name: "Eastern Ribbon Snake",
+    name: "Eastern Ribbonsnake",
     description: "Eastern Ribbonsnakes can be found near wetlands in undeveloped areas and they like sunny sites for basking in. They eat frogs and salamanders and their eggs, and small fish. They look a lot like the Common Gartersnake but can be identified by their head markings: vertical white bar just in front of the eye and black line behind it, and a dark reddish brown head.",
     importance: "There are few of these snakes left in Vermont.",
     conservationTip: "",
@@ -1342,7 +1342,7 @@ export const individualPlants = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/4348/36584626632_932150a62d_b.jpg",
   },
           
 //==============================================================
@@ -1379,7 +1379,7 @@ export const individualPlants = [
     },
   ],
 
-    image: "",
+    image: "https://upload.wikimedia.org/wikipedia/commons/c/c6/Common_milkweed-tracy.jpg",
   },
   {
     id: "american chestnut",
@@ -1411,7 +1411,7 @@ export const individualPlants = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/2480/4023974016_fa9bf8afd0_b.jpg",
   },
   {
     id: "heart leaved aster",
@@ -1443,7 +1443,7 @@ export const individualPlants = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/3272/2887805130_930a292db6_b.jpg",
   },
 
   {
