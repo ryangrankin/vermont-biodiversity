@@ -770,6 +770,28 @@ learnMoreLinks: [
     ],
   },
 
+  // RECOMMENDATION 19
+  {
+    id: 19,
+    title: "Plant it!",
+    description: "Plant it in the spring or fall in a shady spot and it will feed pollinators in the fall.",
+    whyItMatters: "Pollinators need an abundant fall food source, and this native plant provides it.",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [11, 12, 4, 5, 10,] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [
+    {
+    type: "plant",
+    id: "heart leaved aster",
+    label: "Learn more about Heart-Leaved Asters",
+    }, 
+    ],
+  },
 
   
 ];
@@ -1392,11 +1414,11 @@ export const individualPlants = [
     image: "",
   },
   {
-    id: "plant-4",
-    category: "wildlife",
-    name: "",
-    description: "",
-    importance: "",
+    id: "heart leaved aster",
+    category: "polinater",
+    name: "Heart-Leaved Aster",
+    description: "This plant grows up to 4 feet tall with hundreds of small light blue flowers. Unlike many other native flowering plants, this plant grows well in shady deciduous forests.",
+    importance: "Heart-leaved Aster is an important source of nectar in the late summer and early fall for pollinators like monarch butterflies and many types of bees. They need this nectar to prepare for the winter months.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -1408,8 +1430,8 @@ export const individualPlants = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "Heart-leaved Aster: Native Wildflower for Pollinators",
+      url: "https://plantnative.org/native-plants/heart-leaved-aster-aster-cordifolius.htm#:~:text=Heart-leaved%20Aster%20is%20an%20upright%20to%20arching%2C%20branched,branching%20widely%20and%20bearing%20numerous%20small%20flower%20heads.",
     },
     {
       name: "",
