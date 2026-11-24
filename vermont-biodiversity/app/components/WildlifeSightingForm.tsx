@@ -27,7 +27,11 @@ const MONTHS = [
   "December",
 ];
 
-export default function WildlifeSightingForm() {
+export default function WildlifeSightingForm({
+  backgroundClass = "",
+}: {
+  backgroundClass?: string;
+}) {
   // ============================================================
   // WILDLIFE SIGHTING FORM
   // ============================================================
@@ -342,7 +346,7 @@ const authorizationResponse = await fetch(
   // ============================================================
 
   return (
-    <main className="container">
+    <main className={`container ${backgroundClass}`}>
       <Link href="/dashboard" className="back-link">
         ← Back to Dashboard
       </Link>

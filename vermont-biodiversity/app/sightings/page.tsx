@@ -1,5 +1,7 @@
 import WildlifeSightingForm from "@/app/components/WildlifeSightingForm";
 
 export default function SightingsPage() {
-  return <WildlifeSightingForm />;
+  return (
+    <WildlifeSightingForm backgroundClass="sightings-background" />
+  );
 }

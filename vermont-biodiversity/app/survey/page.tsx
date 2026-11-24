@@ -23,20 +23,45 @@ export default function SurveyPage() {
   // ==========================================
   // LOAD PREVIOUS ANSWERS
   // ==========================================
+useEffect(() => {
+  const savedAnswers = localStorage.getItem("biodiversitySurvey");
 
-  useEffect(() => {
-    const savedAnswers = localStorage.getItem("biodiversitySurvey");
+  if (savedAnswers) {
+    try {
+      const parsed = JSON.parse(savedAnswers);
+      const cleanedAnswers: SurveyAnswers = {};
 
-    if (savedAnswers) {
-      try {
-        setAnswers(JSON.parse(savedAnswers));
-      } catch {
-        setAnswers({});
+      for (const question of surveyQuestions) {
+        const previousAnswer = parsed[question.id];
+
+        if (question.id === "interests") {
+          const selected = Array.isArray(previousAnswer)
+            ? previousAnswer
+            : [];
+
+          cleanedAnswers[question.id] = selected.filter(
+            (answer) =>
+              typeof answer === "string" &&
+              answer.trim() !== "" &&
+              question.options.some((option) => option === answer)
+          );
+        } else if (
+          typeof previousAnswer === "string" &&
+          previousAnswer.trim() !== "" &&
+          question.options.some((option) => option === previousAnswer)
+        ) {
+          cleanedAnswers[question.id] = previousAnswer;
+        }
       }
-    }
 
-    setLoaded(true);
-  }, []);
+      setAnswers(cleanedAnswers);
+    } catch {
+      setAnswers({});
+    }
+  }
+
+  setLoaded(true);
+}, []);
 
   // ==========================================
   // SINGLE-CHOICE QUESTIONS
@@ -79,15 +104,23 @@ export default function SurveyPage() {
   // ==========================================
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  event.preventDefault();
 
-    localStorage.setItem(
-      "biodiversitySurvey",
-      JSON.stringify(answers)
-    );
-
-    router.push("/dashboard");
+  if (
+    !Array.isArray(answers.interests) ||
+    answers.interests.length === 0
+  ) {
+    alert("Please select at least one outdoor hobby to see your recommendations.");
+    return;
   }
+
+  localStorage.setItem(
+    "biodiversitySurvey",
+    JSON.stringify(answers)
+  );
+
+  router.push("/dashboard");
+}
 
   if (!loaded) {
   return (

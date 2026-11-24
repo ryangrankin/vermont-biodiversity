@@ -620,7 +620,7 @@ h3 {
       rgba(0, 0, 0, 0.2),
       rgba(0, 0, 0, 0.35)
     ),
-    url("/images/forest.jpg");
+    url("/images/vermont-tree.jpg");
 
   background-size: cover;
   background-position: center;
@@ -1663,4 +1663,68 @@ main.container.animals-background {
 .recommendation-sources a:focus-visible {
   outline: 2px solid #0056b3;
   outline-offset: 3px;
+}
+
+/* Share a Wildlife Sighting */
+.sightings-background {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(
+  rgba(0, 0, 0, 0.45),
+  rgba(0, 0, 0, 0.35)
+),
+    url("/images/wildlife-sighting-forest.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Translucent wildlife sighting cards */
+.sightings-background .info-card {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+/* Wildlife sightings header and description */
+.sightings-background h1,
+.sightings-background > p {
+  color: #ffffff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95);
+}
+
+/* Make the description easier to read */
+.sightings-background > p {
+  font-weight: 600;
+}
+
+/* Wildlife Sightings Gallery background */
+.wildlife-gallery-background {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.35)
+    ),
+    url("/images/wildlife-gallery-forest.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Translucent gallery cards */
+.wildlife-gallery-background .info-card,
+.wildlife-gallery-background .wildlife-gallery-card {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+/* Wildlife gallery header and description */
+.wildlife-gallery-background h1,
+.wildlife-gallery-background > p {
+  color: #ffffff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95);
+}
+
+/* Make the description easier to read */
+.wildlife-gallery-background > p {
+  font-weight: 600;
 }

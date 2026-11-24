@@ -94,7 +94,7 @@ export default function GalleryPage() {
   // ============================================================
 
   return (
-    <main className="container">
+    <main className="container wildlife-gallery-background">
       <Link href="/dashboard" className="back-link">
         ← Back to Dashboard
       </Link>

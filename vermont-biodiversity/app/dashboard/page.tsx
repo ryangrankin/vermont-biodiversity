@@ -10,6 +10,7 @@ import {
   individualPlants,
   dashboardContent,
   HOBBIES,
+  surveyQuestions,
 } from "@/data/studentContent";
 
 type SurveyAnswers = Record<string, string | string[]>;
@@ -95,10 +96,15 @@ function matchesSurvey(
       : [];
 
   // Convert survey answers into short hobby names.
-  const validSelectedInterests = selectedInterests
-    .map(normalizeInterest)
-    .filter((interest): interest is string => interest !== null);
+const currentOptions: readonly string[] =
+  surveyQuestions.find(
+    (question) => question.id === "interests"
+  )?.options ?? [];
 
+const validSelectedInterests = selectedInterests
+  .filter((interest) => currentOptions.includes(interest))
+  .map(normalizeInterest)
+  .filter((interest): interest is string => interest !== null);
   // Convert recommendation interests into short hobby names.
   // Ignore unfinished placeholders such as "interest1".
   const recommendationInterests = tip.interests
