@@ -1097,7 +1097,7 @@ sources: [
 
 
 // ============================================================
-// SECTION 5: Garden Plants
+// SECTION 5: Native Plants for Gardens
 // ============================================================
 //
 // STUDENTS: This section is for your Plants & Gardens page!
@@ -1115,13 +1115,13 @@ sources: [
 export const plantCategories = [
 
   // ==========================================================
-  // CATEGORY 1: Garden PLants
+  // CATEGORY 1: Native Plants for Gardens
   // ==========================================================
 
   {
     // STUDENTS: This is the name of your category.
     // You can change it if you want!
-    title: "Garden Plants",
+    title: "Native Plants for Gardens",
 
     // QUESTION 1:
     // What should visitors know about this category?
@@ -1135,12 +1135,12 @@ export const plantCategories = [
   },
 
   // ==========================================================
-  // CATEGORY 2: Native Plants
+  // CATEGORY 2: Native Wild Plants
   // ==========================================================
 
   {
     // STUDENTS: You can rename this category.
-    title: "Native Plants",
+    title: "Native Wild Plants",
 
     // QUESTION 1:
     // What should visitors know about this category?
@@ -1154,12 +1154,12 @@ export const plantCategories = [
   },
 
   // ==========================================================
-  // CATEGORY 3: TREES
+  // CATEGORY 3:NATIVE TREES
   // ==========================================================
 
   {
     // STUDENTS: You can rename this category.
-    title: "Trees",
+    title: "Native Trees",
 
     // QUESTION 1:
     // What should visitors know about this category?
