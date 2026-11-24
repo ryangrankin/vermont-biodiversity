@@ -515,7 +515,7 @@ learnMoreLinks: [
   // RECOMMENDATION 9
   {
     id: 9,
-    title: "Report Sightings of the eastern ribbonsnake",
+    title: "Report sightings of the eastern ribbonsnake",
     description: "Eastern ribbonsnake are rare in Vermont and experts are concerned about their population numbers. If you see one, take a picture of it and report it to the Vermont Herp Atlas.",
     whyItMatters: "This helps experts know how many eastern ribbonsnakes are left in Vermont.",
     interests: [
@@ -542,7 +542,7 @@ learnMoreLinks: [
   // RECOMMENDATION 10
   {
     id: 10,
-    title: "Let It Grow",
+    title: "Let it grow",
     description: "Let goldenrod grow in your fields, meadows and long roads. You can purchase native goldenrod plants at native plant nurseries. ",
     whyItMatters: "",
     interests: [
@@ -623,7 +623,7 @@ learnMoreLinks: [
   // RECOMMENDATION 13
   {
     id: 13,
-    title: "Feed The Birds, Not The Bears",
+    title: "Feed the birds, not the bears",
     description: "Only put your bird feeder out in December and bring it in by April first. This is when the bears are sleeping and won’t be tempted by bird seed. Bears really like bird seed because it has a lot of calories that they need.",
     whyItMatters: "If bears get used to eating your bird seed, they will get more comfortable with being near your house and eventually might even try to get food from inside your house.  If the bear loses their shyness, they may need to be killed.",
     interests: [
@@ -705,8 +705,8 @@ learnMoreLinks: [
   {
     id: 16,
     title: "Bee more wild!",
-    description: "Leave part of your lawn un-mowed. Leave weedy patches around for the bees and other insects and pollinators. Wait to brush hog fields until October. Many bees are ground nesters so leave patches of dirt undisturbed.",
-    whyItMatters: "These patches provide food and homes for beneficial insects.",
+    description: "Leave part of your lawn un-mowed. Leave weedy patches around. Wait to brush hog fields until October.",
+    whyItMatters: "These wild areas provide food and homes for bees and other beneficial insects.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
@@ -770,6 +770,28 @@ learnMoreLinks: [
     ],
   },
 
+  // RECOMMENDATION 19
+  {
+    id: 19,
+    title: "Plant it!",
+    description: "Plant it in the spring or fall in a shady spot and it will feed pollinators in the fall.",
+    whyItMatters: "Pollinators need an abundant fall food source, and this native plant provides it.",
+    interests: [],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [11, 12, 4, 5, 10,] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [
+    {
+    type: "plant",
+    id: "heart leaved aster",
+    label: "Learn more about Heart-Leaved Asters",
+    }, 
+    ],
+  },
 
   
 ];
@@ -872,7 +894,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/3760/11436039824_148f572570_b.jpg",
   },
 
   // ==========================================================
@@ -905,7 +927,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/5266/5662243565_a599d4bc1e_b.jpg",
   },
 
   {
@@ -937,7 +959,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/5150/5600306085_1ab63ab84c_b.jpg",
   },
   {
     id: "animal-2",
@@ -974,7 +996,7 @@ export const individualAnimals = [
   {
     id: "eastern ribbonsnake",
     category: "reptiles",
-    name: "Eastern Ribbon Snake",
+    name: "Eastern Ribbonsnake",
     description: "Eastern Ribbonsnakes can be found near wetlands in undeveloped areas and they like sunny sites for basking in. They eat frogs and salamanders and their eggs, and small fish. They look a lot like the Common Gartersnake but can be identified by their head markings: vertical white bar just in front of the eye and black line behind it, and a dark reddish brown head.",
     importance: "There are few of these snakes left in Vermont.",
     conservationTip: "",
@@ -993,13 +1015,13 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/815/27658955848_b3311814d3_b.jpg",
   },
   {
     id: "spotted salamander",
     category: "amphibians",
     name: "Spotted Salamander",
-    description: "These salamanders live underground and only come out in the spring. Amphibians’ breath through their skin.",
+    description: "These salamanders live underground and only come out in the spring. Amphibians breath through their skin.",
     importance: "They are good indicators of a healthy vernal pool. A vernal pool is a shallow, seasonal wetland that dries completely each year. They are created by rainfall or snow melt. Amphibians breed in them because there are no fish predators.",
     conservationTip: "",
     
@@ -1021,7 +1043,7 @@ export const individualAnimals = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/1938/44133419344_6f2f38946f_b.jpg",
   },
   {
     id: "american-goldfinch",
@@ -1091,13 +1113,13 @@ sources: [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/3731/9409187070_e447b76f50_b.jpg",
   },
 ];
 
 
 // ============================================================
-// SECTION 5: Garden Plants
+// SECTION 5: Native Plants for Gardens
 // ============================================================
 //
 // STUDENTS: This section is for your Plants & Gardens page!
@@ -1115,13 +1137,13 @@ sources: [
 export const plantCategories = [
 
   // ==========================================================
-  // CATEGORY 1: Garden PLants
+  // CATEGORY 1: Native Plants for Gardens
   // ==========================================================
 
   {
     // STUDENTS: This is the name of your category.
     // You can change it if you want!
-    title: "Garden Plants",
+    title: "Native Plants for Gardens",
 
     // QUESTION 1:
     // What should visitors know about this category?
@@ -1135,12 +1157,12 @@ export const plantCategories = [
   },
 
   // ==========================================================
-  // CATEGORY 2: Native Plants
+  // CATEGORY 2: Native Wild Plants
   // ==========================================================
 
   {
     // STUDENTS: You can rename this category.
-    title: "Native Plants",
+    title: "Native Wild Plants",
 
     // QUESTION 1:
     // What should visitors know about this category?
@@ -1154,12 +1176,12 @@ export const plantCategories = [
   },
 
   // ==========================================================
-  // CATEGORY 3: TREES
+  // CATEGORY 3:NATIVE TREES
   // ==========================================================
 
   {
     // STUDENTS: You can rename this category.
-    title: "Trees",
+    title: "Native Trees",
 
     // QUESTION 1:
     // What should visitors know about this category?
@@ -1320,7 +1342,7 @@ export const individualPlants = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/4348/36584626632_932150a62d_b.jpg",
   },
           
 //==============================================================
@@ -1357,7 +1379,7 @@ export const individualPlants = [
     },
   ],
 
-    image: "",
+    image: "https://upload.wikimedia.org/wikipedia/commons/c/c6/Common_milkweed-tracy.jpg",
   },
   {
     id: "american chestnut",
@@ -1389,14 +1411,14 @@ export const individualPlants = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/2480/4023974016_fa9bf8afd0_b.jpg",
   },
   {
-    id: "plant-4",
-    category: "wildlife",
-    name: "",
-    description: "",
-    importance: "",
+    id: "heart leaved aster",
+    category: "polinater",
+    name: "Heart-Leaved Aster",
+    description: "This plant grows up to 4 feet tall with hundreds of small light blue flowers. Unlike many other native flowering plants, this plant grows well in shady deciduous forests.",
+    importance: "Heart-leaved Aster is an important source of nectar in the late summer and early fall for pollinators like monarch butterflies and many types of bees. They need this nectar to prepare for the winter months.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -1408,8 +1430,8 @@ export const individualPlants = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "Heart-leaved Aster: Native Wildflower for Pollinators",
+      url: "https://plantnative.org/native-plants/heart-leaved-aster-aster-cordifolius.htm#:~:text=Heart-leaved%20Aster%20is%20an%20upright%20to%20arching%2C%20branched,branching%20widely%20and%20bearing%20numerous%20small%20flower%20heads.",
     },
     {
       name: "",
@@ -1421,7 +1443,7 @@ export const individualPlants = [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/3272/2887805130_930a292db6_b.jpg",
   },
 
   {
