@@ -705,8 +705,8 @@ learnMoreLinks: [
   {
     id: 16,
     title: "Bee more wild!",
-    description: "Leave part of your lawn un-mowed. Leave weedy patches around for the bees and other insects and pollinators. Wait to brush hog fields until October. Many bees are ground nesters so leave patches of dirt undisturbed.",
-    whyItMatters: "These patches provide food and homes for beneficial insects.",
+    description: "Leave part of your lawn un-mowed. Leave weedy patches around. Wait to brush hog fields until October.",
+    whyItMatters: "These wild areas provide food and homes for bees and other beneficial insects.",
     interests: [],
     requiresLawn: false,
     requiresGarden: false,
@@ -1091,7 +1091,7 @@ sources: [
     },
   ],
 
-    image: "",
+    image: "https://live.staticflickr.com/5337/7207048590_6a65ccd952_b.jpg",
   },
 ];
 
