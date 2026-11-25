@@ -41,7 +41,7 @@ export const appInfo = {
 
 
 export const HOBBIES = {
-  exploring: "Exploring nature on foot (hiking, walking, skiing, snowshoeing)",
+  exploring: "Exploring nature (hiking, walking, skiing, snowshoeing)",
   gardening: "Gardening",
   outdoorCare: "Caring for my outdoor space (lawn, fields, woods and streams)",
   birdwatching: "Bird watching and feeding birds",
