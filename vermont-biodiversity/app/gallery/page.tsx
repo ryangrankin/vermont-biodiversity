@@ -1,6 +1,8 @@
 
 "use client";
 
+import PhotoCredit from "@/app/components/PhotoCredit";
+import { photoCredits } from "@/data/photoCredits";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -345,6 +347,7 @@ export default function GalleryPage() {
           </div>
         </div>
       )}
+    <PhotoCredit {...photoCredits.gallery} />
     </main>
   );
 }

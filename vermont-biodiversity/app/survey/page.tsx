@@ -1,5 +1,7 @@
 "use client";
 
+import PhotoCredit from "@/app/components/PhotoCredit";
+import { photoCredits } from "@/data/photoCredits";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -213,6 +215,7 @@ useEffect(() => {
         </button>
 
       </form>
+    <PhotoCredit {...photoCredits.survey} />
     </main>
   );
 }

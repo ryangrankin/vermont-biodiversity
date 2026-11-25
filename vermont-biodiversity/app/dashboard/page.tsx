@@ -1,6 +1,8 @@
 
 "use client";
 
+import PhotoCredit from "@/app/components/PhotoCredit";
+import { photoCredits } from "@/data/photoCredits";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -578,11 +580,6 @@ async function undoProgress(id: string) {
             </h3>
 
             <p>
-              [STUDENTS: YOUR BIODIVERSITY
-              RECOMMENDATIONS WILL APPEAR HERE]
-            </p>
-
-            <p>
               Try editing your survey answers or
               checking again during another month.
             </p>
@@ -1000,6 +997,7 @@ async function undoProgress(id: string) {
 
         </div>
       </section>
+    <PhotoCredit {...photoCredits.homepage} />
     </main>
   );
 }

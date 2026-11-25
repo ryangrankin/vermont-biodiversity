@@ -1728,3 +1728,30 @@ main.container.animals-background {
 .wildlife-gallery-background > p {
   font-weight: 600;
 }
+
+/* Photo attribution credits */
+.photo-credit {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #666;
+  text-align: center;
+  margin: 6px auto;
+  padding: 4px 12px;
+  background: none;
+  border: none;
+  text-shadow: none;
+}
+
+.photo-credit a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Credits on photographic backgrounds */
+main[class*="background"] .photo-credit {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-weight: 400;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}

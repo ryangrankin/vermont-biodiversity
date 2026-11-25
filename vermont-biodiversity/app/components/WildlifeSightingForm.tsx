@@ -4,6 +4,8 @@
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/lib/supabase";
+import PhotoCredit from "@/app/components/PhotoCredit";
+import { photoCredits } from "@/data/photoCredits";
 
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 const MAX_VIDEO_SIZE = 50 * 1024 * 1024;
@@ -744,8 +746,12 @@ const authorizationResponse = await fetch(
               ? "Submitting..."
               : "Submit Recommendation Idea"}
           </button>
-        </form>
+                </form>
       </div>
+
+      {backgroundClass === "sightings-background" && (
+        <PhotoCredit {...photoCredits.sightings} />
+      )}
     </main>
   );
 }

@@ -1,6 +1,8 @@
 
 "use client";
 
+import PhotoCredit from "@/app/components/PhotoCredit";
+import { photoCredits } from "@/data/photoCredits";
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -98,6 +100,7 @@ export default function LoginPage() {
           <Link href="/signup">Create an account</Link>
         </p>
       </div>
+    <PhotoCredit {...photoCredits.login} />
     </main>
   );
 }

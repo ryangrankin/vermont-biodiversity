@@ -1,4 +1,6 @@
 
+import PhotoCredit from "@/app/components/PhotoCredit";
+import { photoCredits } from "@/data/photoCredits";
 import Link from "next/link";
 import { animalCategories } from "@/data/studentContent";
 
@@ -41,6 +43,7 @@ export default function AnimalsPage() {
           </div>
         ))}
       </div>
+    <PhotoCredit {...photoCredits.animals} />
     </main>
   );
 }

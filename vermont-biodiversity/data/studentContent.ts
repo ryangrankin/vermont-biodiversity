@@ -1316,11 +1316,13 @@ For each plant, fill in:
 - Conservation tip
 - Research source
 
-Choose one of these category IDs:
-- pollinators
-- helpful
-- trees
-- wildlife
+// VALID PLANT CATEGORY IDs:
+// "pollinators" = Native Plants for Gardens
+// "helpful" = Native Wild Plants
+// "trees" = Native Trees
+//
+// STUDENTS: Use these exact category IDs when adding
+// a new plant so it appears on the correct page.
 
 Ask the developer for help adding more
 entries or uploading photographs.
@@ -1430,7 +1432,7 @@ export const individualPlants = [
   },
   {
     id: "heart leaved aster",
-    category: "rewilding",
+    category: "pollinators",
     name: "Heart-Leaved Aster",
     description: "This plant grows up to 4 feet tall with hundreds of small light blue flowers. Unlike many other native flowering plants, this plant grows well in shady deciduous forests.",
     importance: "Heart-leaved Aster is an important source of nectar in the late summer and early fall for pollinators like monarch butterflies and many types of bees. They need this nectar to prepare for the winter months.",

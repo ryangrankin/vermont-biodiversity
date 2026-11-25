@@ -1,4 +1,6 @@
 
+import PhotoCredit from "@/app/components/PhotoCredit";
+import { photoCredits } from "@/data/photoCredits";
 import Link from "next/link";
 import { plantCategories } from "../../data/studentContent";
 
@@ -40,6 +42,7 @@ export default function PlantsPage() {
           </div>
         ))}
       </div>
+    <PhotoCredit {...photoCredits.plants} />
     </main>
   );
 }

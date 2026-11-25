@@ -1,6 +1,8 @@
 
 export const instant = false;
 
+import PhotoCredit from "@/app/components/PhotoCredit";
+import { photoCredits } from "@/data/photoCredits";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -223,6 +225,7 @@ export default async function PlantCategoryPage({
           </div>
         )}
       </section>
+    <PhotoCredit {...photoCredits[category as keyof typeof photoCredits]} />
     </main>
   );
 }
