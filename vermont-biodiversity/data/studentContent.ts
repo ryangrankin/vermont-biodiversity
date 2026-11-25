@@ -1458,7 +1458,7 @@ export const individualPlants = [
     },
   ],
 
-    image: "https://live.staticflickr.com/3272/2887805130_930a292db6_b.jpg",
+    image: "https://live.staticflickr.com/3020/2973429258_236ca47675_b.jpg",
   },
 
   {
