@@ -1430,7 +1430,7 @@ export const individualPlants = [
   },
   {
     id: "heart leaved aster",
-    category: "polinators",
+    category: "rewilding",
     name: "Heart-Leaved Aster",
     description: "This plant grows up to 4 feet tall with hundreds of small light blue flowers. Unlike many other native flowering plants, this plant grows well in shady deciduous forests.",
     importance: "Heart-leaved Aster is an important source of nectar in the late summer and early fall for pollinators like monarch butterflies and many types of bees. They need this nectar to prepare for the winter months.",
