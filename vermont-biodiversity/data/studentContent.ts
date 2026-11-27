@@ -1027,10 +1027,6 @@ export const individualAnimals = [
       name: "A Dinosaur Among Us-The Lake Sturgeon",
       url: "https://lakechamplainlife.com/a-dinosaur-among-us-the-lake-sturgeon/",
     },
-    {
-      name: "",
-      url: "",
-    },
   ],
 
     image: "",
