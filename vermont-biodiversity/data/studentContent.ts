@@ -98,7 +98,7 @@ You can also suggest additional questions.
 // why users should complete this survey.
 
 export const surveyContent = {
-  introduction: "Answer these questions so we can find the right recomandations for you!",
+  introduction: "Answer these questions so we can find the right recomandations for you! This application is still being developed by the Lego club. We plan to add more animals, plants and recommendations.",
 };
 
 
