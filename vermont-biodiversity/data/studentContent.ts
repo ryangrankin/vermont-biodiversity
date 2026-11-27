@@ -786,7 +786,7 @@ learnMoreLinks: [
   {
     id: 19,
     title: "Plant it!",
-    description: "Plant it in the spring or fall in a shady spot and it will feed pollinators in the fall.",
+    description: "Plant heart-leaved aster in the spring or fall in a shady spot and it will feed pollinators in the fall.",
     whyItMatters: "Pollinators need an abundant fall food source, and this native plant provides it.",
     interests: [
       "gardening",
@@ -805,6 +805,33 @@ learnMoreLinks: [
     type: "plant",
     id: "heart leaved aster",
     label: "Learn more about Heart-Leaved Asters",
+    }, 
+    ],
+  },
+
+  // RECOMMENDATION 20
+  {
+    id: 20,
+    title: "Pass the word",
+    description: "It is illegal to catch sturgeon. If a fisherman accidentally catches one, they should keep it in the water and carefully try to remove the hook. If they can’t, they should cut the line and leave it in. They should also report catching it to Vermont Fish and Wildlife Department so they know where these fish are.",
+    whyItMatters: "Because there are few lake sturgeons left in Lake Champlain, protecting them is important.",
+    interests: [
+      "exploring",
+      "outdoorCare",
+      "interest3",
+    ],
+    requiresLawn: false,
+    requiresGarden: false,
+    months: [11, 12, 5, 6, 7, 8, 9,] as number[],
+    source: "",
+    sources: [
+      { name: "", url: "" },
+    ],
+    learnMoreLinks: [
+    {
+    type: "animal",
+    id: "sturgeon",
+    label: "Learn more about Sturgeons",
     }, 
     ],
   },
@@ -977,11 +1004,11 @@ export const individualAnimals = [
     image: "https://live.staticflickr.com/5150/5600306085_1ab63ab84c_b.jpg",
   },
   {
-    id: "animal-2",
+    id: "sturgeon",
     category: "fish",
-    name: "",
-    description: "",
-    importance: "",
+    name: "Sturgeon",
+    description: "The lake sturgeon is Vermont’s largest fish. The largest one caught in North America was 7 feet long, 300 pounds and was 154 years old. In Vermont, they are found in Lake Champlain and the lower sections of some rivers that feed into Lake Champlain. These fish are listed as endangered by Vermont.",
+    importance: "Lake sturgeon are very old fish. They have been found in fossils that are 60 million years old.",
     conservationTip: "",
     
   // STUDENTS: Add the names and website links for your sources.
@@ -993,12 +1020,12 @@ export const individualAnimals = [
 
   sources: [
     {
-      name: "",
-      url: "",
+      name: "Anglers reminded that lake sturgeon are protected",
+      url: "https://lakechamplainlife.com/lake-sturgeon-are-protected/",
     },
     {
-      name: "",
-      url: "",
+      name: "A Dinosaur Among Us-The Lake Sturgeon",
+      url: "https://lakechamplainlife.com/a-dinosaur-among-us-the-lake-sturgeon/",
     },
     {
       name: "",
@@ -1163,7 +1190,7 @@ export const plantCategories = [
     // QUESTION 1:
     // What should visitors know about this category?
     // WRITE YOUR ANSWER BELOW:
-    description: "",
+    description: "These plants work well in gardens and are benefitial to wildlife",
 
     // QUESTION 2:
     // What can people do to help biodiversity?
@@ -1182,7 +1209,7 @@ export const plantCategories = [
     // QUESTION 1:
     // What should visitors know about this category?
     // WRITE YOUR ANSWER BELOW:
-    description: "",
+    description: "These plants are native to Vermont and benefitial to wildlife",
 
     // QUESTION 2:
     // What can people do to help biodiversity?
@@ -1201,7 +1228,7 @@ export const plantCategories = [
     // QUESTION 1:
     // What should visitors know about this category?
     // WRITE YOUR ANSWER BELOW:
-    description: "",
+    description: "These trees are native to Vermont and benefitial to wildlife",
 
     // QUESTION 2:
     // What can people do to help biodiversity?
